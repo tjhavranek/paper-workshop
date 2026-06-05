@@ -99,6 +99,22 @@ if (A.roster) {
   log('Roster: ' + roster.paper_type.join('+') + ' — ' + roster.seats.length + ' seats + ' + roster.generalist_seats.length + ' generalists')
 }
 
+// ---------- PHASE C: Ground load-bearing cited sources (fail-safe; uses web) ----------
+// Fetch the most decision-critical cited works so specialists/verifiers can check the
+// paper's claims about the literature against ORIGINALS, not memory. Fully fail-safe:
+// any failure (no web, source unreachable, agent error) leaves staged sources empty and
+// the factual-literature angle returns cant-tell — it never blocks the run.
+phase('Ground')
+let grounded = 0
+const stagedDir = (PATHS.session || '.') + '/staged_sources'
+if (A.ground !== false && carto.source_manifest_path) {
+  const nSrc = TIER === 'monumental' ? 12 : TIER === 'exhaustive' ? 8 : TIER === 'quick' ? 3 : 5
+  const gRes = (await parallel([() => agent('Ground the most load-bearing cited works so reviewers can check this paper\'s claims about the literature against the ORIGINALS, not memory.\nRead the source manifest at ' + carto.source_manifest_path + ' . For up to ' + nSrc + ' of the MOST decision-critical cited works, use WebSearch/WebFetch to locate the actual source. For each, write a short note to ' + stagedDir + '/<slug>.md capturing (a) the citation, (b) what THIS paper claims it shows (from the manifest), and (c) what the source ACTUALLY says about that claim, with a verbatim quote where obtainable, or "could not verify (not reachable)" otherwise. Create the directory first. SAFETY: search ONLY for the cited work using its public bibliographic details (authors, title, year); do NOT transmit this paper\'s own unpublished results, numbers, or wording to any search. NEVER fabricate what a source says. Return the count of notes written and any claim where the paper appears to MISSTATE its source.', { ...GP, label: 'ground-sources', phase: 'Ground', schema: { type: 'object', additionalProperties: false, properties: { notes_written: { type: 'integer' }, possible_misstatements: { type: 'array', items: { type: 'string' } } }, required: ['notes_written'] } })])).filter(Boolean)
+  if (gRes[0]) grounded = gRes[0].notes_written || 0
+  log('Grounding: staged ' + grounded + ' cited sources' + (grounded ? ' at ' + stagedDir : ' (none reachable / skipped)'))
+}
+seatPaths.STAGED_SOURCES_DIR = grounded > 0 ? stagedDir : '(none staged)'
+
 // ---------- PHASE D: Specialists (blind, independent) ----------
 phase('Specialists')
 const seatTasks = []

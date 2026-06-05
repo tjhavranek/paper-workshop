@@ -26,8 +26,10 @@ A [Claude Code](https://claude.com/claude-code) skill. Claude-only. Runs on any 
   bias, your benchmark, your proof — plus generalists who ask "does this even matter?" and
   "would a smart outsider follow it?"
 - **Nothing is made up.** Every criticism cites an exact quote, checked by a deterministic
-  script rather than the model's memory. What can't be verified is flagged *needs author
-  confirmation*, never asserted. No acceptance-probability numbers, ever.
+  script rather than the model's memory; and the most load-bearing **cited works are
+  fetched** so the paper's claims about them are checked against the originals. What can't
+  be verified is flagged *needs author confirmation*, never asserted. No
+  acceptance-probability numbers, ever.
 - **Every comment is re-checked from many angles** by independent blind verifiers (does the
   quote exist, does the criticism actually follow, is the severity honest, does the
   proposed fix break something) before it ever reaches you.
@@ -44,9 +46,9 @@ A [Claude Code](https://claude.com/claude-code) skill. Claude-only. Runs on any 
 ## Where it fits (an honest map)
 
 Good AI paper-reviewers already exist — multi-agent review, grounded critique, and
-topic-adaptive reviewers are all prior art, and some tools verify citations more
-aggressively than CRUCIBLE does. CRUCIBLE's bet is the combination two of them rarely make
-together:
+topic-adaptive reviewers are all prior art, and dedicated citation-checkers triangulate
+more reference databases than CRUCIBLE's web-based check does. CRUCIBLE's bet is the
+combination two of them rarely make together:
 
 1. **Reviewers that genuinely debate** from opposed objective functions and rival
    traditions — adversarial *collaboration*, not N independent reviews averaged; and
