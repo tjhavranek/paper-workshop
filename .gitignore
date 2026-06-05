@@ -17,4 +17,5 @@ Thumbs.db
 *.swp
 *.tmp
 *.tmp.*
+.tmp*/
 *~

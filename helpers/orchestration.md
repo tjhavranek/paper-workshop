@@ -52,10 +52,13 @@ calls in one message → batch the verification panel (`05`) by angle → integr
 synthesize (`06`) → completeness (`07`). Same prompts, same schemas, same artifacts —
 slower, identical in substance.
 
-**4c — Desk Review (lightest).** Skip the fleet. The orchestrator itself (optionally with
-2–3 sequential subagents) reads the paper, applies a handful of expert lenses + the three
+**4c — Desk Review (lightest).** Skip the fleet. The orchestrator (optionally with 2–3
+sequential subagents) reads the paper, applies a handful of expert lenses + the three
 generalist checks, runs the deterministic quote-gate, and produces a prioritized, grounded
-findings list (and, if asked, an Act-II redline). No Workflow, minimal subagents.
+findings list (and, if asked, an Act-II redline). No Workflow, minimal subagents. **See
+`helpers/desk_review_mode.md` for the exact passes and which prompts to call** (it reuses
+`01_specialist_seat.md`, `02_generalist_seat.md`, `06_chair_synthesis.md`, and the
+quote-gate).
 
 - On **Workshop and larger** runs, pause after Phase B and surface the `roster_contract`
   for the author to approve before the fleet runs.

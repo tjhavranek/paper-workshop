@@ -1,26 +1,26 @@
 ---
 name: paper-workshop
 description: |
-  CRUCIBLE — a monumental, Claude-only dynamic-Workflow simulation of an
-  elite workshop on a scientific paper, in two acts. ACT I (TRIBUNAL):
-  from the paper PDF alone, a large topic-adapted fleet of expert referee
-  subagents — every contested claim argued from at least two COMPETING
-  intellectual traditions, plus generalist seats for relevance and
-  understandability — stress-tests the paper exhaustively (every argument,
-  every section, to the sentence), and every comment is checked by many
-  independent verifiers from different angles before delivery. ACT II
-  (ATELIER, opt-in): with the author's source + data + code, it implements
-  the agreed changes as tracked edits, RE-RUNS the analysis, and produces an
-  impeccable revised paper plus a full replication package — every change
-  likewise multi-angle-verified, nothing fabricated, nothing applied without
-  the author's sign-off on anything that touches the scientific record.
+  CRUCIBLE — a Claude-only adversarial expert workshop that stress-tests a
+  scientific paper and then, opt-in, rebuilds it. ACT I (TRIBUNAL): from the
+  paper PDF alone, a topic-adapted fleet of expert referee subagents — every
+  contested claim argued from at least two COMPETING intellectual traditions,
+  plus generalist seats for relevance and understandability — reviews the paper
+  to the sentence, every comment grounded in an exact quote (no fabrication, no
+  confidence scores) and independently re-checked from many angles before
+  delivery. ACT II (ATELIER, opt-in): with the author's source + data + code,
+  it implements the agreed changes as a tracked-changes redline plus a clean
+  accepted version, RE-RUNS the analysis under an execution-provenance wall
+  (no number enters the paper unless a logged re-run produced it), and
+  assembles a replication package — every change multi-angle-verified, nothing
+  applied without the author's sign-off on anything that touches the record.
 
   Triggers:
    - "workshop this paper" / "workshop my paper <file>" / "run paper-workshop on <file>"
    - "convene the workshop on <file>" / "convene the tribunal on <file>"
    - "CRUCIBLE <file>" / "give me an elite referee workshop on <file>"
-   - "brutally (but fairly) stress-test and workshop this manuscript"
-   - "monumental review of <paper.pdf>"
+   - "workshop and stress-test this manuscript" / "brutally workshop this paper"
+   - "red-team and rebuild my paper <file>"
    - Act II: "implement the workshop changes" / "rebuild my paper" /
      "build the replication package" / "do Act II / the atelier"
 
@@ -34,22 +34,22 @@ description: |
 
 > *Every paper leaves changed.*
 
-A two-act simulation of the workshop a paper would get if a world authority on
-**every** sub-part were in the room, every contested choice were argued by **both**
-rival schools, a generalist panel asked whether it **matters** and is
-**intelligible**, every comment were **independently re-checked from many angles**,
-and then the best of the room **rebuilt the paper and its replication package**.
+A two-act simulation of the workshop a paper would get if a specialist were
+assigned to **every** contested choice, each one argued by **both** rival schools,
+a generalist panel asked whether it **matters** and is **intelligible**, every
+comment were **independently re-checked from many angles**, and then the best of
+the room **rebuilt the paper and its replication package**.
 
-Runtime is not a constraint — a monumental run takes hours by design. The whole
-tool is Claude-only and orchestrated by Claude 4.8's **Workflow** engine; live
-work (fetching cited sources, running the author's code) uses the **Agent/Bash**
-tools inside that orchestration.
+The deeper modes can run for a while by design (you choose the depth). The whole
+tool is Claude-only; it uses Claude 4.8's **Workflow** engine when available and
+plain subagents otherwise, with live work (fetching cited sources, running the
+author's code) via the **Agent/Bash** tools.
 
 ## The two acts and the gate between them
 
-- **Act I — TRIBUNAL.** Input: **the paper PDF only.** Output: the best feedback
-  achievable — a verified, prioritized finding ledger + a referee-report bundle +
-  a debate transcript + an importance memo + a completeness certificate. Read-only;
+- **Act I — TRIBUNAL.** Input: **the paper PDF only.** Output: a verified,
+  prioritized finding ledger + a referee-report bundle + a debate transcript + an
+  importance memo + a completeness certificate. Read-only;
   nothing of the author's is touched. (`workflow/phase1_tribunal.js`)
 - **[HARD GATE].** The skill **stops** and offers to implement. It never
   auto-chains into Act II.
@@ -84,21 +84,24 @@ almost nothing — never traded away for scale.
 
 ## Modes (pick your depth — runs on any paid plan)
 
-Run size scales with the number of **expert seats**; the verification panel is *batched
-by angle* (cost ≈ `angles × ceil(#findings / batch) × redundancy`, not `#findings ×
-angles`), integration is a fixed 3 lenses, and each seat returns ≤ ~8 findings — so cost
-grows with the depth you choose, not with paper length.
+Run size scales with the number of **expert seats**; the verification panel is *batched by
+angle* (cost ≈ `angles × ceil(#findings / batch) × redundancy`, not `#findings × angles`),
+and each seat returns ≤ ~8 findings. The lighter modes' cost grows with the depth you
+choose; the two heavy modes add a per-section sentence sweep, so their cost **also scales
+with paper length**.
 
 | Mode | What convenes | Expert seats | ≈ agents | Best for |
 |---|---|---|---|---|
 | **Desk Review** | one expert pass (no fleet) | a few inline lenses | ~1–6 | a fast read; lightest setup |
 | **Roundtable** | a small adversarial panel | 6–8 | ~20–30 | a quick but real workshop |
-| **Workshop** *(default)* | the full adversarial workshop | 12–18 | ~40–55 | serious pre-submission review |
-| **Symposium** | a large fleet + close-readers | 25–40 | ~90–130 | top-venue preparation |
-| **Summit** | every subsystem + every sentence | 60–120+ | ~180–300 | the most exhaustive pass (opt-in) |
+| **Workshop** *(default)* | the full adversarial workshop | 12–18 | ~45–65 | serious pre-submission review |
+| **Symposium** | a large fleet + close-readers | 25–40 | ~90–250 | top-venue preparation |
+| **Summit** | every subsystem + every sentence | 60–120+ | ~300–600 | the most exhaustive pass (opt-in) |
 
-Default is **Workshop** (~50 agents). **Summit** is an explicit opt-in; its size is
-mostly *distinct expert seats and sentence sweeps*, not verification overhead. (Internal
+Symposium/Summit counts grow with paper length (the sentence sweeps); a long paper pushes
+Summit toward the top of that range. Default is **Workshop**. **Symposium and Summit are
+best run with the Workflow engine** — the subagent fallback is practical up to Workshop;
+beyond that, without workflows the orchestrator should fall back to Workshop. (Internal
 tier keys: Roundtable=`quick`, Workshop=`thorough`, Symposium=`exhaustive`,
 Summit=`monumental`.)
 

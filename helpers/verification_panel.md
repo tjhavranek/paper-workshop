@@ -21,11 +21,13 @@ adversarial findings). The panel *audits* candidate outputs — findings and edi
 - **Adversarial by construction.** At least one angle (`steelman-charity`) is tasked
   to *defend the paper* — to show the criticism is wrong because the paper already
   handles it. A finding that cannot survive a determined defense should not ship.
-- **Code where code is possible.** The `quote-locator` and (Act II)
-  `numeric-provenance` and `consistency` angles are backed by deterministic scripts
-  (`helpers/quote_gate.py`, the run-artifact hashes, the Consistency Reconciler) —
-  the verifier subagent runs the script and reports its output rather than judging by
-  eye.
+- **Code where code is possible.** The `quote-locator` angle is backed by a real
+  deterministic script (`helpers/quote_gate.py`) — the verifier runs it and reports its
+  output, not an eyeballed judgment. The Act-II `numeric-provenance` and `consistency`
+  angles are **LLM-audited** (an agent inspects the run artifacts and the manuscript): they
+  are far stronger than a single proposer's say-so, but they are not yet a standalone
+  deterministic script, and we label them honestly as such. (Hardening them into scripts —
+  a re-hash of every transcribed value, a numeric cross-reference grep — is on the roadmap.)
 - **Aggregate in code, not by an LLM.** Verdicts are combined by the fixed rules
   below in the Workflow script — no model gets to "weigh" them.
 

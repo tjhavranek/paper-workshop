@@ -9,6 +9,11 @@ rather than failing silently.
 - **Python 3.8+** on PATH (for `helpers/quote_gate.py`). Verify:
   `python --version` (or `python3`). If absent, the quote-gate cannot run and the
   whole grounding guarantee is void — do not proceed; tell the user.
+  **Windows:** Python must be callable as `python` or `python3` from the shell; if it
+  was installed from the Microsoft Store or conda and the command fails, use the `py`
+  launcher (`py -3 --version`) or add Python to PATH. If the gate ever can't run, a
+  finding degrades to `needs-author-confirmation` (still valid, but unconfirmed) — never
+  a silent pass.
 - **Agent tool (subagents) — required, available on every plan.** The workshop always
   runs via subagents. The **Workflow tool is OPTIONAL**: prefer it when available (default
   on Max; on Pro, enable it in `/config`) for efficient orchestration; otherwise use the

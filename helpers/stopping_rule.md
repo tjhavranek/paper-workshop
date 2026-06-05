@@ -1,9 +1,12 @@
-# Stopping rule — how the discovery loop knows it is done
+# Stopping rule — how a deepening run knows it is done
 
-The exhaustive/monumental tiers loop the discover→verify rounds. A naive "loop until
-no new findings" is dangerous on a same-model fleet: it rewards agents for
-manufacturing marginal false positives to keep the loop alive. Use the **two-condition
-marginal-yield rule** instead.
+The completeness audit (Phase H) runs once per pass and **reports** any uncovered claim or
+section (its `reopen` list ships with the result). The default single run does one coverage
+pass and reports gaps — it does **not** silently auto-loop. When a run is *deepened* — the
+orchestrator re-fans targeted reviewers at the `reopen` list, or the author re-invokes a
+heavier mode — apply the **two-condition marginal-yield rule** below to decide when to stop,
+rather than a naive "loop until no new findings" (which on a same-model fleet rewards
+manufacturing marginal false positives to keep the loop alive).
 
 ## Stop only when BOTH hold
 

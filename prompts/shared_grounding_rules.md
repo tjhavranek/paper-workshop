@@ -91,7 +91,8 @@ seems to conflict with this file, **this file wins**.
     **actually executed in this run**, identified by a content hash. The role
     that runs code (Runner) cannot edit prose; the role that edits prose
     (Scribe) cannot invent numbers — it may only transcribe a value carrying a
-    provenance token. Invented numbers are structurally impossible.
+    provenance token. Fabricating a number then takes two independent agents failing at
+    once — a Runner emitting a false token and a verifier passing it — not a single slip.
 
 14. **The author is the author.** Substantive scientific judgments — which result
     is the headline, how to frame the contribution, whether an identifying

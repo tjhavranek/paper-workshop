@@ -107,7 +107,7 @@ roster.generalist_seats.forEach(g => seatTasks.push(() => agent(promptRef('02_ge
 // desk-reject pre-mortem (verbatim, exempt from chair)
 seatTasks.push(() => agent(promptRef('03_premortem', { PAPER_TXT_PATH: carto.paper_txt_path, PRECIS_PATH: carto.precis_path, RULES_PATH: PATHS.rules || '' }), { ...GP, label: 'premortem', phase: 'Specialists', schema: FINDINGS }).then(r => tag(r, 'S-premortem', 'desk-reject-premortem')))
 // close-reader sweeps at the heavy tiers (sentence-coverage invariant)
-const sweeps = (TIER === 'exhaustive' || TIER === 'monumental') ? Math.max(1, Math.ceil((carto.n_sentences || 0) / 40)) : 0
+const sweeps = (TIER === 'exhaustive' || TIER === 'monumental') ? Math.min(40, Math.max(1, Math.ceil((carto.n_sentences || 0) / 40))) : 0
 for (let i = 0; i < sweeps; i++) {
   const seat = { seat_id: 'S-closeread-' + i, role_title: 'Close reader', tradition: 'line-by-line close reading', objective_function: 'neutral-audit', jurisdiction: 'sentence ranges block ' + i + ' (read sentence_map.json, review ranges [' + (i * 40) + ',' + ((i + 1) * 40) + ') and return covered_ranges)', justifying_quote: '(coverage sweep)', rival_of: null, out_of_scope: 'other blocks', owned_claim_ids: [] }
   seatTasks.push(() => agent(promptRef('01_specialist_seat', { ...seatPaths, SEAT_JSON: { ...seat, sentence_map_path: carto.sentence_map_path } }) + '\nALSO: read the sentence map at ' + carto.sentence_map_path + ' and return covered_ranges = the list of sentence-range ids you reviewed.', { ...GP, label: 'closeread:' + i, phase: 'Specialists', schema: FINDINGS }).then(r => tag(r, seat.seat_id, seat.tradition)))
@@ -178,9 +178,12 @@ function decide(f, verdicts) {
   const out = { ...f }
   let delivered = true
   let reject_reason = ''
-  // hard gate: logical-validity
+  // hard gate: logical-validity. FAIL CLOSED — if no verdict came back (e.g. a verifier
+  // agent was dropped), keep the finding but flag it unconfirmed rather than passing it
+  // through as clean (a missing gate must never be a free pass).
   const lv = majority(verdicts, 'logical-validity')
   if (lv && lv.verdict === 'rejected') { delivered = false; reject_reason = 'logical-validity: criticism does not follow from the quote' }
+  else if (!lv && out.finding_type !== 'absence-silence') { out.verification_status = 'needs-author-confirmation' }
   // steelman defense
   const sm = majority(verdicts, 'steelman-charity')
   if (delivered && sm && sm.verdict === 'rejected') { delivered = false; reject_reason = 'steelman: the paper already addresses this / the criticism is mistaken' }
