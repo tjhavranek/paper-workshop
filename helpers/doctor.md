@@ -9,11 +9,13 @@ rather than failing silently.
 - **Python 3.8+** on PATH (for `helpers/quote_gate.py`). Verify:
   `python --version` (or `python3`). If absent, the quote-gate cannot run and the
   whole grounding guarantee is void — do not proceed; tell the user.
-- **Workflow + Agent tools available.** This skill is orchestrated by the Workflow
-  engine and spawns Agent/Bash subagents. If the Workflow tool is unavailable, fall
-  back to a sequential Agent-tool orchestration (slower, same phases) and say so.
-- **Tier sanity.** Warn the user that `monumental` may run for hours and spawn
-  hundreds of subagents; confirm before launching it.
+- **Agent tool (subagents) — required, available on every plan.** The workshop always
+  runs via subagents. The **Workflow tool is OPTIONAL**: prefer it when available (default
+  on Max; on Pro, enable it in `/config`) for efficient orchestration; otherwise use the
+  subagent fallback (orchestration Step 4b). **Desk Review** needs neither. Detect the
+  engine and tell the user which one you're using.
+- **Mode sanity.** Warn that **Summit** may run for an extended time and spawn ~180–300
+  subagents; confirm before launching it. The default **Workshop** mode is ~40–55 agents.
 
 ## Act II (only if the user opts in)
 - **Manuscript source** present (.tex + `\input` children, or .docx). This is the

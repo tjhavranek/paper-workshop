@@ -14,7 +14,8 @@ export const meta = {
 }
 
 // ---------- args & helpers ----------
-const A = args || {}
+// args can arrive as a JSON-encoded string in some harnesses; parse defensively.
+const A = (typeof args === 'string' ? JSON.parse(args) : args) || {}
 const PATHS = A.paths || {}
 const TIER = A.tier || 'thorough'
 const REGISTER = A.register || 'supportive'
@@ -25,10 +26,11 @@ const PROMPTS_DIR = PATHS.prompts_dir || ''
 // the skill self-contained (it loads its own prompts from disk; nothing is inlined).
 const promptRef = (name, vars) =>
   'Your task instructions are in the file: ' + PROMPTS_DIR + '/' + name + '.md\n' +
-  'READ that file with your tools and follow it EXACTLY as your role. It contains {{TOKEN}} ' +
-  'placeholders — substitute these values (and read any path given as a file):\n' +
+  'READ that file with your tools and follow it EXACTLY as your role. If that exact path ' +
+  'fails, glob for **/' + name + '.md and read the match. It contains {{TOKEN}} placeholders ' +
+  '— substitute these values (and read any path given as a file):\n' +
   JSON.stringify(vars || {}, null, 2) +
-  '\nProduce output strictly matching the required schema.'
+  '\nYou MUST finish by returning the required structured output via the StructuredOutput tool — do NOT reply in prose, and do not stop until you have called it.'
 const GP = { agentType: 'general-purpose' } // full tool access (Read/Write/Bash)
 
 // ---------- compact inline schemas (mirror schemas/*.json) ----------

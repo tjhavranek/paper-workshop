@@ -13,7 +13,8 @@ export const meta = {
   ],
 }
 
-const A = args || {}
+// args can arrive as a JSON-encoded string in some harnesses; parse defensively.
+const A = (typeof args === 'string' ? JSON.parse(args) : args) || {}
 const PATHS = A.paths || {}
 const INPUTS = A.inputs || {}
 const LEDGER = A.ledger || []        // the verified findings the author elected to implement
@@ -24,10 +25,11 @@ const GP = { agentType: 'general-purpose' }
 // the 'phase2/' subdir; the shared verifier is '05_verification_panel'.
 const promptRef = (name, vars) =>
   'Your task instructions are in the file: ' + PROMPTS_DIR + '/' + name + '.md\n' +
-  'READ that file with your tools and follow it EXACTLY as your role. It contains {{TOKEN}} ' +
-  'placeholders — substitute these values (and read any path given as a file):\n' +
+  'READ that file with your tools and follow it EXACTLY as your role. If that exact path ' +
+  'fails, glob for **/' + name + '.md and read the match. It contains {{TOKEN}} placeholders ' +
+  '— substitute these values (and read any path given as a file):\n' +
   JSON.stringify(vars || {}, null, 2) +
-  '\nProduce output strictly matching the required schema.'
+  '\nYou MUST finish by returning the required structured output via the StructuredOutput tool — do NOT reply in prose, and do not stop until you have called it.'
 
 // ---------- schemas ----------
 const SCOPE = { type: 'object', additionalProperties: false, properties: { achievable_scope: { type: 'array', items: { type: 'string' } }, degraded: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { finding_id: { type: 'string' }, missing_input: { type: 'string' }, consequence: { type: 'string' } }, required: ['finding_id', 'missing_input', 'consequence'] } }, blocking_gaps: { type: 'array', items: { type: 'string' } }, request_list: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { input: { type: 'string' }, reason: { type: 'string' } }, required: ['input', 'reason'] } } }, required: ['achievable_scope', 'degraded', 'blocking_gaps', 'request_list'] }

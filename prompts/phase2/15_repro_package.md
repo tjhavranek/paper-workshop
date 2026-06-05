@@ -10,7 +10,13 @@ README.md  LICENSE(author-chosen; prompt, never assume)  manifest.json(every fil
 data/{raw(read-only), processed(built by code), data_availability.md}
 code/{00_run_all.*, 01_clean.* .. NN_*, lib/}
 output/{tables, figures, logs}
-manuscript/{revised.(tex|docx), revised.pdf, changes.pdf}
+manuscript/{
+  revised_clean.(tex|docx),     # ALL changes accepted — the submit-ready clean version
+  revised_clean.pdf,            # compiled clean version
+  revised_redline.pdf,          # the auditable REDLINE: latexdiff (LaTeX) showing every insert/delete
+  revised_tracked.docx,         # OR (Word) native tracked changes (w:ins/w:del) the author accepts/rejects
+  changes_map.md                # every change -> edit_id -> finding_id -> the reviewer concern it answers
+}
 env/{sessionInfo|pip-freeze|conda-list, lockfile, optional Dockerfile}
 codebook/data_dictionary.md
 MAP.md   (every Table/Figure/headline number -> exact script+line+run_id+output_hash)

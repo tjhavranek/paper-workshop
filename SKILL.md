@@ -82,24 +82,33 @@ almost nothing — never traded away for scale.
 - **Act II Execution-Provenance Wall:** no number enters the paper unless a real,
   logged re-run produced it; the author signs off on anything touching the record.
 
-## Depth tiers
+## Modes (pick your depth — runs on any paid plan)
 
-Run size is dominated by the **expert seats** — each adds a *distinct* perspective. The
-rest of the pipeline is bounded: the verification panel is **batched by angle** (cost ≈
-`angles × ceil(#findings / batch) × redundancy`, not `#findings × angles`), integration
-is a fixed 3 lenses, and each seat returns at most ~8 findings. So total agents scale
-sensibly with the tier rather than exploding with paper length:
+Run size scales with the number of **expert seats**; the verification panel is *batched
+by angle* (cost ≈ `angles × ceil(#findings / batch) × redundancy`, not `#findings ×
+angles`), integration is a fixed 3 lenses, and each seat returns ≤ ~8 findings — so cost
+grows with the depth you choose, not with paper length.
 
-| Tier | Expert seats | ≈ total agents | Use |
-|---|---|---|---|
-| `quick` | 6–8 (floor only) | ~20–30 | a fast sanity pass |
-| `thorough` (default) | 12–18 | **~40–55** | a serious pre-submission review |
-| `exhaustive` | 25–40 + per-section close-readers | ~90–130 | top-venue preparation |
-| `monumental` | 60–120+ (loop-until-dry on findings AND coverage) | ~180–300 | "better than any conference" |
+| Mode | What convenes | Expert seats | ≈ agents | Best for |
+|---|---|---|---|---|
+| **Desk Review** | one expert pass (no fleet) | a few inline lenses | ~1–6 | a fast read; lightest setup |
+| **Roundtable** | a small adversarial panel | 6–8 | ~20–30 | a quick but real workshop |
+| **Workshop** *(default)* | the full adversarial workshop | 12–18 | ~40–55 | serious pre-submission review |
+| **Symposium** | a large fleet + close-readers | 25–40 | ~90–130 | top-venue preparation |
+| **Summit** | every subsystem + every sentence | 60–120+ | ~180–300 | the most exhaustive pass (opt-in) |
 
-The default `thorough` tier is deliberately in the few-dozen-agents range. `monumental`
-is the explicit opt-in for a genuinely exhaustive run; its size is mostly *distinct
-expert seats and sentence-coverage sweeps*, not a verification multiplier.
+Default is **Workshop** (~50 agents). **Summit** is an explicit opt-in; its size is
+mostly *distinct expert seats and sentence sweeps*, not verification overhead. (Internal
+tier keys: Roundtable=`quick`, Workshop=`thorough`, Symposium=`exhaustive`,
+Summit=`monumental`.)
+
+**Engine & plans — the workshop runs for everyone.** Subagents (the Agent tool) work on
+**every plan**, so the orchestrator can always run the phases by spawning subagents
+directly. If **dynamic workflows** are enabled (default on Max; on Pro, turn them on in
+`/config`), the skill uses `workflow/*.js` for efficient deterministic orchestration
+instead — same phases, same prompts, same schemas. **Desk Review** needs neither a fleet
+nor workflows and is the safe choice on the lightest setups. See
+`helpers/orchestration.md` for how the orchestrator picks the engine.
 
 ## Reading order for the orchestrating Claude
 

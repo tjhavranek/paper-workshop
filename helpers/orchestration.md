@@ -16,11 +16,13 @@ the PDF (and later the source/data/code) into `input/` — never read or mutate 
 author's originals in place. Write `meta.json` (session id, timestamp, input hashes,
 tier, register supportive|brutal, codex/external availability).
 
-## Step 2 — Choose tier and register
-Default tier `thorough`, register `supportive`. The user may say `quick` /
-`exhaustive` / `monumental`, and `brutal` for register. Record both in `meta.json`
-and the brief. (Register changes the chair's delivery only; severity is
-tone-invariant — grounding rule 4.)
+## Step 2 — Choose the mode and register
+Modes (depth) and their internal tier keys: **Desk Review** (no fleet/workflow — Step
+4c), **Roundtable** = `quick`, **Workshop** = `thorough` (default), **Symposium** =
+`exhaustive`, **Summit** = `monumental`. The user may name a mode, give a tier key, or
+just say "lighter"/"deeper". Register is `supportive` (default) or `brutal` — it changes
+the chair's delivery only; severity is tone-invariant (grounding rule 4). Record the
+mode→tier and register in `meta.json` and the brief.
 
 ## Step 3 — Write the brief
 `brief.md` is read by every subagent and contains: the mission, the absolute path to
@@ -29,23 +31,37 @@ the copied PDF and any staged sources, the tier, the register, and a pointer to
 heavy rules in those files; the brief just points to them and states the run's
 specifics.
 
-## Step 4 — Run ACT I via the Workflow tool
-Launch `workflow/phase1_tribunal.js` with `args` = `{ pdf_path, tier, register,
-paths: { session, prompts_dir, helpers_dir, rules, rubric, coverage_rubric, quote_gate,
-brief, staged_sources } }` (each subagent reads its own prompt template from
-`prompts_dir`, so nothing is inlined). The script runs the eight phases (A ingest/cartography → B scout/roster
-→ C ground sources → D blind specialists → E cross-critique → F red-team verifiers →
-**verification panel** → G synthesis → H completeness audit, looping per
-`helpers/stopping_rule.md`). It writes every artifact to the session and returns the
-`synthesis.schema.json` object.
+## Step 4 — Run ACT I (pick the engine first)
+**Engine choice.** Prefer the **Workflow** engine if the Workflow tool is available
+(default on Max; on Pro, enable it in `/config`). If it is not available, run the **same
+phases via the Agent tool** (Step 4b) — subagents work on every plan, so the workshop
+always runs. **Desk Review** uses neither a fleet nor workflows (Step 4c).
 
-- On **non-quick** runs the script **pauses after Phase B** and surfaces the
-  `roster_contract` for the author to edit/approve before the fleet runs. (Implement
-  the pause by running Phase B as its own Workflow call, showing the contract, then
-  launching the rest with the approved roster as `args`.)
-- The deterministic quote-gate (`helpers/quote_gate.py`) is run by the
-  `quote-locator` verifier subagent via Bash at the barrier exiting Phase D and again
-  in the panel; absence-silence findings are exempt.
+**4a — Workflow engine.** Launch `workflow/phase1_tribunal.js` with `args` = `{ pdf_path,
+tier, register, paths: { session, prompts_dir, helpers_dir, rules, rubric,
+coverage_rubric, quote_gate, brief, staged_sources } }` — pass `tier` as the internal key
+for the chosen mode. (The script parses `args` defensively whether it arrives as an object
+or a JSON string.) It runs the eight phases (A ingest/cartography → B scout/roster → C
+ground sources → D blind specialists → E cross-critique → **F verification panel** (batched
+by angle) → G synthesis → H completeness audit, looping per `helpers/stopping_rule.md`),
+writes every artifact to the session, and returns the `synthesis.schema.json` object.
+
+**4b — Subagent fallback (no Workflow).** Drive the same phases yourself with the Agent
+tool: cartography → Scout (`00`) → fan out the seats (`01`/`02`/`03`) as parallel Agent
+calls in one message → batch the verification panel (`05`) by angle → integrate (`04`) →
+synthesize (`06`) → completeness (`07`). Same prompts, same schemas, same artifacts —
+slower, identical in substance.
+
+**4c — Desk Review (lightest).** Skip the fleet. The orchestrator itself (optionally with
+2–3 sequential subagents) reads the paper, applies a handful of expert lenses + the three
+generalist checks, runs the deterministic quote-gate, and produces a prioritized, grounded
+findings list (and, if asked, an Act-II redline). No Workflow, minimal subagents.
+
+- On **Workshop and larger** runs, pause after Phase B and surface the `roster_contract`
+  for the author to approve before the fleet runs.
+- The deterministic quote-gate (`helpers/quote_gate.py`) is run by the `quote-locator`
+  verifier via Bash at the barrier exiting Phase D and in the panel; absence-silence
+  findings are exempt.
 
 ## Step 5 — Assemble and present the Act-I report
 From the returned synthesis, render the human-facing **report bundle**: verdict;
