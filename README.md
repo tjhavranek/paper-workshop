@@ -58,6 +58,14 @@ combination two of them rarely make together:
 If you only want a fast referee-style critique, lighter tools (and CRUCIBLE's own **Desk
 Review** mode) do that. CRUCIBLE earns its keep when you want the argument *and* the rebuild.
 
+**Honesty about limits.** See **[`LIMITATIONS.md`](LIMITATIONS.md)** for a straight account
+of what is genuinely enforced, what is not proven yet (no measured recall / false-positive
+numbers yet; same-model decorrelation is a design bet; coverage means *attention*, not
+correctness), and the roadmap. We ran CRUCIBLE on its own design before release — it caught
+real overclaims and a bug in its own quote-gate, both fixed; that run is in
+[`examples/self-audit/`](examples/self-audit/), framed honestly as a development pass, not
+independent validation.
+
 ## Modes — pick your depth (every mode runs on any paid plan)
 
 | Mode | What convenes | Experts | ≈ agents | Best for |
