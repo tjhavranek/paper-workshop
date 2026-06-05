@@ -72,10 +72,14 @@ def dehyphenate(text):
 
 def check(quote, source, casefold=True):
     """Return (matched: bool, match_level: str). Tries exact-normalized first,
-    then a dehyphenated fallback for PDF line-break hyphenation."""
+    then a dehyphenated fallback for PDF line-break hyphenation.
+
+    An empty quote is NOT a match here (fail CLOSED). The absence/silence exemption
+    needs the finding_type, so it is the CALLER's job (see cmd_batch); an empty quote
+    on a non-absence finding must fail, never be waved through."""
     nq = normalize(quote, casefold)
     if nq == "":
-        return True, "exempt-absence"
+        return False, "empty-quote"
     ns = normalize(source, casefold)
     if nq in ns:
         return True, "normalized"
@@ -89,7 +93,7 @@ def _read_quote(args):
     if args.quote is not None:
         return args.quote
     if args.quote_file:
-        with open(args.quote_file, encoding="utf-8") as fh:
+        with open(args.quote_file, encoding="utf-8-sig") as fh:
             return fh.read()
     if args.quote_stdin:
         return sys.stdin.read()
@@ -97,7 +101,7 @@ def _read_quote(args):
 
 
 def cmd_check(args):
-    with open(args.source_file, encoding="utf-8") as fh:
+    with open(args.source_file, encoding="utf-8-sig") as fh:
         source = fh.read()
     quote = _read_quote(args)
     matched, level = check(quote, source, casefold=not args.case_sensitive)
@@ -106,9 +110,9 @@ def cmd_check(args):
 
 
 def cmd_batch(args):
-    with open(args.source_file, encoding="utf-8") as fh:
+    with open(args.source_file, encoding="utf-8-sig") as fh:
         source = fh.read()
-    with open(args.findings, encoding="utf-8") as fh:
+    with open(args.findings, encoding="utf-8-sig") as fh:
         data = json.load(fh)
     findings = data["findings"] if isinstance(data, dict) and "findings" in data else data
     out = []

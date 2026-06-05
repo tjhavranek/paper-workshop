@@ -45,9 +45,12 @@ skipped it.
 16. **Understandability / brilliant-outsider** — is it intelligible to a strong
     scientist one field over; where does it lose them?
 
-## The sentence-coverage invariant
-Independently of the dimensions above, the Section/Sentence Map (Phase A) tiles
-the paper into disjoint sentence ranges whose union equals the whole paper. At
-the exhaustive and monumental tiers, close-reader sweeps must return a verdict
-for **every** range, so that `covered_sentences == total_sentences` is a checked
-invariant, not a claim. Any gap re-spawns a sweep for exactly that gap.
+## The sentence-coverage ledger
+Independently of the dimensions above, the Section/Sentence Map (Phase A) tiles the paper
+into disjoint sentence ranges whose union equals the whole paper. At the exhaustive and
+monumental tiers, close-reader sweeps return a verdict for **every** range, so
+`covered_sentences == total_sentences` is checkable. Be honest about what this proves: it
+certifies that **every range was examined** (coverage of *attention*), **not** that each
+was *correctly* reviewed — a flaw can still hide inside a "covered" range. It is an
+auditable assignment ledger, not a correctness guarantee. Any gap re-spawns a sweep for
+exactly that gap.
