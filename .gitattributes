@@ -1,0 +1,6 @@
+# Normalize line endings to LF on checkout for cross-platform installs.
+* text=auto eol=lf
+*.py text eol=lf
+*.js text eol=lf
+*.md text eol=lf
+*.json text eol=lf
