@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "paper-workshop/synthesis",
+  "title": "Synthesis",
+  "description": "The chair's final Act-I output (Phase G), composed ONLY from verified findings. The chair controls delivery tone; it may NOT alter severity, delete the kill_shots array, or average away dissent (grounding rules 4, 8).",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "verdict": { "type": "string", "description": "3-6 sentences. Validity verdict dominates venue verdict." },
+    "top_strengths": { "type": "array", "items": { "type": "string" } },
+    "prioritized_findings": {
+      "type": "array",
+      "description": "The verified findings, prioritized. must-fix capped at ~5-7; sorted by magnitude, not seat seniority.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "finding_id": { "type": "string" },
+          "priority": { "type": "string", "enum": ["must", "should", "nice"] },
+          "one_line": { "type": "string" },
+          "panel_summary": { "type": "string", "description": "How the verification panel ruled, e.g. 'upheld 6/7 angles; severity revised High->Medium per robustness check'." }
+        },
+        "required": ["finding_id", "priority", "one_line", "panel_summary"]
+      }
+    },
+    "kill_shots": {
+      "type": "array",
+      "description": "VERBATIM, un-deletable. The harshest surviving objections from the fatal-flaw and pre-mortem seats, reproduced unsmoothed regardless of delivery tone.",
+      "items": { "type": "string" }
+    },
+    "referee_verdicts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": { "seat_id": { "type": "string" }, "verdict": { "type": "string" } },
+        "required": ["seat_id", "verdict"]
+      }
+    },
+    "venue_verdict": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "bucket": { "type": "string", "enum": ["desk-reject-risk", "major-revision", "competitive"] },
+        "objections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": { "objection": { "type": "string" }, "quote": { "type": "string" } },
+            "required": ["objection", "quote"]
+          }
+        },
+        "swing_factor": { "type": "string" }
+      },
+      "required": ["bucket", "objections", "swing_factor"],
+      "description": "NO acceptance probability anywhere."
+    },
+    "validity_verdict": { "type": "string", "description": "Is the central claim actually supported? Dominates the venue verdict." },
+    "minority_report": { "type": "string", "description": "A specific, grounded dissent preserved intact even if it lost." },
+    "rejected_suggestions": {
+      "type": "array",
+      "description": "Suggestions considered and dropped during verification, with reasons. Includes panel-rejected findings.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": { "suggestion": { "type": "string" }, "why_rejected": { "type": "string" } },
+        "required": ["suggestion", "why_rejected"]
+      }
+    },
+    "coverage_certificate": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "claims_total": { "type": "integer" },
+        "claims_covered": { "type": "integer" },
+        "sentences_total": { "type": "integer" },
+        "sentences_covered": { "type": "integer" },
+        "not_covered": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["claims_total", "claims_covered", "sentences_total", "sentences_covered", "not_covered"]
+    }
+  },
+  "required": ["verdict", "top_strengths", "prioritized_findings", "kill_shots", "referee_verdicts", "venue_verdict", "validity_verdict", "minority_report", "rejected_suggestions", "coverage_certificate"]
+}

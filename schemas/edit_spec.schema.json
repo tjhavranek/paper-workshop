@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "paper-workshop/edit_spec",
+  "title": "EditSpec",
+  "description": "The Act-II work order, derived from verified Act-I findings the author elected to implement. One entry per concrete change. Lanes A/B auto-apply (as tracked changes / logged re-runs) after the implementation verification panel clears them; lanes C/D are proposal-only and require author sign-off.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "edits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "edit_id": { "type": "string", "description": "e.g. E-007" },
+          "finding_id": { "type": "string", "description": "The Act-I finding this implements." },
+          "lane": {
+            "type": "string",
+            "enum": ["A-writing", "B-recompute", "C-new-analysis", "D-author-decision"],
+            "description": "A = pure writing; B = re-run existing analysis; C = new analysis (proposal-only); D = author judgment (memo-only)."
+          },
+          "file": { "type": "string", "description": "Target source file (copy), e.g. 'manuscript/main.tex'." },
+          "locator": { "type": "string", "description": "Anchor: a unique surrounding quote or section/label." },
+          "old_text": { "type": ["string", "null"], "description": "Exact text to replace; null for additions/recomputes." },
+          "new_text": { "type": ["string", "null"], "description": "Replacement text. For lane B, a placeholder bound to a provenance token until the run produces the value." },
+          "depends_on_run": { "type": ["string", "null"], "description": "run_id whose output supplies any number in this edit; null for pure-writing." },
+          "provenance_token": { "type": ["string", "null"], "description": "Content hash linking a number to the run artifact that produced it. Required for any numeric change (Execution-Provenance Wall)." },
+          "justification_type": { "type": "string", "enum": ["more-correct", "clearer"], "description": "'more likely to be accepted' is NEVER a permitted justification for a substantive change." },
+          "edit_class": {
+            "type": "string",
+            "enum": ["presentation", "additive-verified", "numeric", "result-suppressing", "claim-altering"],
+            "description": "Routes auto-apply vs sign-off. presentation/additive-verified may auto-apply; numeric/result-suppressing/claim-altering require author sign-off."
+          },
+          "author_signoff_required": { "type": "boolean" },
+          "reverify_angles": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Which verification-panel angles must clear this edit before delivery (always includes fix-safety; numeric edits add numeric-provenance + consistency; any record-touching edit adds integrity)."
+          }
+        },
+        "required": ["edit_id", "finding_id", "lane", "file", "locator", "old_text", "new_text", "depends_on_run", "provenance_token", "justification_type", "edit_class", "author_signoff_required", "reverify_angles"]
+      }
+    }
+  },
+  "required": ["edits"]
+}

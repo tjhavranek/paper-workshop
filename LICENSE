@@ -1,0 +1,19 @@
+Copyright (c) 2026 Tomas Havranek and Zuzana Irsova.
+
+SPDX-License-Identifier: CC-BY-4.0
+
+This work — the paper-workshop / CRUCIBLE skill, including its prompts, helpers,
+schemas, and workflow scripts — is licensed under the Creative Commons Attribution
+4.0 International License (CC BY 4.0).
+
+You are free to share and adapt the material for any purpose, including commercially,
+provided you give appropriate credit, link to the license, and indicate if changes
+were made.
+
+Human-readable summary: https://creativecommons.org/licenses/by/4.0/
+Full legal code:       https://creativecommons.org/licenses/by/4.0/legalcode
+
+THE WORK IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. The tool proposes changes
+to scientific manuscripts and re-runs analysis code; the human author is solely
+responsible for verifying and approving every change and for the integrity of the
+resulting work.

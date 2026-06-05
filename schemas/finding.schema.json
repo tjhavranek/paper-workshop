@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "paper-workshop/finding",
+  "title": "Finding",
+  "description": "The atomic unit of Act I. A specialist seat emits one of these per issue. The verification panel later attaches verdicts; the synthesizer composes ONLY from verified findings. No 'confidence' field exists, by design (grounding rule 3).",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "description": "Stable id, e.g. F-014" },
+    "seat_id": { "type": "string", "description": "The seat that raised it, e.g. S-identification-A" },
+    "tradition": { "type": "string", "description": "The school/tradition/objective-function this seat speaks for" },
+    "finding_type": {
+      "type": "string",
+      "enum": [
+        "claim-support", "identification", "statistical", "robustness",
+        "framing-overclaim", "related-work", "citation-accuracy",
+        "reproducibility", "ethics-integrity", "presentation", "clarity",
+        "relevance", "understandability", "absence-silence"
+      ]
+    },
+    "location": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "page": { "type": ["integer", "null"] },
+        "section": { "type": "string" },
+        "paragraph": { "type": ["integer", "null"] },
+        "sentence_range": { "type": ["string", "null"], "description": "e.g. 's12-s14' into the Section/Sentence Map" }
+      },
+      "required": ["section"]
+    },
+    "quote": {
+      "type": "string",
+      "description": "Exact verbatim quote from the manuscript. MUST pass the deterministic quote-gate. May be empty ONLY if finding_type is 'absence-silence'."
+    },
+    "issue": { "type": "string", "description": "The problem, stated precisely and specifically to THIS paper." },
+    "why_it_matters": { "type": "string" },
+    "severity": { "type": "string", "enum": ["High", "Medium", "Low"], "description": "Per rubric.md. Tone-invariant." },
+    "magnitude": { "type": "string", "enum": ["moves-a-number", "moves-a-conclusion", "presentation-only"] },
+    "proposed_fix": { "type": "string", "description": "Concrete, actionable. Empty string if the fix is genuinely an author decision." },
+    "risk_of_fix": { "type": "string", "description": "What could go wrong if the fix is applied naively; '' if none foreseen." },
+    "verification_status": {
+      "type": "string",
+      "enum": ["quote-verified", "logic-checked", "citation-grounded", "needs-author-confirmation", "cant-tell"],
+      "description": "Annotates the finding; NEVER vetoes its severity."
+    },
+    "raised_by_n_blind_seats": { "type": "integer", "minimum": 1, "description": "Corroboration count, set during integration. Diagnostic only, never an auto-down-weighter." }
+  },
+  "required": ["id", "seat_id", "tradition", "finding_type", "location", "quote", "issue", "why_it_matters", "severity", "magnitude", "proposed_fix", "risk_of_fix", "verification_status"]
+}

@@ -1,0 +1,14 @@
+# Workshop run sessions (per-paper outputs) never belong in the skill repo
+paper_workshop_sessions/
+**/paper_workshop_sessions/
+
+# Python
+__pycache__/
+*.pyc
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp
+*~
