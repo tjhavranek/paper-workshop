@@ -31,7 +31,7 @@ rather than failing silently.
 
 ## External dissent leg (optional, off by default)
 - Only if the user asks for it. Confirm a **no-train / retention-disabled** endpoint
-  is configured (per the workspace's Gemini-vehicle policy). If not, **skip** the
+  is configured (provider is the user's choice; the skill ships no provider wiring). If not, **skip** the
   leg and disclose it — never downgrade silently to a training-eligible free tier,
   and never send raw data.
 

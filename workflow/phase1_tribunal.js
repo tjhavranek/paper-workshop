@@ -52,6 +52,7 @@ const GEN = { type: 'object', additionalProperties: false, properties: { seat_id
 const ROSTER = { type: 'object', additionalProperties: false, properties: { paper_type: { type: 'array', items: { type: 'string' } }, precis: { type: 'string' }, central_tensions: { type: 'array', items: { type: 'string' } }, mandatory_floor: { type: 'array', items: { type: 'string' } }, seats: { type: 'array', items: SEAT }, generalist_seats: { type: 'array', items: GEN }, not_staffed: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { dimension: { type: 'string' }, why: { type: 'string' } }, required: ['dimension', 'why'] } } }, required: ['paper_type', 'precis', 'central_tensions', 'mandatory_floor', 'seats', 'generalist_seats', 'not_staffed'] }
 const CARTO = { type: 'object', additionalProperties: false, properties: { paper_txt_path: { type: 'string' }, inventory_path: { type: 'string' }, sentence_map_path: { type: 'string' }, precis_path: { type: 'string' }, source_manifest_path: { type: 'string' }, n_claims: { type: 'integer' }, n_sentences: { type: 'integer' } }, required: ['paper_txt_path', 'inventory_path', 'sentence_map_path', 'precis_path', 'n_claims', 'n_sentences'] }
 const VERIF = { type: 'object', additionalProperties: false, properties: { target_id: { type: 'string' }, angle: { type: 'string' }, verdict: { type: 'string', enum: ['upheld', 'upheld-with-revision', 'rejected', 'cant-tell'] }, reason: { type: 'string' }, suggested_revision: { type: ['string', 'null'] } }, required: ['target_id', 'angle', 'verdict', 'reason', 'suggested_revision'] }
+const VERIF_BATCH = { type: 'object', additionalProperties: false, properties: { verdicts: { type: 'array', items: VERIF } }, required: ['verdicts'] }
 const INTEGRATION = { type: 'object', additionalProperties: false, properties: { lens: { type: 'string' }, clusters: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { theme: { type: 'string' }, finding_ids: { type: 'array', items: { type: 'string' } }, merged_issue: { type: 'string' }, recommended_severity: { type: 'string', enum: ['High', 'Medium', 'Low'] }, priority: { type: 'string', enum: ['must', 'should', 'nice'] } }, required: ['theme', 'finding_ids', 'merged_issue', 'recommended_severity', 'priority'] } }, crux_notes: { type: 'array', items: { type: 'string' } }, missing_issue: { type: 'string' } }, required: ['lens', 'clusters', 'crux_notes', 'missing_issue'] }
 const COVERAGE = { type: 'object', additionalProperties: false, properties: { claims_total: { type: 'integer' }, claims_covered: { type: 'integer' }, sentences_total: { type: 'integer' }, sentences_covered: { type: 'integer' }, dimension_coverage: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { dimension: { type: 'string' }, status: { type: 'string' } }, required: ['dimension', 'status'] } }, reopen: { type: 'array', items: { type: 'string' } }, not_covered: { type: 'array', items: { type: 'string' } } }, required: ['claims_total', 'claims_covered', 'sentences_total', 'sentences_covered', 'dimension_coverage', 'reopen', 'not_covered'] }
 const SYNTHESIS = { type: 'object', additionalProperties: false, properties: { verdict: { type: 'string' }, top_strengths: { type: 'array', items: { type: 'string' } }, prioritized_findings: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { finding_id: { type: 'string' }, priority: { type: 'string', enum: ['must', 'should', 'nice'] }, one_line: { type: 'string' }, panel_summary: { type: 'string' } }, required: ['finding_id', 'priority', 'one_line', 'panel_summary'] } }, kill_shots: { type: 'array', items: { type: 'string' } }, referee_verdicts: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { seat_id: { type: 'string' }, verdict: { type: 'string' } }, required: ['seat_id', 'verdict'] } }, venue_verdict: { type: 'object', additionalProperties: false, properties: { bucket: { type: 'string', enum: ['desk-reject-risk', 'major-revision', 'competitive'] }, objections: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { objection: { type: 'string' }, quote: { type: 'string' } }, required: ['objection', 'quote'] } }, swing_factor: { type: 'string' } }, required: ['bucket', 'objections', 'swing_factor'] }, validity_verdict: { type: 'string' }, minority_report: { type: 'string' }, rejected_suggestions: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { suggestion: { type: 'string' }, why_rejected: { type: 'string' } }, required: ['suggestion', 'why_rejected'] } }, coverage_certificate: COVERAGE }, required: ['verdict', 'top_strengths', 'prioritized_findings', 'kill_shots', 'referee_verdicts', 'venue_verdict', 'validity_verdict', 'minority_report', 'rejected_suggestions', 'coverage_certificate'] }
@@ -142,18 +143,26 @@ const locKey = f => (f.location.section || '') + '|' + f.finding_type
 const counts = {}
 findings.forEach(f => { counts[locKey(f)] = (counts[locKey(f)] || 0) + 1 })
 
-// ---------- PHASE F: Verification panel ----------
+// ---------- PHASE F: Verification panel (BATCHED by angle: cost is ~constant in #findings) ----------
+// Each angle reviews findings in batches, so the panel costs angles x ceil(#findings/BATCH) x
+// REDUNDANCY agents — NOT findings x angles. Independence is preserved (one blind agent per
+// angle/batch, never per-finding-per-angle), but agent count stays feasible.
 phase('Verification')
 const angles = anglesFor(TIER)
-const verified = (await pipeline(
-  findings,
-  f => parallel(
-    angles.flatMap(ang => Array.from({ length: REDUNDANCY }, (_, k) => () =>
-      agent(promptRef('05_verification_panel', { ANGLE: ang, ANGLE_QUESTION: ANGLE_Q[ang], TARGET_JSON: f, PAPER_TXT_PATH: carto.paper_txt_path, STAGED_SOURCES_DIR: seatPaths.STAGED_SOURCES_DIR, QUOTE_GATE_PATH: PATHS.quote_gate || '', RULES_PATH: PATHS.rules || '', RUBRIC_PATH: PATHS.rubric || '' }),
-        { ...GP, label: ('verify:' + ang + ':' + f.id).slice(0, 56), phase: 'Verification', schema: VERIF })
-    ))
-  ).then(vs => decide(f, vs.filter(Boolean)))
-)).filter(Boolean)
+const BATCH = (TIER === 'monumental' ? 25 : TIER === 'exhaustive' ? 20 : 15)
+const batches = []
+for (let i = 0; i < findings.length; i += BATCH) batches.push(findings.slice(i, i + BATCH))
+const panelTasks = []
+angles.forEach(ang => batches.forEach((b, bi) => {
+  for (let k = 0; k < REDUNDANCY; k++) panelTasks.push(() =>
+    agent(promptRef('05_verification_panel', { ANGLE: ang, ANGLE_QUESTION: ANGLE_Q[ang], TARGETS_JSON: b, PAPER_TXT_PATH: carto.paper_txt_path, STAGED_SOURCES_DIR: seatPaths.STAGED_SOURCES_DIR, QUOTE_GATE_PATH: PATHS.quote_gate || '', RULES_PATH: PATHS.rules || '', RUBRIC_PATH: PATHS.rubric || '' }),
+      { ...GP, label: ('vfy:' + ang + ':b' + bi + (REDUNDANCY > 1 ? ':r' + k : '')).slice(0, 56), phase: 'Verification', schema: VERIF_BATCH }))
+}))
+const panelResults = (await parallel(panelTasks)).filter(Boolean)
+const verdictsById = {}
+panelResults.forEach(r => (r.verdicts || []).forEach(v => { (verdictsById[v.target_id] = verdictsById[v.target_id] || []).push(v) }))
+const verified = findings.map(f => decide(f, verdictsById[f.id] || []))
+log('Verification: ' + panelTasks.length + ' batched verifier agents over ' + angles.length + ' angles x ' + batches.length + ' batches' + (REDUNDANCY > 1 ? ' x' + REDUNDANCY : ''))
 
 function majority(verdicts, angle) {
   const v = verdicts.filter(x => x.angle === angle)

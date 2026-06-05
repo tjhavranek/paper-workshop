@@ -10,9 +10,10 @@
 - Refuse embargoed / NDA / "no-AI-tools" material for anything that would transmit it.
 
 ## The optional external dissent leg
-- Off by default. One lower-weight voice asking only "what assumption / citation /
-  alternative explanation did **all** the Claude seats miss?" (consistent with the
-  workspace's "do MAD with Gemini" posture — a tiebreaker, never a co-equal judge).
+- Off by default. One lower-weight, **separate-provider** voice asking only "what
+  assumption / citation / alternative explanation did **all** the Claude seats miss?" —
+  a tiebreaker, never a co-equal judge. The provider is the user's choice and is
+  configured locally; the skill ships no provider wiring.
 - Route only through a **no-train / retention-disabled** endpoint. If none is
   configured, **skip the leg and disclose it** — never fall back to a training-eligible
   free tier, and never imply cross-model coverage that did not happen.

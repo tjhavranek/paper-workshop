@@ -47,5 +47,7 @@ Then produce a ROSTER CONTRACT (schema: roster_contract). Requirements:
 
 Scale the number of specialist seats to the tier ({{TIER}}): quick 6–8, thorough
 12–18, exhaustive 25–40, monumental 60–120+ (at the largest tiers add one close-reader
-per section and one verification micro-seat per load-bearing claim). Be neutral — you
-are casting, not yet critiquing.
+per section for the sentence-coverage sweep). These are the EXPERT seats — the rest of
+the pipeline (verification, integration) is batched and bounded, so the seat count is
+the main driver of run size; cast enough to cover the paper well, but every seat must
+earn its place with a justifying quote. Be neutral — you are casting, not yet critiquing.

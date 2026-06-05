@@ -50,10 +50,15 @@ rubric.md, status annotates, never vetoes severity). Findings the panel rejects 
 not discarded silently — they are written to the synthesis `rejected_suggestions`
 list with the panel's reason.
 
-Run **≥3 verifiers on the hard-gate angles and ≥1 on each soft angle** at `thorough`;
-scale to **the full 7-angle panel, with 2 independent verifiers per angle (majority
-within an angle)** at `exhaustive`/`monumental`. More angles and more redundancy as
-the stakes rise — never fewer.
+**Batched, not per-finding — this is what keeps the run feasible.** Each angle is run by
+one blind agent (two redundant agents at the heavy tiers) that reviews the findings in
+**batches** and returns a verdict *per finding*. So the panel costs
+`angles × ceil(#findings / batch) × redundancy` agents — **never `#findings × angles`**,
+which would explode with paper length. `quick` runs three angles (logical-validity,
+fix-safety, steelman-charity); `thorough` runs six; `exhaustive`/`monumental` run all
+seven with two redundant agents per angle (majority within an angle). The angle's
+independence is preserved (one agent owns one angle, blind to the others); only the
+wasteful one-agent-per-finding-per-angle fan-out is removed.
 
 ## Act II — angles applied to every edit (in addition to the Act-I angles on the originating finding)
 

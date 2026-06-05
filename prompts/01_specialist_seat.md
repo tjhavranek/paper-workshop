@@ -31,6 +31,8 @@ Produce an array of FINDINGS (schema: finding). For each finding:
   `proposed_fix` empty and say why in `issue`.
 - Be specific to THIS paper. Generic methodology lectures are noise.
 
-Report every real issue in your jurisdiction and nothing outside it. If your
-jurisdiction is clean, say so by returning an empty array — a fabricated finding to
-look productive is a serious failure.
+Return your MOST IMPORTANT findings — **at most ~8**, prioritized by severity. Do not
+pad with minor items to look productive (a fabricated or trivial finding is a serious
+failure); genuinely minor notes can be folded into a single low-severity "minor notes"
+finding. If your jurisdiction is clean, return an empty array — that is a valid,
+respected result.

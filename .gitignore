@@ -2,6 +2,11 @@
 paper_workshop_sessions/
 **/paper_workshop_sessions/
 
+# Self-audit working artifacts (heavy session dump + raw concatenated manuscript);
+# the curated self-audit report is committed instead.
+examples/self-audit/run/
+examples/self-audit/skill_manuscript.md
+
 # Python
 __pycache__/
 *.pyc

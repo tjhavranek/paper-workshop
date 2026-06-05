@@ -84,12 +84,22 @@ almost nothing — never traded away for scale.
 
 ## Depth tiers
 
-| Tier | Specialist seats | Use |
-|---|---|---|
-| `quick` | 6–8 (floor only) | a fast sanity pass |
-| `thorough` (default) | 12–18 | a serious pre-submission review |
-| `exhaustive` | 25–40 + per-section close-readers | top-venue preparation |
-| `monumental` | 60–120+, loop-until-dry on findings AND coverage | "better than any conference" |
+Run size is dominated by the **expert seats** — each adds a *distinct* perspective. The
+rest of the pipeline is bounded: the verification panel is **batched by angle** (cost ≈
+`angles × ceil(#findings / batch) × redundancy`, not `#findings × angles`), integration
+is a fixed 3 lenses, and each seat returns at most ~8 findings. So total agents scale
+sensibly with the tier rather than exploding with paper length:
+
+| Tier | Expert seats | ≈ total agents | Use |
+|---|---|---|---|
+| `quick` | 6–8 (floor only) | ~20–30 | a fast sanity pass |
+| `thorough` (default) | 12–18 | **~40–55** | a serious pre-submission review |
+| `exhaustive` | 25–40 + per-section close-readers | ~90–130 | top-venue preparation |
+| `monumental` | 60–120+ (loop-until-dry on findings AND coverage) | ~180–300 | "better than any conference" |
+
+The default `thorough` tier is deliberately in the few-dozen-agents range. `monumental`
+is the explicit opt-in for a genuinely exhaustive run; its size is mostly *distinct
+expert seats and sentence-coverage sweeps*, not a verification multiplier.
 
 ## Reading order for the orchestrating Claude
 
