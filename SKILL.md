@@ -3,7 +3,8 @@ name: paper-workshop
 description: |
   CRUCIBLE — a Claude-only adversarial expert workshop that stress-tests a
   scientific paper and then, opt-in, rebuilds it. ACT I (TRIBUNAL): from the
-  paper PDF alone, a topic-adapted fleet of expert referee subagents — every
+  paper PDF (plus a few public cited works it fetches), a topic-adapted fleet of expert
+  referee subagents — every
   contested claim argued from at least two COMPETING intellectual traditions,
   plus generalist seats for relevance and understandability — reviews the paper
   to the sentence, every comment grounded in an exact quote (no fabrication, no
@@ -47,7 +48,8 @@ author's code) via the **Agent/Bash** tools.
 
 ## The two acts and the gate between them
 
-- **Act I — TRIBUNAL.** Input: **the paper PDF only.** Output: a verified,
+- **Act I — TRIBUNAL.** Input: **the paper PDF** — no data or code, and it touches none of
+  your files (it does fetch a few *public* cited works to check the paper's claims). Output: a verified,
   prioritized finding ledger + a referee-report bundle + a debate transcript + an
   importance memo + a completeness certificate. Read-only;
   nothing of the author's is touched. (`workflow/phase1_tribunal.js`)
@@ -146,8 +148,9 @@ modify the author's source documents — copy them into `input/` first.
 
 ## What this skill does NOT do
 
-- No Python preprocessing of the PDF for Act I (Claude reads PDFs natively); the
-  one piece of code in Act I is the deterministic quote-gate.
+- No Python preprocessing of the PDF for Act I (Claude reads PDFs natively); the only
+  Python in Act I is the deterministic quote-gate (the orchestration itself runs in the
+  Workflow JS).
 - No confidence scores, percentages, or venue acceptance-odds numbers anywhere.
 - No fabricated citations, numbers, quotes, data, or results — ever.
 - No silent edits: Act II emits tracked changes on copies for human acceptance.

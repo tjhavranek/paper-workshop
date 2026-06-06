@@ -1,130 +1,145 @@
 {
   "tier": "quick",
   "register": "brutal",
-  "agent_count": 40,
+  "agent_count": 42,
   "counts": {
-    "raw_findings": 82,
-    "delivered": 76,
-    "rejected": 6
+    "raw_findings": 80,
+    "delivered": 69,
+    "rejected": 11
   },
   "roster": {
     "paper_type": [
       "simulation-methods",
-      "descriptive-measurement"
+      "theory-proof"
     ],
-    "seats": 10,
+    "seats": 11,
     "generalists": 3,
     "central_tensions": [
-      "Decorrelation vs. correlated draws: the entire value of a 'fleet' over a single strong review rests on the claim (C-033) that commit-and-reveal plus opposed objective functions make a same-model fleet 'more than N correlated draws' — but every seat and every verifier is the same Claude model sharing the same priors and blind spots. Does the architecture genuinely decorrelate, or does it relaunder one model's judgment with extra steps?",
-      "Absolute guarantees vs. probabilistic reality: the design asserts hard invariants — 'Invented numbers are structurally impossible' (C-040, C-060), 'impeccable revised paper' (C-005), 'No fabricated citations, numbers, quotes, data, or results — ever' (C-018). Yet the Runner/Scribe wall, the quote-gate, and the panel are all enforced by prompts and one substring script. Are these enforced invariants or aspirational rules the model can still violate (e.g., a Runner producing a hash-stamped number from wrong/misread code)?",
-      "Exhaustiveness claims vs. what is actually checked: 'every argument, every word' (C-003), 'covered == total' (C-022, C-055), and 'better than any conference' (C-016) are presented as checked invariants. But a per-range verdict proves a range was visited, not that its argument was meaningfully reviewed; is the coverage certificate substantive assurance or coverage theater at scale?",
-      "Act II safety vs. error-laundering: re-running the author's code and auto-implementing presentation/additive edits, gated only by Claude verifiers plus author sign-off, is the differentiator (C-027). Does the Execution-Provenance Wall plus author ratification actually protect the scientific record, or can it lend a veneer of provenance to a mis-specified or non-reproducing pipeline?"
+      "Does same-model decorrelation actually produce independent corroboration, or does a 300-600-agent Claude-only fleet merely launder N correlated draws into a confident green light? The design both relies on the fleet as 'the product' (C-020) and concedes 'a fleet's agreement is not independent corroboration' (C-034) — the whole value proposition rides on which of these dominates in practice.",
+      "Do the named mechanisms actually deliver the safety properties claimed, or only their appearance? Specifically: does the deterministic quote-gate (C-008, C-043) plus quote-EXEMPT absence findings (C-041) close the fabrication hole, or relocate it to the unscripted absence/severity channels? And does the Runner/Scribe split (C-029, C-044) truly require 'two independent agents failing at once' (C-044) given both are the same model class?",
+      "Is the contribution honestly sized? The artifact is shipped and self-describes 'no measured effectiveness numbers yet' (C-031) and 'one very thorough opinion, not validated ground truth' (C-032), yet the marketing surface claims reviewing 'to the sentence' (C-001), genuine debate (C-014, C-020), and an integrated rebuild that returns 'a corrected, reproducing manuscript' (C-021). Does the honest-limits framing fully neutralize the headline overclaims, or merely footnote them?",
+      "Does the design break, mislead, or become theater at the scales it advertises (60-120+ seats, ~300-600 agents)? The batched-by-angle verification panel (C-011, C-046) is the load-bearing cost control AND the last line of defense against fleet-laundered errors — at quick tier it runs only three angles (C-046). Is the panel strong enough to audit a fleet far larger than itself, or does scaling the fleet faster than the panel invert the safety claim?"
     ],
     "not_staffed": [
       {
         "dimension": "Identification / causal validity (coverage_rubric #3)",
-        "why": "N/A: the manuscript is a software/methodology design with no causal estimand of its own. The empirical-paper 'identification referee' slot is filled by the type-locked methods-validation/benchmark referee (S08), per the brief's instruction to map 'identification' onto 'does the claimed mechanism deliver its property.'"
+        "why": "N/A: the manuscript is a software/methodology design document, not an empirical study with a causal estimand. The closest analogue — 'does the claimed mechanism deliver the property it claims' — is remapped per the brief and fully staffed by S-MECHANISM and the S-DECORR rival pair, so the dimension is covered in adapted form rather than left silent."
       },
       {
-        "dimension": "Data & measurement (coverage_rubric #4)",
-        "why": "Largely N/A: there is no dataset under analysis. The only measurement-instrument content is the proposed validation/reproduction machinery, which is staffed by S08; raw-data handling claims for Act II are folded into the robustness critic (S04) rather than a dedicated seat at quick tier."
+        "dimension": "Data & measurement; Estimation & statistical validity (coverage_rubric #4, #5)",
+        "why": "N/A: there is no dataset, sample, estimator, or inference procedure in the design itself — the artifact reasons ABOUT other papers' data/stats but reports none of its own. The absence of any measured recall/false-positive evaluation (the would-be data/stats of this paper) is instead routed to S-MISSING as a load-bearing gap, not treated as a present-but-flawed analysis."
       },
       {
-        "dimension": "Estimation & statistical validity (coverage_rubric #5)",
-        "why": "Folded, not separately staffed: the only quantitative content is verifier-count thresholds and the recall/FPR scoring design (C-048, C-049, C-068), which S02 (panel mechanics) and S08 (benchmark design) cover. A standalone statistics seat is not warranted at quick tier for a non-empirical document."
+        "dimension": "Mechanism & interpretation via analysis-of-competing-hypotheses (coverage_rubric #7)",
+        "why": "Partially folded, not separately staffed at quick tier. Rival-explanation testing of the design's core mechanism (decorrelation works vs. produces correlated draws) is staffed directly as the S-DECORR-BREAK / S-DECORR-DEFEND opposed pair; a standalone ACH seat would duplicate that crux. Deferred to thorough+ tiers if added scope warrants."
       },
       {
         "dimension": "Ethics, integrity & disclosure (coverage_rubric #12)",
-        "why": "Folded at quick tier: the AI-involvement disclosure, read-only/no-train-endpoint, consent-gated external dissent, and 'the author is the author' ratification claims (C-006, C-017, C-066) are real and load-bearing, but at quick tier they are absorbed by S04 (failure modes) and S06 (desk-reject) rather than given a dedicated integrity/disclosure seat. Flag for a dedicated seat at thorough+."
+        "why": "Not staffed as its own seat at quick (6-8) tier. The relevant surface — AI-involvement disclosure, no-train external leg, read-only/consent handling, data-release prohibitions — is touched within S-MECHANISM (provenance/integrity controls) and S-ROBUST (failure modes), and the design's claims here are comparatively modest. A dedicated research-integrity/disclosure seat is a candidate add at thorough+ tier."
       },
       {
-        "dimension": "Per-section sentence-coverage sweep (the sentence-coverage invariant)",
-        "why": "Not run at quick tier by design: per-section close-readers and the 'covered_sentences == total_sentences' sweep are exhaustive/monumental-tier features. S01 reads for consistency but does not certify full sentence tiling; the coverage CLAIM itself (C-022, C-055) is still stress-tested as a design claim by S06 and S04."
+        "dimension": "Reproducibility of the artifact's own claims (coverage_rubric #10)",
+        "why": "Not staffed as an independent seat. The skill's reproducibility story (the self-audit, the absent third-party validation run, the under-specified Act-II 'reproduces' predicate) is owned by S-DESKREJECT (self-audit-is-not-validation) and S-MISSING (missing reproduction predicate), so the dimension is covered without a separate reproducibility referee at quick tier."
       }
     ]
   },
   "coverage": {
-    "claims_total": 71,
-    "claims_covered": 51,
-    "sentences_total": 663,
-    "sentences_covered": 51,
+    "claims_total": 55,
+    "claims_covered": 46,
+    "sentences_total": 497,
+    "sentences_covered": 75,
     "dimension_coverage": [
       {
         "dimension": "1. Motivation & contribution",
-        "status": "covered by seat (findings on the contribution/superlative claims: 'deliverable bundle' s439, 'moat' s660, 'better than any conference' s68, description block s10; touches C-001/C-005/C-016/C-019/C-027/C-052/C-067)"
+        "status": "covered by seat (novelty/combination + scope findings at s127, s130-s131, C-014/C-020 'argue'/'adversarial collaboration', C-001 'Claude-only workshop' frame)"
       },
       {
         "dimension": "2. Positioning in the literature",
-        "status": "covered by seat (Relationship-to-mad-research findings: DESIGN §8 s660, README comparison table s636, lineage s237; touches C-029/C-071 — the paper's only 'prior work' is its mad-research lineage)"
+        "status": "covered by seat ('Good AI paper-reviewers already exist' s127/C-018; citation-checker comparison C-019; Lineage s166-s168/C-026-C-027)"
       },
       {
         "dimension": "3. Identification / causal validity",
-        "status": "N/A (rubric gates this dimension '(if any causal claim)'; the claim inventory contains zero claims typed causal or identification — it is a software/methodology design document. N/A flows from the inventory itself; note no roster_contract.json exists in run3 to record a Scout justification)"
+        "status": "covered by seat (structural/absence finding: 'no negative-control / falsification of the trust architecture'; same-model decorrelation as a design bet C-033/C-034) — note: no causal empirical claim in this skill-spec; coverage is of the validity-of-mechanism argument, not a causal design"
       },
       {
         "dimension": "4. Data & measurement",
-        "status": "covered by seat (self-audit-meta finding: 'paper.txt has no data/code/numbers; DESIGN §3 (Act II) presupposes data + code + numbers' — a returned verdict on the data dimension; thin but present)"
+        "status": "covered by seat (absence examined: 'no measured recall / false-positive numbers yet' C-022/C-031, s197-s199) — note: document presents no dataset of its own; what was reviewed is the acknowledged ABSENCE of measurement data, not present empirical data"
       },
       {
         "dimension": "5. Estimation & statistical validity",
-        "status": "covered by seat (verifier-count / panel-statistics findings: s389 '≥3 / 2-per-angle, majority within an angle' C-048/C-049; 'more than N correlated draws' s280 C-033)"
+        "status": "N/A (skill specification contains no estimator/inference of its own; the one statistical artifact, the n=5 lineage comparison s168, IS examined via C-026/C-027 'illustrative, not proof'). Scout's N/A justification NOT verifiable from supplied inputs (no roster_contract provided)"
       },
       {
         "dimension": "6. Robustness & sensitivity",
-        "status": "covered by seat (Validation-track 4-arm ablation findings: DESIGN §6 item 8 s647, 'score recall AND false-positive rate' C-068)"
+        "status": "covered by seat (analogue examined: 'no negative-control / falsification of the trust architecture' finding; decorrelation-is-a-design-bet C-033/C-034) — no empirical headline result exists to stress-test"
       },
       {
         "dimension": "7. Mechanism & interpretation (ACH)",
-        "status": "covered by seat (decorrelation-mechanism findings: 'opposed incentives in separate heads' / rule 5–6 / DESIGN §2.1.D C-002/C-034; 'only thing that makes a same-model fleet more than N correlated draws' s280 C-033)"
+        "status": "covered by seat (rival-explanation analysis: 'a fleet's agreement is NOT independent corroboration' C-034 vs 'scout assembles experts'; same-model decorrelation C-033, s201-s202)"
       },
       {
         "dimension": "8. Magnitude / real-world significance",
-        "status": "covered by seat (depth-tier / agent-count findings: DESIGN §2.2 tiers s541/s544, 'trust a 300-agent run', 'Runtime is not a constraint' s28/s505 C-008)"
+        "status": "covered by seat ('illustrative, not proof' C-027; cost model C-010/C-011 s49; 'coverage means attention, not correctness' C-036/s135) — significance/right-sizing of claims examined"
       },
       {
         "dimension": "9. External validity / generalizability",
-        "status": "NOT COVERED — the claim that carries generalizability (C-070 s654, roster-adaptivity 2nd pilot 'Scout re-rosters rather than reusing the inflation roster') received no finding; only the primary pilot optimal_inflation (s651) was reviewed, so cross-target generality has no returned verdict"
+        "status": "covered by seat (self-audit-is-not-independent-validation C-023/C-024/C-025/C-037 s136/s212; 'treat output as one very thorough opinion' C-032)"
       },
       {
         "dimension": "10. Reproducibility",
-        "status": "covered by seat (clean-room-replication findings: DESIGN §4 item 10 s601 C-065, baseline-reproduction s548 C-061, Execution-Provenance Wall s166/s524 C-023/C-060)"
+        "status": "covered by seat (Execution-Provenance Wall C-044/s276; Act-II reproduction predicate C-021/s131 + s210-s211; replication-package delivery s339-s353)"
       },
       {
         "dimension": "11. Limitations & threats",
-        "status": "covered by seat (superlatives-outrun-deferred-evidence finding: 'evidence is deferred in DESIGN §6 item 8' / whole-document superlatives s647; returns a limitations verdict)"
+        "status": "covered by seat (LIMITATIONS.md 'not yet proven' list extensively cited: C-022, C-031-C-037; 'Honesty about limits' s135/s136)"
       },
       {
         "dimension": "12. Ethics, integrity & disclosure",
-        "status": "covered by seat (integrity-rail / sign-off findings: 'integrity rails load-bearing' s421 C-051, rule 4 acceptance-test s600/s326, fabrication-impossibility s326/s524 C-040/C-060)"
+        "status": "covered by seat (integrity angle s337; AI-involvement disclosure s406/s339-s353; no-fabrication / Execution-Provenance Wall C-044)"
       },
       {
         "dimension": "13. Abstract, figures, tables",
-        "status": "covered by seat (description/abstract-block findings s8/s10 C-001; no figures or tables exist in this design document, so 'figures/tables' sub-part is vacuously N/A and the abstract-analogue (SKILL.md description) was reviewed)"
+        "status": "covered by seat (the only tables present — the Modes tables — examined via 'Best for' column findings + C-010/C-011, s49-s62) — note: no scientific abstract/figures exist in a README/SKILL; partial by document type"
       },
       {
         "dimension": "14. Writing & clarity",
-        "status": "covered by seat (consistency/clarity findings: SKILL.md '## Files' block vs DESIGN §5 'Repo layout' s147/s148/s617/s618/s622, schema-filename convention, examples/ naming)"
+        "status": "covered by seat ('persuasive headers and repeated litany' bundled minor-notes finding; tagline epigraph line 40/s18; Modes-table readability)"
       },
       {
         "dimension": "15. Relevance / so-what",
-        "status": "covered by seat (whole-document relevance/trust findings: 'What makes it trustworthy at scale' s47, 'Why you can trust a 300-agent run', generalist relevance memo)"
+        "status": "covered by seat ('Where it fits (an honest map)' s127-s131; relevance of the combination bet C-020/C-021)"
       },
       {
         "dimension": "16. Understandability / brilliant-outsider",
-        "status": "covered by seat (précis-framing finding: 'DESIGN header note / SKILL.md Safety defaults / précis framing'; understandability/brilliant-outsider angle touched)"
+        "status": "covered by seat (dual-name TRIBUNAL/ATELIER/CRUCIBLE 'one skill, said two ways' s23-s27; 'would a smart outsider follow it' generalist angle; repeated-litany clarity finding)"
       }
     ],
     "reopen": [
-      "DIMENSION NOT COVERED — 9. External validity / generalizability: re-spawn a generalizability seat to return a verdict on claim C-070 (s654, 'Second (roster-adaptivity contrast): Chania/.../2026_Havranek_METRICS.tex ... confirms the Scout re-rosters rather than reusing the inflation roster'); no finding currently tests whether the tool's conclusions travel beyond the primary optimal_inflation pilot.",
-      "CLAIMS NOT COVERED (20 load-bearing claims with no overlapping finding) — re-review each: C-010 (s36 'It never auto-chains into Act II' — the HARD GATE); C-015 (s58 Act II Execution-Provenance-Wall SKILL.md statement); C-028 (s234-s235 the self-citation/reference block); C-032 (s262 'A fabricated detail is the single worst thing this tool can produce'); C-035 (s286 inter-seat overlap is a diagnostic, never auto-down-weights convergence); C-036 (s302 'highest-severity problems are often things the paper never says'); C-037 (s304 silence-findings exempt from the quote-gate, never demoted for being unquotable); C-041 (s330-s331 sign-off gate: never declares 'done'/'submitted', never merges to main); C-042 (s335 degraded-run honesty: missing inputs/unreproduced baseline 'says so plainly'); C-046 (s369 verdicts combined by fixed Workflow rules, 'no model gets to weigh them'); C-050 (s403 auto-apply only if edit_class presentation/additive-verified AND all hard-gate angles pass); C-053 (s464 'a seat with no quote is auto-rejected → kills expertise theater'); C-056 (s503 'Loop-until-dry = two required stop conditions'); C-057 (s513 must-fix capped ~5–7, sorted by magnitude not seniority); C-058 (s513 'no fake acceptance-odds %; validity verdict dominates venue'); C-059 (s522-s523 'no third path' provenance rule); C-062 (s559 'A+B auto-implement; C+D are proposal-only'); C-063 (s563 'one finding = one commit'); C-066 (s608 substantive judgments ratified by the human → author remains accountable); C-070 (s654 roster-adaptivity 2nd pilot — also the Dim-9 gap above).",
-      "SENTENCE-COVERAGE INVARIANT FAILS — covered_sentences(51) ≪ total_sentences(663); 612 ranges have no returned verdict. Restricting to substantive prose, 329 of 368 prose sentences are unreviewed. Re-spawn close-reader sweeps for the uncovered prose runs (no sweep output exists in run3; the 51 'covered' ranges are finding-locators, not sweep verdicts). Uncovered prose runs by section: SKILL.md — s9, s11, s13, s15-s17, s24-s25, s27, s29, s33-s39, s41-s43, s48-s49, s51-s59, s72-s88, s92-s93, s95-s96, s100-s102, s106-s107, s109-s112; README.md — s138-s139, s142-s143, s150, s154, s156-s157, s159-s160, s163, s165, s167-s169, s175-s176, s178-s182, s198-s199, s209-s213, s226-s227, s231-s232, s237-s238; shared_grounding_rules.md — s246-s248, s250, s254-s258, s260-s262, s264-s265, s267-s270, s272-s276, s278-s279, s281-s282, s284-s287, s289-s292, s294-s299, s301-s305, s307-s308, s310, s312-s315, s317-s321, s323-s325, s329-s332, s334-s336; verification_panel.md — s356-s358, s362-s365, s367-s370, s384, s386-s387, s390-s391, s403-s406, s410-s412; DESIGN v1 — s420-s421, s427-s429, s431-s435, s437-s438, s440-s442, s448-s452, s459-s468, s470-s481, s484-s486, s495-s496, s499-s500, s502-s504, s506, s509-s511, s513-s515, s522-s523, s525-s526, s529-s530, s532-s536, s538-s540, s542-s543, s546-s547, s549, s559-s560, s563-s568, s571-s573, s578-s584, s586-s599, s603-s610, s628-s629, s632-s635, s638-s646, s648, s652-s655, s658-s659, s661-s662."
+      "CLOSE-READER SWEEP GAP (largest gap): covered_ranges in the supplied coverage payload is EMPTY — no close-reader sweep returned a verdict for ANY sentence range. Only 75 of 497 ranges were touched, and only as incidental finding-locator citations, not sweep verdicts. Re-spawn close-reader sweeps for the 422 un-swept ranges so covered_sentences == total_sentences becomes truthfully checkable. Uncovered ranges: s1-s3, s6-s14, s16-s22, s28-s35, s37-s48, s63-s107, s111-s126, s128-s129, s132-s134, s137-s165, s169-s196, s200, s203-s209, s213-s247, s250-s263, s269-s275, s277-s301, s303-s328, s330-s336, s338, s354-s488, s493, s497.",
+      "Sweep by section (un-swept range counts to re-tile): SKILL.md 71, README.md 74, LIMITATIONS.md 34, prompts/shared_grounding_rules.md 59, helpers/verification_panel.md 46, helpers/orchestration.md 58, rubric.md 43, coverage_rubric.md 36.",
+      "Re-review claim C-001 (sentence s3, SKILL.md description, scope): 'a Claude-only adversarial expert workshop that stress-tests a [paper]' — the headline scope/contribution frame; no finding returned a verdict on s3.",
+      "Re-review claim C-017 (sentence s118, README 'what it does', scope): 'No acceptance-probability numbers, ever.' — no finding targets the acceptance-odds prohibition at this locus.",
+      "Re-review claim C-035 (sentence s205, LIMITATIONS 'not yet proven', identification): 'The \"consistency\" and \"numeric-provenance\" verifiers are LLM-audited, not deterministic scripts (only the quote-gate is a real script today)' — key honesty concession; no finding swept s205.",
+      "Re-review claim C-038 (sentence s228, shared_grounding_rules intro, definitional): 'Where a later prompt seems to conflict with this file, this file wins.' — rule-precedence/constitution claim; untouched.",
+      "Re-review claim C-049 (sentence s414, rubric.md intro, definitional): 'This file is locked.' — rubric immutability claim; untouched.",
+      "Re-review claim C-050 (sentence s416, rubric.md intro, definitional): 'It contains no numeric scores by design' — rubric's no-numeric-scores claim; not swept at this locus (related no-scores litany examined only via bundled minor notes).",
+      "Re-review claim C-051 (sentence s429, rubric.md High, definitional): 'A single un-rebutted High of the correctness/integrity kind caps the overall headline verdict at the floor' — severity-capping rule; untouched.",
+      "Re-review claim C-052 (sentence s449, rubric.md overall verdict, definitional): 'The validity verdict [dominates the venue verdict]' — verdict-precedence rule; untouched.",
+      "Re-review claim C-053 (sentence s454, rubric.md overall verdict, scope): 'No acceptance probability, ever.' — the rubric-side acceptance-odds prohibition; untouched.",
+      "Verify Scout N/A justifications: coverage_rubric requires that any N/A dimension be justified in the roster_contract. No roster_contract was supplied to this audit, so the N/A marked for dimension 5 (and the by-document-type partials on dimensions 3,4,6,13) cannot be confirmed as Scout-justified. Surface the roster_contract and confirm each N/A/partial was explicitly justified, or re-open the dimension."
     ],
     "not_covered": [
-      "Dimension 9 (External validity / generalizability): NOT COVERED — no finding returns a verdict on whether results generalize; the carrying claim C-070 (roster-adaptivity 2nd pilot, s654) was never touched.",
-      "20 of 71 load-bearing claims have no overlapping finding (by id or locator): C-010, C-015, C-028, C-032, C-035, C-036, C-037, C-041, C-042, C-046, C-050, C-053, C-056, C-057, C-058, C-059, C-062, C-063, C-066, C-070. Notable gaps include the HARD-GATE non-auto-chain guarantee (C-010), the degraded-run honesty rule (C-042), the must-fix cap (C-057), the 'no fake acceptance-odds' rule (C-058), and the human-ratification/accountability rule (C-066).",
-      "Sentence-coverage invariant unmet: 612 of 663 map ranges (329 of 368 substantive prose sentences) have no returned verdict. The 51 'covered' ranges are findings' locators, not outputs of systematic close-reader sweeps — no close-reader sweep artifact exists in run3, so 'exhaustive to the sentence' is NOT a checked invariant for this run.",
-      "Note on N/A: Dimension 3 (Identification/causal validity) is legitimately N/A because the claim inventory contains no causal/identification claim (the rubric gates this dimension on the existence of a causal claim). This N/A derives from the inventory, NOT from a Scout roster contract — no roster_contract.json exists in run3 — so it should be ratified explicitly by the chair before issuing the certificate.",
-      "Coverage-input caveat: the audit was computed from the union of finding locators only; some claim coverage was credited on unambiguous section+anchor matches (20 of the 51) rather than explicit sentence-id overlap (31 of the 51). If the chair requires strict id-overlap, claims_covered drops to 31/71."
+      "Sentence-coverage ledger: 422 of 497 sentence ranges have NO returned close-reader verdict (covered_ranges payload is empty). covered_sentences=75 reflects only finding-locator citations, not sweeps. The 'examined everything' invariant is NOT met for this run.",
+      "Claim C-001 (s3) — Claude-only workshop scope/contribution frame.",
+      "Claim C-017 (s118) — 'No acceptance-probability numbers, ever' (README).",
+      "Claim C-035 (s205) — consistency/numeric-provenance verifiers are LLM-audited, not scripts (honesty concession).",
+      "Claim C-038 (s228) — 'this file wins' rule-precedence.",
+      "Claim C-049 (s414) — 'This file is locked' (rubric immutability).",
+      "Claim C-050 (s416) — rubric 'no numeric scores by design'.",
+      "Claim C-051 (s429) — single un-rebutted High caps the headline verdict.",
+      "Claim C-052 (s449) — validity verdict dominates venue verdict.",
+      "Claim C-053 (s454) — 'No acceptance probability, ever' (rubric).",
+      "Dimension 5 (Estimation & statistical validity) marked N/A and dimensions 3/4/6/13 covered only via absence-or-by-document-type partials: Scout's N/A/partial justifications are UNVERIFIED because no roster_contract was provided to the audit."
     ]
   }
 }

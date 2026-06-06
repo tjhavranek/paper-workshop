@@ -1,58 +1,49 @@
-# Example: CRUCIBLE audits its own design (Act I)
+# Example: paper-workshop audits its own design (Act I)
 
-Before its first release, we ran `paper-workshop` **on its own design** — a real, unedited
-Act I run, in **brutal** register, at the cheapest fleet size (**Roundtable / `quick`**).
-This folder is the result.
+We ran `paper-workshop` on its **own design** — the tool eating its own dog food. This
+folder holds the **validation run** on the cleaned-up shipped version, in **brutal**
+register at the cheapest fleet (**Roundtable / `quick`**).
 
-- **[`REPORT.md`](REPORT.md)** — the chair's verdict, validity & venue read, top strengths,
-  prioritized must-fix list, the verbatim desk-reject "kill shots," the central tensions,
-  a representative sample of findings, and the points the panel *rejected*.
-- **[`findings.json`](findings.json)** — all 76 delivered findings, machine-readable.
+- **[`REPORT.md`](REPORT.md)** — the chair's verdict, validity & venue read, must-fix list,
+  verbatim desk-reject "kill shots," central tensions, a sample of findings, and the
+  points the panel *rejected*.
+- **[`findings.json`](findings.json)** — all 69 delivered findings, machine-readable.
 - **[`run_meta.json`](run_meta.json)** — mode, register, counts, roster, coverage.
 - **[`brief.md`](brief.md)** — the brief the run was given.
 
-> **Note on the reviewed input (read before the findings).** The "manuscript" was a
-> concatenation that **included an internal design doc (`DESIGN v1`) not shipped in this
-> repo**. So a few findings cite locations you won't find here (e.g. "DESIGN v1 §5", or
-> prompt names like `09_chair_synthesis`), and several contradictions they flag —
-> prompt-numbering, a stray "neutral" register, repo-layout — **were fixed in response and no
-> longer exist in the shipped files.** Treat those as *historical*: the tool caught them, we
-> fixed them. The deeper findings (overclaims, the quote-gate fail-open bug) are real and
-> were also fixed.
-
-## What happened
+## What happened (this run)
 
 | | |
 |---|---|
 | Mode / register | Roundtable (`quick`) / brutal |
-| Roster (auto-generated) | 10 expert seats + 3 generalists, paired by rival objective function |
-| Findings | 82 raised → **76 delivered, 6 rejected by the verification panel** |
-| Total agents | **40** (batched verification keeps it bounded) |
-| Verdict | `desk-reject-risk` — *as a research contribution*, because the design's headline claims were asserted but not yet measured |
+| Roster (auto-generated) | 11 expert seats + 3 generalists, incl. a decorrelation **skeptic vs. defender** rival pair |
+| Findings | 80 raised → **69 delivered, 11 rejected by the verification panel** |
+| Total agents | **42** — full pipeline incl. the new citation-grounding, bounded |
+| Verdict | `desk-reject-risk` — *as a research contribution*, because the headline claims still lack measured numbers |
 
-## Why we're shipping our own bad review
+## Two runs, both honest — the tool kept finding things in itself
 
-Two reasons, and they matter more than a glowing example would.
+1. **A pre-release run** on the early design caught real **overclaims** ("better than any
+   conference," "impeccable," "fabrication structurally impossible," "every word a checked
+   invariant") **and a fail-open bug in the tool's own quote-gate** — all fixed before release.
+2. **This validation run**, on the cleaned-up shipped code, ran **end-to-end at 42 bounded
+   agents** and caught that the newly-added citation-grounding **contradicted a "PDF only"
+   claim** in `SKILL.md` (finding F-001), plus a stale "one piece of code" line — both fixed
+   in response.
 
-**1. It found real bugs in itself, and we fixed them.** Run on the pre-release design, the
-tool flagged — with grounded, code-checked findings — that the design overclaimed
-("better than any conference," "impeccable," "fabrication structurally impossible," "every
-word a checked invariant") and that its *own* deterministic quote-gate **failed open** on an
-empty non-absence quote (finding **F-007**, verified against the actual Python). We acted on
-its review: the superlatives are gone from the shipped skill, the quote-gate now fails
-closed (and tolerates BOM files), the agent-count claims were corrected, and the
-"every-word" coverage claim was relabeled as coverage of *attention*, not correctness. The
-commit history reflects this. That is the tool doing its job — on us.
+Across the two runs the tool found, in itself, overclaims, a code bug, and a spec
+contradiction — and we acted on each. That is the tool doing its job, on us.
 
-**2. We will not pretend a self-audit is independent validation.** The single sharpest
-finding (**F-079**) is that a same-model system designing, claiming, auditing, and verifying
-*itself* is a closed loop — a development pass, **not** evidence of trustworthiness. We
-agree. This example demonstrates that the machine runs, stays bounded, grounds its findings,
-and its panel rejects weak ones; it does **not** prove the tool catches flaws a human panel
-would, or that its false-positive rate is low. That requires a measured run on third-party
-papers with a known answer, which is future work, stated plainly rather than papered over.
+## What this does *not* prove (please read [`../../LIMITATIONS.md`](../../LIMITATIONS.md))
+
+The verdict is `desk-reject-risk` not because the machine failed — it ran cleanly and its
+panel rejected 11 weak findings — but because **as a research contribution the headline
+claims still lack measured recall / false-positive numbers**, and **a same-model system
+auditing itself is a closed loop: a development pass, not independent validation.** We will
+not pretend otherwise. The load-bearing next step is a measured run on third-party papers
+with a known answer.
 
 This is **Act I (review) only** — the design document has no data or code, so it cannot
-exercise Act II (the rebuild: redline + clean version + re-run code + replication package).
+exercise Act II (the rebuild).
 
-*(`parse_selfaudit.js` generated `REPORT.md` from the raw run for readability.)*
+*(`../parse_selfaudit.js` generated `REPORT.md` from the raw run for readability.)*
