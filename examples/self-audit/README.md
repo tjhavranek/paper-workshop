@@ -1,8 +1,9 @@
 # Example: paper-workshop audits its own design (Act I)
 
 We ran `paper-workshop` on its **own design** — the tool eating its own dog food. This
-folder holds the **validation run** on the cleaned-up shipped version, in **brutal**
-register at the cheapest fleet (**Roundtable / `quick`**).
+folder holds a **development self-audit** (a closed-loop dogfood, **not** independent
+validation) on the cleaned-up shipped version, in **brutal** register at the cheapest fleet
+(**Roundtable / `quick`**).
 
 - **[`REPORT.md`](REPORT.md)** — the chair's verdict, validity & venue read, must-fix list,
   verbatim desk-reject "kill shots," central tensions, a sample of findings, and the
@@ -26,7 +27,7 @@ register at the cheapest fleet (**Roundtable / `quick`**).
 1. **A pre-release run** on the early design caught real **overclaims** ("better than any
    conference," "impeccable," "fabrication structurally impossible," "every word a checked
    invariant") **and a fail-open bug in the tool's own quote-gate** — all fixed before release.
-2. **This validation run**, on the cleaned-up shipped code, ran **end-to-end at 42 bounded
+2. **This self-audit run**, on the cleaned-up shipped code, ran **end-to-end at 42 bounded
    agents** and caught that the newly-added citation-grounding **contradicted a "PDF only"
    claim** in `SKILL.md` (finding F-001), plus a stale "one piece of code" line — both fixed
    in response.

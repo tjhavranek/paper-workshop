@@ -21,6 +21,11 @@ It is for researchers who want more than a list of complaints. You want the *sha
 objection a top referee would raise, argued from more than one angle, plus the *actual edits*
 that answer it before you submit.
 
+It earns trust at the seams: every criticism is pinned to a real quote, and every revised
+number is produced by a real re-run of your own code. It is equally plain about the rest: its
+effectiveness is not measured yet, and the rebuild is not field-proven end to end. Read the
+[honest limits](LIMITATIONS.md) before you rely on it.
+
 A [Claude Code](https://claude.com/claude-code) skill. Claude-only. Runs on any paid plan.
 
 ---
@@ -70,7 +75,7 @@ design before release, and it caught real overclaims and a bug in its own quote-
 fixed; that run is in [`examples/self-audit/`](examples/self-audit/), framed as a development
 pass, not independent validation.
 
-## Modes: pick your depth (every mode runs on any paid plan)
+## Modes: pick your depth (Desk Review through Workshop run on any paid plan)
 
 | Mode | What convenes | Experts | ≈ agents | Best for |
 |---|---|---|---|---|
@@ -86,11 +91,11 @@ pass, not independent validation.
 and the default Workshop is a few dozen — cheap enough to re-run as you revise a paper. Reserve
 Symposium/Summit for a major pre-submission pass.
 
-**Engine.** The workshop always runs via subagents (available on every plan). If dynamic
-workflows are enabled (on by default on Max; on Pro, switch them on in `/config`), CRUCIBLE
-uses them for faster orchestration; if they're off, Symposium/Summit quietly run at Workshop
-depth and CRUCIBLE tells you rather than downgrading silently. **Desk Review** needs neither,
-so it works anywhere.
+**Engine.** The workshop runs on subagents, which work on every plan. When dynamic workflows
+are available (on by default on Max; on Pro, switch them on in `/config`), CRUCIBLE uses them
+to orchestrate those same subagent phases more efficiently; if they're off, Symposium and
+Summit run at Workshop depth and CRUCIBLE tells you rather than downgrading silently. **Desk
+Review** needs neither, so it works anywhere.
 
 ## Install
 

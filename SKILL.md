@@ -114,10 +114,10 @@ Summit=`monumental`.)
 
 **Engine & plans — the workshop runs for everyone.** Subagents (the Agent tool) work on
 **every plan**, so the orchestrator can always run the phases by spawning subagents
-directly. If **dynamic workflows** are enabled (default on Max; on Pro, turn them on in
-`/config`), the skill uses `workflow/*.js` for efficient deterministic orchestration
-instead — same phases, same prompts, same schemas. **Desk Review** needs neither a fleet
-nor workflows and is the safe choice on the lightest setups. See
+directly. When **dynamic workflows** are enabled (default on Max; on Pro, turn them on in
+`/config`), the skill uses `workflow/*.js` to orchestrate those same subagent phases more
+efficiently (same phases, prompts, schemas); the subagents still do the work. **Desk Review**
+needs neither a fleet nor workflows and is the safe choice on the lightest setups. See
 `helpers/orchestration.md` for how the orchestrator picks the engine.
 
 ## Reading order for the orchestrating Claude

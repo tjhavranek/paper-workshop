@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.3.0 — 2026-06-06
+README / pitch overhaul, plus a Roundtable self-stress-test pass (the skill run on its own
+package: 37 agents, 53 delivered findings).
+
+- **Stronger, process-first pitch.** New opening hook that doubles as the launch line: "Imagine a
+  panel of AI referees built for your exact paper, arguing it out from rival schools and then
+  rebuilding it, re-running your own code so the numbers are real." It promises the *process*,
+  never the outcome (no "perfection", no "world's leading experts").
+- **README tightened and de-AI-styled.** Merged the two overlapping differentiator sections,
+  converted negation-correction antitheses to positive statements, and cut em-dashes from 26 to 5.
+  Moved the "Every paper leaves changed." epigraph to a closing flourish.
+- **Honesty surfaced up front.** Added a lead-section line stating that effectiveness is not
+  measured yet and the rebuild is not field-proven end to end, so the front matches LIMITATIONS
+  instead of back-loading the caveats. (The tool's own Roundtable self-review capped the package
+  at desk-reject-risk for exactly that front/back register gap.)
+- **Fixed contradictions the self-review caught:** "every mode runs on any paid plan" now states
+  that the deep modes (Symposium/Summit) need dynamic workflows to run at full depth; reconciled
+  the README "always runs via subagents" vs SKILL "uses workflows instead" engine description; and
+  relabeled `examples/self-audit/` as a development self-audit, not a "validation run."
+
 ## v0.2.0 — 2026-06-06
 Act II finishing pass — deterministic rails + wiring fixes.
 
