@@ -1,6 +1,10 @@
-# CRUCIBLE — the `paper-workshop` skill
+# paper-workshop  ·  CRUCIBLE
 
 **An adversarial expert workshop for your paper — that then helps you actually fix it.**
+
+> **One skill, said two ways.** `paper-workshop` is the repo you install and the phrase you
+> type to run it; **CRUCIBLE** is its name (you'll see it as the brand in report headers).
+> They are the same thing — there is no separate "CRUCIBLE."
 
 CRUCIBLE convenes a panel of AI referees built specifically for *your* manuscript, makes
 them **argue with each other** from rival schools of thought, grounds every criticism in

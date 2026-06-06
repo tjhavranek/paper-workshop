@@ -4,3 +4,11 @@
 *.js text eol=lf
 *.md text eol=lf
 *.json text eol=lf
+
+# --- GitHub language stats ---
+# A Claude Code skill is mostly Markdown (prompts + docs), with JavaScript orchestration
+# scripts and one Python helper. Count the prompts/docs so the language bar reflects that,
+# and keep generated example artifacts out of the stats.
+*.md linguist-detectable=true
+*.md linguist-documentation=false
+examples/** linguist-generated=true
