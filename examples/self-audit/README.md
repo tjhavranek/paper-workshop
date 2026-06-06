@@ -11,6 +11,15 @@ This folder is the result.
 - **[`run_meta.json`](run_meta.json)** — mode, register, counts, roster, coverage.
 - **[`brief.md`](brief.md)** — the brief the run was given.
 
+> **Note on the reviewed input (read before the findings).** The "manuscript" was a
+> concatenation that **included an internal design doc (`DESIGN v1`) not shipped in this
+> repo**. So a few findings cite locations you won't find here (e.g. "DESIGN v1 §5", or
+> prompt names like `09_chair_synthesis`), and several contradictions they flag —
+> prompt-numbering, a stray "neutral" register, repo-layout — **were fixed in response and no
+> longer exist in the shipped files.** Treat those as *historical*: the tool caught them, we
+> fixed them. The deeper findings (overclaims, the quote-gate fail-open bug) are real and
+> were also fixed.
+
 ## What happened
 
 | | |

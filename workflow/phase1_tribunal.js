@@ -156,10 +156,13 @@ if (findings.length) {
 phase('Cross-critique')
 const LENSES = ['value-maximizer', 'risk-minimizer', 'coherence']
 const integration = (await parallel(LENSES.map(L => () => agent(promptRef('04_cross_critique', { ALL_FINDINGS_JSON: findings, LENS: L, RULES_PATH: PATHS.rules || '' }), { ...GP, label: 'integrate:' + L, phase: 'Cross-critique', schema: INTEGRATION })))).filter(Boolean)
-// corroboration diagnostic
+// corroboration diagnostic: how many DISTINCT seats independently raised a finding in the
+// same (section, finding-type) bucket — a proxy for cross-seat corroboration (not a raw count).
 const locKey = f => (f.location.section || '') + '|' + f.finding_type
+const seatSets = {}
+findings.forEach(f => { const k = locKey(f); (seatSets[k] = seatSets[k] || new Set()).add(f.seat_id) })
 const counts = {}
-findings.forEach(f => { counts[locKey(f)] = (counts[locKey(f)] || 0) + 1 })
+Object.keys(seatSets).forEach(k => { counts[k] = seatSets[k].size })
 
 // ---------- PHASE F: Verification panel (BATCHED by angle: cost is ~constant in #findings) ----------
 // Each angle reviews findings in batches, so the panel costs angles x ceil(#findings/BATCH) x

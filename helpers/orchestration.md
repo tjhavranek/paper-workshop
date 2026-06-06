@@ -43,8 +43,10 @@ coverage_rubric, quote_gate, brief, staged_sources } }` — pass `tier` as the i
 for the chosen mode. (The script parses `args` defensively whether it arrives as an object
 or a JSON string.) It runs the eight phases (A ingest/cartography → B scout/roster → C
 ground sources → D blind specialists → E cross-critique → **F verification panel** (batched
-by angle) → G synthesis → H completeness audit, looping per `helpers/stopping_rule.md`),
-writes every artifact to the session, and returns the `synthesis.schema.json` object.
+by angle) → completeness audit → fresh-chair synthesis). The default run is a single pass
+that **reports** coverage gaps; deepening (re-fanning the `reopen` list) is orchestrator-driven
+per `helpers/stopping_rule.md`, not baked into the script. It writes every artifact to the
+session and returns the `synthesis.schema.json` object.
 
 **4b — Subagent fallback (no Workflow).** Drive the same phases yourself with the Agent
 tool: cartography → Scout (`00`) → fan out the seats (`01`/`02`/`03`) as parallel Agent
@@ -87,7 +89,7 @@ Stop. Offer Act II explicitly:
 Never auto-start Act II.
 
 ## Step 7 — Run ACT II via the Workflow tool (only on opt-in)
-1. **Intake** (`prompts/phase2/11_intake.md`): request source/data/code/.bib/figure
+1. **Intake** (`prompts/phase2/10_intake.md`): request source/data/code/.bib/figure
    sources/venue style/env, each with its reason; copy what's provided into
    `phase2/input/`; compute and show back the **achievable scope**.
 2. **Baseline-reproduction gate** (`helpers/phase2_sandbox.md`): run the author's

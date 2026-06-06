@@ -1,7 +1,7 @@
 # Coverage rubric
 
-The completeness audit (Act I, Phase H) and the chair's `coverage_certificate`
-verdict against **this list**. For every dimension below, the synthesizer must
+The completeness audit (Act I) and the chair's `coverage_certificate` are scored against
+**this list**. For every dimension below, the synthesizer must
 mark it `covered by seat <id>` or **`NOT COVERED`** (with a one-line reason). A
 `NOT COVERED` load-bearing dimension re-opens a targeted mini-fan-out until it is
 green or is explicitly logged "reviewed, nothing found." This is what lets the

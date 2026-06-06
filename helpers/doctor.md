@@ -19,8 +19,9 @@ rather than failing silently.
   on Max; on Pro, enable it in `/config`) for efficient orchestration; otherwise use the
   subagent fallback (orchestration Step 4b). **Desk Review** needs neither. Detect the
   engine and tell the user which one you're using.
-- **Mode sanity.** Warn that **Summit** may run for an extended time and spawn ~180–300
-  subagents; confirm before launching it. The default **Workshop** mode is ~40–55 agents.
+- **Mode sanity.** Warn that **Summit** may run for an extended time and spawn **~300–600**
+  agents (more on long papers); confirm before launching it. The default **Workshop** mode
+  is **~45–65** agents.
 
 ## Act II (only if the user opts in)
 - **Manuscript source** present (.tex + `\input` children, or .docx). This is the

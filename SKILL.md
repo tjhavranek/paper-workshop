@@ -70,9 +70,9 @@ almost nothing — never traded away for scale.
 
 - **Multi-angle independent verification before delivery.** *Nothing* reaches the
   user until several blind subagents, **each from a different angle**, have checked
-  it (quote/locator, logical validity, factual/literature, severity calibration,
-  decision-relevance, fix-safety, charitable steelman; Act II adds numeric
-  provenance, consistency, integrity). See `helpers/verification_panel.md`.
+  it (quote/locator, logical validity, severity calibration, decision-relevance,
+  fix-safety, charitable steelman — with factual/literature added at the deeper tiers; Act
+  II adds numeric provenance, consistency, integrity). See `helpers/verification_panel.md`.
 - **Ground, don't recall; never fabricate.** Exact quote + locator on every
   finding, verified by the deterministic `helpers/quote_gate.py` (not an LLM).
   Unverifiable → `needs-author-confirmation`, never asserted.
@@ -98,8 +98,10 @@ with paper length**.
 | **Symposium** | a large fleet + close-readers | 25–40 | ~90–250 | top-venue preparation |
 | **Summit** | every subsystem + every sentence | 60–120+ | ~300–600 | the most exhaustive pass (opt-in) |
 
-Symposium/Summit counts grow with paper length (the sentence sweeps); a long paper pushes
-Summit toward the top of that range. Default is **Workshop**. **Symposium and Summit are
+Symposium/Summit counts grow with paper length (the sentence sweeps); a very long paper can
+push Summit past 600. The seat count — the main cost driver — is cast by the scout within
+the target bands, so these totals are typical, not hard limits (the script bounds only the
+verification and sweep fan-out). Default is **Workshop**. **Symposium and Summit are
 best run with the Workflow engine** — the subagent fallback is practical up to Workshop;
 beyond that, without workflows the orchestrator should fall back to Workshop. (Internal
 tier keys: Roundtable=`quick`, Workshop=`thorough`, Symposium=`exhaustive`,

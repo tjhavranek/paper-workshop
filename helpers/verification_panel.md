@@ -35,7 +35,7 @@ adversarial findings). The panel *audits* candidate outputs — findings and edi
 
 | Angle | The question it asks | Hard gate? |
 |---|---|---|
-| `quote-locator` | Does the quote exist verbatim at the stated location? (runs `quote_gate.py`) | **Yes** — fail ⇒ status forced to `needs-author-confirmation` (the finding is **not** dropped; absence-silence findings are exempt) |
+| `quote-locator` | Does the quote exist verbatim at the stated location? (runs `quote_gate.py`) | **Enforced by the standalone Quote-gate phase, not the panel aggregator** — fail ⇒ status forced to `needs-author-confirmation`; the finding is **not** dropped; absence-silence findings are exempt |
 | `logical-validity` | Does the criticism actually *follow* from the quoted text? (catches a real quote + an invalid inference) | **Yes** — fail ⇒ reject |
 | `factual-literature` | Is the norm/method/citation the finding appeals to actually correct? (checked against fetched sources, never memory) | No — fail ⇒ revise or reject |
 | `severity-calibration` | Is the severity honest under `rubric.md` — neither inflated nor deflated? | No — fail ⇒ revise severity (never silently; recorded) |
