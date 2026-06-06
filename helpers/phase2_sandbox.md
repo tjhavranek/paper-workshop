@@ -38,7 +38,7 @@ integrity rails.
   <target>` granularity; fall back to whole-script). Write `phase2/runs/<run_id>/` with
   the exact command, stdout/stderr, env snapshot, and input/output hashes.
 - **Tables/figures:** regenerate the script-produced artifact and swap the file;
-  prefer the manuscript `\input{}` generated tables/figures so re-runs stay honest.
+  prefer the manuscript `\input{}` generated tables/figures so re-runs stay accurate.
   Apply presentation findings (labels, units, colorblind-safe palettes) **in the
   plotting code**, then regenerate. Never edit a rendered image or hand-type a table.
 - **In-text numbers:** locate the producing computation, re-run, propagate the fresh

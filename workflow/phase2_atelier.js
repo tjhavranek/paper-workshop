@@ -50,6 +50,7 @@ const ANGLE_Q = {
   'integrity': 'Does the edit suppress/attenuate a result, narrow a sample, drop a control/observation, weaken a caveat, swap the headline spec, or HARK?',
   'logical-validity': 'Does the edit faithfully implement the finding without overreaching?',
   'steelman-charity': 'Is the original passage actually fine as-is, making this edit unnecessary or harmful?',
+  'human-voice': 'Does this edit read as the AUTHOR wrote it, not AI? Judge against the author-voice standard in prompts/phase2/12_scribe_implementer.md and GROUND it: quote an adjacent author sentence as the benchmark and report a style diff (em/en-dash, semicolon and hedge counts, words-per-sentence, plus any banned-lexicon or negation-correction-antithesis hits). Reject on any banned token, the antithesis in any form, or a punctuation spike above the author baseline; no quoted benchmark => cant-tell, never upheld.',
 }
 
 // ---------- Intake ----------
@@ -84,11 +85,12 @@ function anglesForEdit(e) {
   ;(e.reverify_angles || []).forEach(a => set.add(a))
   if (e.edit_class === 'numeric') { set.add('numeric-provenance'); set.add('consistency') }
   if (e.edit_class === 'result-suppressing' || e.edit_class === 'claim-altering') set.add('integrity')
+  if (e.lane === 'A-writing' || e.new_text) set.add('human-voice') // any prose edit must read as the author, not AI
   return [...set]
 }
 function decideEdit(e, run, scribe, verdicts) {
   // hard gates: any 'rejected' on a hard-gate angle blocks the edit
-  const hard = ['fix-safety', 'numeric-provenance', 'consistency', 'integrity']
+  const hard = ['fix-safety', 'numeric-provenance', 'consistency', 'integrity', 'human-voice']
   const failed = verdicts.filter(v => hard.includes(v.angle) && v.verdict === 'rejected')
   if (scribe && /blocked/.test(scribe.status || '')) return { ...wrap(e, run, scribe, verdicts), status: 'blocked', reason: scribe.status }
   if (failed.length) return { ...wrap(e, run, scribe, verdicts), status: 'blocked', reason: failed.map(f => f.angle + ': ' + f.reason).join('; ') }

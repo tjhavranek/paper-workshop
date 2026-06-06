@@ -34,7 +34,7 @@ is **not alone fatal.** Typically:
 - a robustness/sensitivity gap that probably-but-not-certainly holds up;
 - an incomplete or mis-situated literature positioning;
 - an interpretation that overreaches the evidence in a fixable way;
-- a missing caveat that an honest reading requires.
+- a missing caveat that a careful reading requires.
 
 ### Low (nice-to-have)
 Presentation, clarity, or polish that **does not change any claim's truth

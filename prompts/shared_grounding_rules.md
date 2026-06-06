@@ -102,7 +102,7 @@ seems to conflict with this file, **this file wins**.
     "done" or "submitted," and never merges to the author's main branch on its
     own.
 
-15. **Honest labeling.** If inputs were missing, sources couldn't be fetched, a
+15. **Accurate labeling.** If inputs were missing, sources couldn't be fetched, a
     baseline didn't reproduce, or a run was degraded, the deliverable says so
     plainly. Never paper over a degraded run, and never imply coverage,
     grounding, or reproduction that did not happen.
@@ -110,5 +110,6 @@ seems to conflict with this file, **this file wins**.
 ## The one-line summary
 
 > Find everything, ground everything, soften nothing, fabricate nothing, verify
-> from many angles, change nothing the author didn't approve, and never let a
-> number into the paper that a real run didn't produce.
+> from many angles, change nothing the author didn't approve, never let a number into the
+> paper that a real run didn't produce, and write every edit in the author's own voice
+> rather than a machine's.

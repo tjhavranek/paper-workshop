@@ -1,6 +1,6 @@
 # Limitations & roadmap (read this before you trust a run)
 
-CRUCIBLE is built by people who care about research integrity, so here is the honest
+CRUCIBLE is built by people who care about research integrity, so this is the
 account of what it does **not** yet guarantee. Several of these came from running the tool
 on its own design (see [`examples/self-audit/`](examples/self-audit/)) and from an
 independent review panel.

@@ -34,7 +34,7 @@ A [Claude Code](https://claude.com/claude-code) skill. Claude-only. Runs on any 
   be verified is flagged *needs author confirmation*, never asserted. No
   acceptance-probability numbers, ever.
 - **Every comment is re-checked from many angles** by independent blind verifiers (does the
-  quote exist, does the criticism actually follow, is the severity honest, does the
+  quote exist, does the criticism actually follow, is the severity calibrated, does the
   proposed fix break something) before it ever reaches you.
 - **It rebuilds the paper — it doesn't just review it.** Opt-in second act: it turns
   the agreed findings into a tracked-changes **redline** *and* a **clean accepted version**,
@@ -46,7 +46,7 @@ A [Claude Code](https://claude.com/claude-code) skill. Claude-only. Runs on any 
   number, a sample, a claim, or a result waits for your sign-off. It never edits your only
   copy, never submits, never releases data.
 
-## Where it fits (an honest map)
+## Where it fits
 
 Good AI paper-reviewers already exist — multi-agent review, grounded critique, and
 topic-adaptive reviewers are all prior art, and dedicated citation-checkers triangulate
@@ -61,12 +61,12 @@ combination two of them rarely make together:
 If you only want a fast referee-style critique, lighter tools (and its own **Desk
 Review** mode) do that. paper-workshop earns its keep when you want the argument *and* the rebuild.
 
-**Honesty about limits.** See **[`LIMITATIONS.md`](LIMITATIONS.md)** for a straight account
+**Limits.** See **[`LIMITATIONS.md`](LIMITATIONS.md)** for a straight account
 of what is genuinely enforced, what is not proven yet (no measured recall / false-positive
 numbers yet; same-model decorrelation is a design bet; coverage means *attention*, not
 correctness), and the roadmap. We ran paper-workshop on its own design before release — it caught
 real overclaims and a bug in its own quote-gate, both fixed; that run is in
-[`examples/self-audit/`](examples/self-audit/), framed honestly as a development pass, not
+[`examples/self-audit/`](examples/self-audit/), framed as a development pass, not
 independent validation.
 
 ## Modes — pick your depth (every mode runs on any paid plan)
@@ -80,6 +80,10 @@ independent validation.
 | **Summit** | every subsystem, every sentence | 60–120+ | ~300–600 | the most exhaustive pass (opt-in) |
 
 *(Symposium/Summit also scale with paper length and are best run with dynamic workflows enabled; without them they fall back to Workshop depth.)*
+
+**Running it often is fine.** Desk Review and Roundtable are light (single-digit to ~30
+agents) and the default Workshop is a few dozen — cheap enough to re-run as you revise a
+paper. Reserve Symposium/Summit for a major pre-submission pass.
 
 **Engine.** The workshop always runs via subagents (available on every plan). If dynamic
 workflows are enabled — on by default on Max; on Pro, switch them on in `/config` — it

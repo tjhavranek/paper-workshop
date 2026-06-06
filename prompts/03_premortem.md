@@ -12,7 +12,7 @@ READ: the manuscript at {{PAPER_TXT_PATH}}, the précis at {{PRECIS_PATH}}, the 
 at {{RULES_PATH}}.
 
 Produce an array of FINDINGS (schema: finding) for the decisive failure modes, each
-grounded (quote or `absence-silence`), each with honest severity (most will be `High`),
+grounded (quote or `absence-silence`), each with calibrated severity (most will be `High`),
 each with the magnitude it moves. This is a pre-mortem, not a hit job: every claimed
 failure must be real and grounded, or it weakens the warning. Then, as the FIRST item,
 include one finding whose `issue` field is the single sharpest sentence you would put

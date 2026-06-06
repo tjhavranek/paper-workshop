@@ -21,7 +21,7 @@ verification; `target_id` = the target's id). How to judge, by angle:
 - `factual-literature`: is the norm/method/citation the target appeals to correct?
   Check against the staged sources in {{STAGED_SOURCES_DIR}} — NEVER your memory. If you
   cannot check, `cant-tell`.
-- `severity-calibration`: is the severity honest under the rubric at {{RUBRIC_PATH}}?
+- `severity-calibration`: is the severity calibrated under the rubric at {{RUBRIC_PATH}}?
   Inflated/deflated ⇒ `upheld-with-revision` with the corrected severity + grounded
   reason.
 - `decision-relevance`: would fixing it change a number or a conclusion, or only
@@ -37,6 +37,15 @@ verification; `target_id` = the target's id). How to judge, by angle:
 - (Act II) `integrity`: does the edit suppress/attenuate a result, narrow a sample, drop
   a control/observation, weaken a caveat, swap the headline spec, or HARK? Any ⇒
   `rejected` (route to author sign-off).
+- (Act II) `human-voice`: does the edit read as the AUTHOR wrote it, not AI? Judge against
+  the author-voice standard in `prompts/phase2/12_scribe_implementer.md`, and GROUND the
+  verdict — do not eyeball it. In `reason`: (a) quote one sentence of the author's own prose
+  from {{PAPER_TXT_PATH}} adjacent to the edit as the voice benchmark; (b) report a short
+  style diff vs. the edit's text — counts of em/en-dashes, semicolons, hedges, and
+  words-per-sentence, plus any banned-lexicon or negation-correction-antithesis hits quoted
+  verbatim. `rejected` if the edit spikes any mark above the author's baseline, uses the
+  antithesis in any form, or contains a banned token. "Reads fine" with no quoted benchmark
+  is not a valid `upheld`; if you cannot quote a surrounding sample, return `cant-tell`.
 
 Default to the CONSERVATIVE verdict when genuinely unsure (defend the paper, deflate the
 severity, withhold the fix). Judge every target on its own merits; do not let one

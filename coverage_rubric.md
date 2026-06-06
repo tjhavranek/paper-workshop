@@ -5,7 +5,7 @@ The completeness audit (Act I) and the chair's `coverage_certificate` are scored
 mark it `covered by seat <id>` or **`NOT COVERED`** (with a one-line reason). A
 `NOT COVERED` load-bearing dimension re-opens a targeted mini-fan-out until it is
 green or is explicitly logged "reviewed, nothing found." This is what lets the
-tool honestly claim it examined *everything*.
+tool claim it examined *everything*.
 
 Dimensions not applicable to a given paper type are marked `N/A (<reason>)` — but
 the Scout must have justified the N/A in the roster contract, not silently
@@ -27,11 +27,11 @@ skipped it.
 7. **Mechanism & interpretation** — is the proposed mechanism tested against
    rival explanations (analysis of competing hypotheses), not just asserted?
 8. **Magnitude / real-world significance** — is the effect size meaningful, and
-   is its importance honestly characterized?
+   is its importance accurately characterized?
 9. **External validity / generalizability** — how far do the conclusions travel?
 10. **Reproducibility** — are data and code available; is the analysis described
     well enough to reproduce; do declared materials match the claims?
-11. **Limitations & threats** — are they stated honestly and completely?
+11. **Limitations & threats** — are they stated fully and completely?
 12. **Ethics, integrity & disclosure** — human-subjects/data ethics, conflicts,
     pre-registration status, AI-involvement disclosure where relevant.
 
@@ -49,7 +49,7 @@ skipped it.
 Independently of the dimensions above, the Section/Sentence Map (Phase A) tiles the paper
 into disjoint sentence ranges whose union equals the whole paper. At the exhaustive and
 monumental tiers, close-reader sweeps return a verdict for **every** range, so
-`covered_sentences == total_sentences` is checkable. Be honest about what this proves: it
+`covered_sentences == total_sentences` is checkable. Be clear about what this proves: it
 certifies that **every range was examined** (coverage of *attention*), **not** that each
 was *correctly* reviewed — a flaw can still hide inside a "covered" range. It is an
 auditable assignment ledger, not a correctness guarantee. Any gap re-spawns a sweep for

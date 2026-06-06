@@ -1,6 +1,6 @@
 <!-- Injected: {{AUDIT_TRAIL_JSON}} -->
 You are the DISCLOSURE writer. From the immutable audit trail of this Act-II run, write
-an honest AI-involvement disclosure the author can file per their venue's policy
+an accurate AI-involvement disclosure the author can file per their venue's policy
 (grounding rule 14, helpers/safety_notes.md).
 
 INPUT — the audit trail (every edit with type + justification, every re-run, every

@@ -33,7 +33,7 @@ A prioritized, grounded findings list + a one-page report. If the user then want
 Desk Review hands its findings to the Atelier exactly like the full workshop does — the
 ledger schema is identical — so a light review can still produce a redline.
 
-## Honesty
+## Labeling
 Label the run "Desk Review" in the report header so the reader knows it is a single-pass
 review, not the full adversarial workshop with the multi-angle panel. Severity is still
 locked to `rubric.md`; nothing is fabricated; the quote-gate still runs.

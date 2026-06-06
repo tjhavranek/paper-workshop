@@ -19,7 +19,9 @@ Then produce a ROSTER CONTRACT (schema: roster_contract). Requirements:
 
 2. **Bind the always-on floor** (these seat_ids go in `mandatory_floor` and cannot be
    dropped): a close-reader; a methods-&-stats auditor; a related-work expert; a
-   robustness/limitations critic; a presentation critic; a desk-reject pre-mortem
+   robustness/limitations critic; a presentation & academic-writing critic (clarity,
+   figures/tables, the author's voice, and whether any prose reads as machine-generated
+   rather than human-written); a desk-reject pre-mortem
    seat; and a standing "what load-bearing analysis is MISSING" seat. PLUS the
    **paper-type-locked mandatory specialist**: meta-analysis → publication-bias &
    heterogeneity; observational-causal → identification referee; theory → proof-checker;

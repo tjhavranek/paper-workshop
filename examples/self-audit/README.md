@@ -21,7 +21,7 @@ register at the cheapest fleet (**Roundtable / `quick`**).
 | Total agents | **42** — full pipeline incl. the new citation-grounding, bounded |
 | Verdict | `desk-reject-risk` — *as a research contribution*, because the headline claims still lack measured numbers |
 
-## Two runs, both honest — the tool kept finding things in itself
+## Two runs — the tool kept finding things in itself
 
 1. **A pre-release run** on the early design caught real **overclaims** ("better than any
    conference," "impeccable," "fabrication structurally impossible," "every word a checked

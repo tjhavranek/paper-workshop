@@ -20,6 +20,6 @@ Compute and return:
   untiled/unreviewed sentence range: each task names the exact claim id, dimension, or
   sentence range to re-review. If everything is covered, return an empty `reopen` list.
 
-Be precise and literal — this audit is what lets the chair issue an honest coverage
+Be precise and literal — this audit is what lets the chair issue an accurate coverage
 certificate. Do not mark something covered out of optimism; an unreviewed range is
 `NOT COVERED` until a sweep returns a verdict for it.

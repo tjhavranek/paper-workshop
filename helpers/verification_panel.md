@@ -26,7 +26,7 @@ adversarial findings). The panel *audits* candidate outputs — findings and edi
   output, not an eyeballed judgment. The Act-II `numeric-provenance` and `consistency`
   angles are **LLM-audited** (an agent inspects the run artifacts and the manuscript): they
   are far stronger than a single proposer's say-so, but they are not yet a standalone
-  deterministic script, and we label them honestly as such. (Hardening them into scripts —
+  deterministic script, and we label them as such. (Hardening them into scripts —
   a re-hash of every transcribed value, a numeric cross-reference grep — is on the roadmap.)
 - **Aggregate in code, not by an LLM.** Verdicts are combined by the fixed rules
   below in the Workflow script — no model gets to "weigh" them.
@@ -38,7 +38,7 @@ adversarial findings). The panel *audits* candidate outputs — findings and edi
 | `quote-locator` | Does the quote exist verbatim at the stated location? (runs `quote_gate.py`) | **Enforced by the standalone Quote-gate phase, not the panel aggregator** — fail ⇒ status forced to `needs-author-confirmation`; the finding is **not** dropped; absence-silence findings are exempt |
 | `logical-validity` | Does the criticism actually *follow* from the quoted text? (catches a real quote + an invalid inference) | **Yes** — fail ⇒ reject |
 | `factual-literature` | Is the norm/method/citation the finding appeals to actually correct? (checked against fetched sources, never memory) | No — fail ⇒ revise or reject |
-| `severity-calibration` | Is the severity honest under `rubric.md` — neither inflated nor deflated? | No — fail ⇒ revise severity (never silently; recorded) |
+| `severity-calibration` | Is the severity calibrated under `rubric.md` — neither inflated nor deflated? | No — fail ⇒ revise severity (never silently; recorded) |
 | `decision-relevance` | Would fixing this change a number, a conclusion, or only presentation? Is it non-trivial? (the finding-killer) | No — fail ⇒ demote to `nice` or reject as trivial |
 | `steelman-charity` | Can the paper be defended — does it already address this elsewhere, or is the criticism mistaken? | No — strong defense ⇒ reject |
 | `fix-safety` | Would the `proposed_fix` introduce a NEW error or break a correct passage? | **Yes (for the fix)** — fail ⇒ the fix is withheld/flagged even if the finding stands |
@@ -70,6 +70,7 @@ wasteful one-agent-per-finding-per-angle fan-out is removed.
 | `consistency` | After this edit, does the value match **every** other place the same quantity appears (abstract/body/table/appendix)? | **Yes** — fail ⇒ edit blocked |
 | `fix-safety` | Does the edit target the right span and avoid introducing a new error or breaking a correct passage? | **Yes** | 
 | `integrity` | Does the edit suppress/attenuate a result, narrow a sample, drop a control/observation, weaken a caveat, swap the headline spec, or HARK? | **Yes** — any ⇒ route to author sign-off, never auto-apply |
+| `human-voice` | Does the edit read as the author wrote it, not AI? (no negation-correction antithesis, no banned lexicon, no filler/over-signposting; punctuation matched to the author's baseline; verdict must quote an adjacent author sentence + a style diff) | **Yes** — fail ⇒ edit blocked |
 | `logical-validity`, `factual-literature`, `steelman-charity` | (as in Act I, re-asked against the *edited* text) | mixed |
 
 **Delivery rule (Act II).** An edit is auto-applied (as a tracked change on a copy)

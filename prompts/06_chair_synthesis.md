@@ -31,8 +31,8 @@ Produce the synthesis (schema: synthesis). Binding constraints:
   if it lost.
 - **`rejected_suggestions`** records findings the panel rejected, with the panel's
   reason — so the author sees what was considered and dropped.
-- **`coverage_certificate`** comes from the coverage audit; report it honestly,
+- **`coverage_certificate`** comes from the coverage audit; report it accurately,
   including anything `NOT COVERED`.
 
 Compose nothing that is not traceable to a verified finding. If the verified set is
-thin, the report is short and honest — never padded.
+thin, the report is short and to the point — never padded.

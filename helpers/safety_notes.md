@@ -42,7 +42,7 @@ a long form and a paste-able short form. Filing it per the venue's policy is par
 the deliverable. Substantive scientific judgments are **proposed** by the tool and
 **ratified by the human** — the author remains the accountable author.
 
-## Honest labeling
+## Labeling
 If inputs were missing, a source could not be fetched, the baseline did not reproduce,
 or the external leg was skipped, the deliverable says so. A degraded run is labeled,
 never disguised.

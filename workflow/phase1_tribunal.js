@@ -64,7 +64,7 @@ const ANGLE_Q = {
   'quote-locator': 'Does the quote exist verbatim at the stated location? Run the deterministic quote gate via Bash and report its result.',
   'logical-validity': 'Does the criticism actually FOLLOW from the quoted text? A real quote with an invalid inference must be rejected.',
   'factual-literature': 'Is the norm/method/citation the finding appeals to actually correct, checked against staged sources (never memory)?',
-  'severity-calibration': 'Is the severity honest under the locked rubric — neither inflated nor deflated?',
+  'severity-calibration': 'Is the severity calibrated under the locked rubric — neither inflated nor deflated?',
   'decision-relevance': 'Would fixing this change a number or a conclusion, or only presentation? Is it non-trivial?',
   'fix-safety': 'Would the proposed fix introduce a NEW error or break a correct passage?',
   'steelman-charity': 'Try hard to DEFEND the paper. Does it already address this elsewhere, or is the criticism mistaken?',

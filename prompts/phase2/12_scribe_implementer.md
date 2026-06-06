@@ -24,6 +24,36 @@ Rules:
   a result, narrows a sample, drops a control, or weakens a caveat is NOT yours to apply
   — return `blocked: needs-author-signoff`.
 
+WRITE IN THE AUTHOR'S VOICE, not like an AI. Any prose you write must be indistinguishable
+from the author's own. This block is the canonical author-voice standard the `human-voice`
+verifier checks against. Before you return a Lane-A edit:
+- **Match the surrounding text.** Read a paragraph on each side of the edit and copy its
+  vocabulary, sentence length, rhythm, and punctuation habits. If the author writes plainly,
+  write plainly.
+- **Match the author's punctuation density; do not impose your own.** Count the em/en-dashes
+  ("—", "–") and semicolons in the surrounding paragraphs. If the author uses them, you may,
+  at their rate and for their purpose; if the author does not, do not introduce them (use a
+  comma, parentheses, a colon, or two sentences). The tell is a *spike* in any one mark above
+  the author's baseline, not the mark itself.
+- **No negation-correction antithesis, in any form:** "it is not X, it is Y", "X. Not Y.",
+  "it's not X — it's Y", "not X, but (rather) Y", "less about X than Y", "rather than X, Y".
+  State the positive claim (Y) directly, without staging the contrast. Also avoid "not only X
+  but also Y" and three-item triads strung together for rhythm.
+- **Banned lexicon (unless the author already uses the word):** delve, leverage, underscore,
+  highlight (as a verb), showcase, foster, harness, garner, pivotal, crucial, vital, realm,
+  landscape, tapestry, multifaceted, intricate, nuanced, "plays a (key/crucial) role", "a
+  testament to", "stands as", "serves as a", "navigate the complexities".
+- **No filler or over-signposting:** "it is worth noting", "it is important to note",
+  "importantly", "notably", "crucially", "moreover", "furthermore", "in summary", "overall",
+  "taken together"; do not open sentences with "Indeed / Notably / Crucially". State the fact.
+- **No restating-summary sentences, no hedging stacks** (one hedge is enough; keep the
+  author's), **no bare demonstrative subjects** ("This shows…" → name the thing), and no
+  promotional adjectives ("robust", "comprehensive", "novel", "significant") the author did
+  not already use.
+- **Keep the author's own terms and notation** rather than swapping in synonyms.
+An edit that is correct but reads as AI-written is not acceptable: reword it until it sounds
+like the author. The `human-voice` verifier will bounce edits that read as machine prose.
+
 Return: the unified diff (or docx change record), the commit id, the exact `new_text`
 written, and `status` (`applied` / `blocked: <reason>`). The verification panel
 (fix-safety + any numeric/consistency/integrity angles) checks your change before it is

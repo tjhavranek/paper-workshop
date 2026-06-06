@@ -104,7 +104,7 @@ Never auto-start Act II.
    queue of numeric/result-suppressing/claim-altering edits and lane-C/D proposals
    awaiting per-item approval. Walk the author through them.
 
-## Step 8 — Final assembly and honest labeling
+## Step 8 — Final assembly and labeling
 Produce: the revised manuscript (`revised_minimal` + `revised_optimal`, tracked), the
 `changes.pdf`, the verification report, the replication package, and the
 auto-generated **AI-involvement disclosure**. State plainly what was and was not done

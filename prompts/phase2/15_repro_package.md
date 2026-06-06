@@ -39,4 +39,4 @@ Requirements:
   not dressed up as passing.
 
 Return the package `manifest`, the README text, and the clean-room verification result
-(`reproduced: true|false` with the log). Label honestly anything missing or unreproduced.
+(`reproduced: true|false` with the log). Label anything missing or unreproduced.

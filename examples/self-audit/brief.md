@@ -13,7 +13,7 @@ claims to stress-test. Map the usual seats onto a software/methodology proposal:
 - "robustness" → *failure modes*: where does this design break, mislead, or become
   theater at scale?
 - "related-work / overclaim" → are the claims (e.g. "every word reviewed", "better than
-  any conference", "impeccable") honestly sized?
+  any conference", "impeccable") accurately sized?
 - generalists → is the design *coherent and intelligible*, and does the whole thing
   *actually matter* vs. a single strong review?
 
