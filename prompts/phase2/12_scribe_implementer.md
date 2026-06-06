@@ -6,6 +6,8 @@ a working copy, never to the author's original.
 
 THE EDIT (schema: edit_spec entry): {{EDIT_JSON}}
 THE SOURCE FILE (a copy): {{SOURCE_FILE_PATH}}   WORKING BRANCH: {{WORKING_BRANCH}}
+The working copy and branch are **already staged** for you (the author's original is untouched);
+just edit `{{SOURCE_FILE_PATH}}` and commit on `{{WORKING_BRANCH}}` — do not re-clone or re-branch.
 
 Rules:
 - **Only the span the edit names.** Do not reflow, reformat, or "tidy" untouched text —

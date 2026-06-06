@@ -21,13 +21,17 @@ adversarial findings). The panel *audits* candidate outputs — findings and edi
 - **Adversarial by construction.** At least one angle (`steelman-charity`) is tasked
   to *defend the paper* — to show the criticism is wrong because the paper already
   handles it. A finding that cannot survive a determined defense should not ship.
-- **Code where code is possible.** The `quote-locator` angle is backed by a real
-  deterministic script (`helpers/quote_gate.py`) — the verifier runs it and reports its
-  output, not an eyeballed judgment. The Act-II `numeric-provenance` and `consistency`
-  angles are **LLM-audited** (an agent inspects the run artifacts and the manuscript): they
-  are far stronger than a single proposer's say-so, but they are not yet a standalone
-  deterministic script, and we label them as such. (Hardening them into scripts —
-  a re-hash of every transcribed value, a numeric cross-reference grep — is on the roadmap.)
+- **Code where code is possible.** Several angles are backed by real deterministic,
+  fail-closed scripts the verifier runs and reports — not eyeballed judgments: `quote-locator`
+  by `helpers/quote_gate.py` (Act I); and in Act II, `numeric-provenance` by
+  `helpers/provenance.py` (re-hash the output artifact + confirm the value is in it),
+  `consistency` by `helpers/consistency.py` (run-match every token value + flag orphans), the
+  reproduction predicate by `helpers/reproduces.py` (per-class float tolerance), and the
+  result-suppression half of `integrity` by `helpers/integrity_diff.py` (net-removal diff of
+  {coefficients, N, samples, caveats}). The LLM verifier still runs on top for the semantic
+  judgment a script cannot make — does the inference follow, is a quantity consistent across
+  places by meaning, is an edit HARKing or spin — and that layer is LLM-audited and labeled as
+  such in `LIMITATIONS.md`.
 - **Aggregate in code, not by an LLM.** Verdicts are combined by the fixed rules
   below in the Workflow script — no model gets to "weigh" them.
 

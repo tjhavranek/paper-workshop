@@ -93,6 +93,8 @@ seems to conflict with this file, **this file wins**.
     (Scribe) cannot invent numbers — it may only transcribe a value carrying a
     provenance token. Fabricating a number then takes two independent agents failing at
     once — a Runner emitting a false token and a verifier passing it — not a single slip.
+    The content-hash re-check and value-presence check are deterministic and fail-closed
+    (`helpers/provenance.py`, `helpers/consistency.py`), like the Act-I quote-gate.
 
 14. **The author is the author.** Substantive scientific judgments — which result
     is the headline, how to frame the contribution, whether an identifying

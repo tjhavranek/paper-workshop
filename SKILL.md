@@ -81,8 +81,10 @@ almost nothing — never traded away for scale.
 - **No confidence scores. Severity is tone-invariant** (`rubric.md`).
 - **Decorrelate by rival objective function**, commit-and-reveal independence,
   un-deletable verbatim dissent, preserved minority report.
-- **Act II Execution-Provenance Wall:** no number enters the paper unless a real,
-  logged re-run produced it; the author signs off on anything touching the record.
+- **Act II Execution-Provenance Wall:** no number enters the paper unless a real, logged
+  re-run produced it — re-hashed and value-checked by the deterministic `helpers/provenance.py`
+  + `helpers/consistency.py` (fail-closed), with `helpers/reproduces.py` deciding "reproduces"
+  and `helpers/integrity_diff.py` flagging any net result-removal to author sign-off.
 
 ## Modes (pick your depth — runs on any paid plan)
 
@@ -105,7 +107,8 @@ push Summit past 600. The seat count — the main cost driver — is cast by the
 the target bands, so these totals are typical, not hard limits (the script bounds only the
 verification and sweep fan-out). Default is **Workshop**. **Symposium and Summit are
 best run with the Workflow engine** — the subagent fallback is practical up to Workshop;
-beyond that, without workflows the orchestrator should fall back to Workshop. (Internal
+beyond that, without workflows the orchestrator should fall back to Workshop depth **and tell
+the user**, rather than downgrading silently. (Internal
 tier keys: Roundtable=`quick`, Workshop=`thorough`, Symposium=`exhaustive`,
 Summit=`monumental`.)
 
@@ -168,6 +171,7 @@ paper-workshop/
 ├── schemas/                 ← finding, verification, roster_contract, synthesis, edit_spec
 ├── prompts/                 ← shared_grounding_rules + 00..07 (Act I) + phase2/10..16 (Act II)
 ├── helpers/                 ← orchestration, doctor, verification_panel, quote_gate.(py|md),
+│                              provenance.py, consistency.py, reproduces.py, integrity_diff.py,
 │                              stopping_rule, pdf_extraction, phase2_sandbox, safety_notes
 ├── workflow/                ← phase1_tribunal.js, phase2_atelier.js (the Workflow scripts)
 └── examples/                ← self-audit/ (the tool run on itself)

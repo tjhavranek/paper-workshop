@@ -1,11 +1,14 @@
-# paper-workshop
+# CRUCIBLE — the `paper-workshop` skill
+
+> *Every paper leaves changed.*
 
 **An adversarial expert workshop for your paper — that then helps you actually fix it.**
 
-> The skill is **`paper-workshop`** — that's what you install and the phrase you type.
-> *CRUCIBLE* is just its nickname (you'll see it as the brand on the report). Same thing.
+> **One skill, said two ways.** `paper-workshop` is the repo you install and the phrase you
+> type to run it; **CRUCIBLE** is its name — you'll see it in the report headers. There is no
+> separate tool.
 
-paper-workshop convenes a panel of AI referees built specifically for *your* manuscript, makes
+CRUCIBLE convenes a panel of AI referees built specifically for *your* manuscript, makes
 them **argue with each other** from rival schools of thought, grounds every criticism in
 an exact quote (no invented objections, no confidence theater), and then — if you want —
 **implements the agreed fixes**: a tracked-changes redline, a clean revised version, your
@@ -36,12 +39,13 @@ A [Claude Code](https://claude.com/claude-code) skill. Claude-only. Runs on any 
 - **Every comment is re-checked from many angles** by independent blind verifiers (does the
   quote exist, does the criticism actually follow, is the severity calibrated, does the
   proposed fix break something) before it ever reaches you.
-- **It rebuilds the paper — it doesn't just review it.** Opt-in second act: it turns
-  the agreed findings into a tracked-changes **redline** *and* a **clean accepted version**,
-  **re-runs your own code** to regenerate the affected numbers, tables, and figures, and
-  assembles a **replication package** — under one hard rule: *no number enters your paper
-  unless a real, logged re-run produced it.* Every change is mapped to the reviewer concern
-  it answers.
+- **It rebuilds the paper — it doesn't just review it.** Opt-in second act (the **ATELIER**):
+  CRUCIBLE turns the agreed findings into a tracked-changes **redline** *and* a **clean accepted
+  version**, **re-runs your own code** to regenerate the affected numbers, tables, and figures,
+  and assembles a **replication package** — under one hard rule: *no number enters your paper
+  unless a real, logged re-run produced it* (enforced by deterministic provenance and consistency
+  checks). Every change is mapped to the reviewer concern it answers. (The rebuild engine is
+  built and unit-tested but **not yet field-proven end-to-end on a real paper** — see Limits.)
 - **You stay in control.** It works on copies, never your originals. Anything that touches a
   number, a sample, a claim, or a result waits for your sign-off. It never edits your only
   copy, never submits, never releases data.
@@ -50,7 +54,7 @@ A [Claude Code](https://claude.com/claude-code) skill. Claude-only. Runs on any 
 
 Good AI paper-reviewers already exist — multi-agent review, grounded critique, and
 topic-adaptive reviewers are all prior art, and dedicated citation-checkers triangulate
-more reference databases than its web-based check does. paper-workshop's bet is the
+more reference databases than CRUCIBLE's web-based check does. CRUCIBLE's bet is the
 combination two of them rarely make together:
 
 1. **Reviewers that genuinely debate** from opposed objective functions and rival
@@ -58,16 +62,17 @@ combination two of them rarely make together:
 2. **An integrated rebuild** that re-runs your analysis and hands back a corrected,
    reproducing manuscript — so you leave with a redline and a clean draft, not a to-do list.
 
-If you only want a fast referee-style critique, lighter tools (and its own **Desk
-Review** mode) do that. paper-workshop earns its keep when you want the argument *and* the rebuild.
+If you only want a fast referee-style critique, lighter tools (and CRUCIBLE's own **Desk
+Review** mode) do that. CRUCIBLE earns its keep when you want the argument *and* the rebuild.
 
-**Limits.** See **[`LIMITATIONS.md`](LIMITATIONS.md)** for a straight account
+**Honesty about limits.** See **[`LIMITATIONS.md`](LIMITATIONS.md)** for a straight account
 of what is genuinely enforced, what is not proven yet (no measured recall / false-positive
 numbers yet; same-model decorrelation is a design bet; coverage means *attention*, not
-correctness), and the roadmap. We ran paper-workshop on its own design before release — it caught
-real overclaims and a bug in its own quote-gate, both fixed; that run is in
-[`examples/self-audit/`](examples/self-audit/), framed as a development pass, not
-independent validation.
+correctness; **Act II's rebuild is built and unit-tested but not yet field-proven end-to-end
+on a real paper — re-derive any regenerated number yourself**), and the roadmap. We ran
+CRUCIBLE on its own design before release — it caught real overclaims and a bug in its own
+quote-gate, both fixed; that run is in [`examples/self-audit/`](examples/self-audit/), framed
+as a development pass, not independent validation.
 
 ## Modes — pick your depth (every mode runs on any paid plan)
 
@@ -86,13 +91,16 @@ agents) and the default Workshop is a few dozen — cheap enough to re-run as yo
 paper. Reserve Symposium/Summit for a major pre-submission pass.
 
 **Engine.** The workshop always runs via subagents (available on every plan). If dynamic
-workflows are enabled — on by default on Max; on Pro, switch them on in `/config` — it
-uses them for faster orchestration. **Desk Review** needs neither, so it works anywhere.
+workflows are enabled — on by default on Max; on Pro, switch them on in `/config` — CRUCIBLE
+uses them for faster orchestration; if they're off, Symposium/Summit quietly run at Workshop
+depth and CRUCIBLE tells you, rather than downgrading silently. **Desk Review** needs neither,
+so it works anywhere.
 
 ## Install
 
 ```bash
-# 1. Claude Code installed; Python 3.8+ on PATH (for the deterministic quote-gate).
+# 1. Claude Code installed; Python 3.8+ on PATH (for the deterministic quote/number checks).
+#    Windows: if `python` isn't found, the `py -3` launcher or a conda Python works too.
 # 2. Make the skills dir (it may not exist yet) and clone into it:
 mkdir -p ~/.claude/skills
 git clone https://github.com/tjhavranek/paper-workshop ~/.claude/skills/paper-workshop
@@ -112,16 +120,17 @@ Stata), `latexmk` (LaTeX) or the bundled `docx` skill (Word), and `git`.
 workshop my paper: mypaper.pdf                 # default Workshop mode, supportive register
 workshop my paper: mypaper.pdf  roundtable     # a quick adversarial pass
 workshop my paper: mypaper.pdf  summit brutal  # the most exhaustive pass, brutal register
+CRUCIBLE mypaper.pdf  symposium                 # the brand name works as a trigger too
 ```
 
-paper-workshop runs the workshop and presents the report. Then it **stops and asks** whether to
+CRUCIBLE runs the workshop and presents the report. Then it **stops and asks** whether to
 implement the changes; if you say yes, it requests your source, data, and code and produces
 the redline, the clean version, and the replication package. *Register* (`supportive` /
 `brutal`) changes only the tone of the write-up — the severity of a finding never changes.
 
 ## Lineage
 
-paper-workshop is the successor to the authors'
+CRUCIBLE is the successor to the authors'
 [`mad-research`](https://github.com/tjhavranek/mad-research) (a cross-model audit that
 produces a memo) and
 [`research-audit-duel-protocol`](https://github.com/tjhavranek/research-audit-duel-protocol)
@@ -130,7 +139,7 @@ quote-and-locate grounding, a preserved minority report, no confidence scores, r
 treatment of your files — and adds the topic-adapted debating fleet and the rebuild.
 (`mad-research`'s own small blinded comparison, n = 5 meta-analyses, found a Claude-only
 configuration ranked above its cross-model setup by an independent judge — illustrative,
-not proof; paper-workshop is Claude-only by design, and a single optional non-Claude "what did we
+not proof; CRUCIBLE is Claude-only by design, and a single optional non-Claude "what did we
 all miss?" pass is available for those who configure it.)
 
 ## What it deliberately will not do
@@ -144,5 +153,5 @@ automatic merge, submission, or data release. The author remains the author.
 
 CC-BY-4.0 ([`LICENSE`](LICENSE)). If it helps your work, please cite:
 
-> Havranek, T. & Irsova, Z. (2026). *paper-workshop (CRUCIBLE): an adversarial multi-expert
+> Havranek, T. & Irsova, Z. (2026). *CRUCIBLE (`paper-workshop`): an adversarial multi-expert
 > workshop that stress-tests and rebuilds a research paper.* GitHub.

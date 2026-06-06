@@ -83,8 +83,11 @@ Stop. Offer Act II explicitly:
 > changes, re-run the affected analyses against your data, regenerate figures/tables,
 > and assemble a reproducing replication package. This needs your source files and
 > is gated on your sign-off for anything that touches a number, sample, claim, or
-> result. Proceed? (full / only the writing edits / let me pick which findings / not
-> now)"
+> result. **Status, so you opt in with eyes open:** Act II's rails are deterministic and
+> unit-tested but **not yet field-proven end-to-end on a real paper**, and there are **no
+> measured recall/false-positive numbers** yet — treat the output as one very thorough
+> opinion and re-derive any regenerated number yourself. Proceed? (full / only the writing
+> edits / let me pick which findings / not now)"
 
 Never auto-start Act II.
 
@@ -95,11 +98,16 @@ Never auto-start Act II.
 2. **Baseline-reproduction gate** (`helpers/phase2_sandbox.md`): run the author's
    master script unchanged; diff current headline numbers. Mismatch ⇒ stop and report
    (a broken baseline is the first finding).
-3. Launch `workflow/phase2_atelier.js` with `args` = `{ session_path, ledger,
-   inputs, signoff_policy }`. It triages each finding into lanes A/B/C/D, drafts
-   edits (`edit_spec.schema.json`), runs the Runner/Scribe split under the
-   Execution-Provenance Wall, rebuilds, regenerates artifacts, runs the **Act-II
-   verification panel**, and assembles the replication package.
+3. Launch `workflow/phase2_atelier.js` with `args` = `{ ledger, inputs, paths: { session,
+   prompts_dir, helpers_dir, rules, rubric, quote_gate, sandbox_notes } }` — `helpers_dir`
+   lets the Runner / reconciler / package agents call the deterministic checkers
+   (`provenance.py`, `consistency.py`, `reproduces.py`, `integrity_diff.py`). It triages each
+   finding into lanes A/B/C/D, drafts edits (`edit_spec.schema.json`), **stages a git working
+   copy on branch `paper-workshop/phase2`** (the author's original is never touched), runs the
+   Runner/Scribe split under the Execution-Provenance Wall, rebuilds, regenerates artifacts,
+   runs the **Act-II verification panel**, reconciles every number deterministically, and
+   assembles the replication package (its return surfaces the redline / clean-version /
+   changes-map / MAP paths).
 4. **Author sign-off:** the script returns the auto-applied tracked changes plus the
    queue of numeric/result-suppressing/claim-altering edits and lane-C/D proposals
    awaiting per-item approval. Walk the author through them.

@@ -19,9 +19,10 @@ rather than failing silently.
   on Max; on Pro, enable it in `/config`) for efficient orchestration; otherwise use the
   subagent fallback (orchestration Step 4b). **Desk Review** needs neither. Detect the
   engine and tell the user which one you're using.
-- **Mode sanity.** Warn that **Summit** may run for an extended time and spawn **~300–600**
-  agents (more on long papers); confirm before launching it. The default **Workshop** mode
-  is **~45–65** agents.
+- **Mode sanity & cost preview.** Before launching, tell the user the chosen mode's ≈agent
+  count so a weekly-limit-aware user can decide: Desk Review ~1–6, Roundtable ~20–30, Workshop
+  ~45–65, Symposium ~90–250, Summit ~300–600 (the last two also grow with paper length). Warn
+  that **Summit** may run for an extended time, and **confirm before launching Summit**.
 
 ## Act II (only if the user opts in)
 - **Manuscript source** present (.tex + `\input` children, or .docx). This is the
@@ -35,7 +36,11 @@ rather than failing silently.
 - **Sandbox.** A way to run the author's code network-off, writing only inside the
   session. If unavailable, do **not** run untrusted code; offer to draft the edits
   for the author to run.
-- **git** for the per-finding-commit working copy of the manuscript.
+- **git** for the per-finding-commit working copy of the manuscript (the workflow stages a
+  copy on branch `paper-workshop/phase2`; the author's original is never touched).
+- **Act-II deterministic checkers** (`helpers/provenance.py`, `consistency.py`, `reproduces.py`,
+  `integrity_diff.py`) are stdlib-only and use the same Python as the quote-gate — no extra
+  install. `python helpers/<name>.py selftest` confirms each is runnable.
 
 ## External dissent leg (optional, off by default)
 - Only if the user asks for it. Confirm a **no-train / retention-disabled** endpoint

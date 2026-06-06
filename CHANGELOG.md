@@ -1,5 +1,32 @@
 # Changelog
 
+## v0.2.0 — 2026-06-06
+Act II finishing pass — deterministic rails + wiring fixes.
+
+- **Deterministic Act-II checkers added** (stdlib-only, fail-closed, like the quote-gate;
+  each ships a `selftest`): `helpers/provenance.py` (re-hash output artifacts + confirm the
+  transcribed value is in them — the Execution-Provenance Wall), `helpers/consistency.py`
+  (run-match every token value + flag orphans), `helpers/reproduces.py` (the reproduction
+  predicate: per-artifact-class float tolerance + fixed seeds), and `helpers/integrity_diff.py`
+  (deterministic net-removal diff of {coefficients, N, samples, caveats}).
+- **Wiring fixes in `workflow/phase2_atelier.js`:** the Scribe now edits a real staged git
+  working copy on branch `paper-workshop/phase2` (never the author's original); the reconciler
+  and packager receive resolvable paths; the package return surfaces the redline / clean
+  version / changes-map / MAP paths; `decideEdit()` is fail-closed (a missing or `cant-tell`
+  hard-gate verdict no longer auto-applies — it routes to author sign-off); the provenance
+  token requires all seven fields; the baseline gate runs whenever code+data exist and a run
+  with no baseline anchor reports `reproduced: "n/a"`; blocking intake gaps always halt.
+- **Docs reconciled to the artifacts:** `helpers/safety_notes.md` no longer claims an
+  unimplemented "specification ledger / analysis-lock / HARKing detector" apparatus — it names
+  the scripts that exist and labels the HARKing judgment as LLM-audited; `LIMITATIONS.md`,
+  `helpers/verification_panel.md`, and `helpers/phase2_sandbox.md` updated to match.
+- **README / brand + UX honesty pass:** restored CRUCIBLE as a consistent brand (brand-led
+  title, the "Every paper leaves changed." tagline, the name as the subject of the value
+  claims, named acts TRIBUNAL/ATELIER) instead of an orphaned nickname; surfaced Act II's
+  "built + unit-tested, not yet field-proven end-to-end" status in the README limits section
+  and at the Act-I→II gate; added a Windows `py` install note, an explicit engine-fallback
+  announcement, and a per-mode agent-count cost preview.
+
 ## v0.1.0 — 2026-06-05
 Initial release.
 

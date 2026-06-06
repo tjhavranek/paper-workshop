@@ -19,21 +19,32 @@
   free tier, and never imply cross-model coverage that did not happen.
 
 ## The scientific-integrity failure modes Act II must not commit
-These are the reasons the Act-II rails exist; keep them in view:
-- **Fabricated numbers** → the Execution-Provenance Wall makes them impossible.
-- **AI p-hacking / spec-search / HARKing** → the analysis-lock freezes the headline
-  spec; new specs are added only as *labeled robustness checks reported alongside the
-  original*; every spec run (including discarded) is logged to an immutable
-  specification ledger; a HARKing detector flags hypothesis drift toward the data.
-- **Result suppression** → removing/attenuating a result, narrowing a sample, dropping
-  a control/observation, or weakening a caveat is a privileged, logged edit behind
-  per-item author sign-off; a deterministic before/after diff of
-  {coefficients, N, samples, caveats} routes any net removal to that gate.
-- **Breaking a correct passage / introducing an error** → the fix-safety verifier and
-  the no-collateral-damage diff (every changed span must trace to an approved finding).
-- **Overfitting to reviewers** → "more likely to be accepted" is never a permitted
-  justification for a substantive edit; validity dominates venue; reviewer suggestions
-  are themselves prosecuted before they can drive an edit.
+These are the reasons the Act-II rails exist. Where a rail is a deterministic, fail-closed
+script it is named; the rest are LLM-judged on top, with author sign-off for anything that
+touches the record.
+- **Fabricated numbers** → the Execution-Provenance Wall. The Runner emits a provenance
+  token for every value and the Scribe may only transcribe one; `helpers/provenance.py`
+  re-hashes the named output artifact and confirms the value is present in it, and
+  `helpers/consistency.py` confirms every transcribed value appears in the revised text and
+  flags any changed number that has no token (an orphan). Both are deterministic, fail closed.
+- **Result suppression** → removing/attenuating a result, narrowing a sample, dropping a
+  control/observation, or weakening a caveat is a privileged edit behind per-item author
+  sign-off. `helpers/integrity_diff.py` deterministically diffs {coefficients, N, samples,
+  caveats} between the baseline and the revised manuscript and routes any net removal to that
+  gate; the LLM `integrity` verification angle adds the semantic judgment a diff cannot make.
+- **AI p-hacking / spec-search / HARKing** → "more likely to be accepted" is never a permitted
+  justification for a substantive edit (triage and the Scribe allow `more-correct`/`clearer`
+  only); a new specification is proposed only as a *labeled robustness check reported
+  alongside the original* (lane C, proposal-only), never a silent swap; and the LLM
+  `integrity` angle flags hypothesis-drift-toward-the-data. This one is **LLM-judged, not a
+  deterministic ledger** — see `LIMITATIONS.md`.
+- **Unreproducible numbers** → `helpers/reproduces.py` defines "reproduces" as code (per
+  artifact class: float tolerance, fixed seeds), so the baseline gate and the package
+  clean-room check are decided by a deterministic predicate, not an LLM's say-so.
+- **Breaking a correct passage / introducing an error** → the fix-safety verifier, plus the
+  rule that every changed span must trace to an approved finding (no collateral damage).
+- **Overfitting to reviewers** → validity dominates venue; reviewer suggestions are themselves
+  prosecuted (the Act-I panel) before they can drive an edit.
 
 ## Disclosure
 The run auto-generates an **AI-involvement disclosure** from the audit trail
