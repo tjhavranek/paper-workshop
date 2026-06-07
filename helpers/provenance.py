@@ -54,9 +54,12 @@ _NUM_RE = re.compile(r"[-+]?\d[\d,]*(?:\.\d+)?(?:[eE][-+]?\d+)?%?")
 
 
 def _num_literals(text):
-    """Set of normalized numeric literals in text ('1,200' -> '1200'); bare signs dropped."""
+    """Set of normalized numeric literals in text ('1,200' -> '1200'); bare signs dropped.
+    The Unicode MINUS SIGN (U+2212), ubiquitous in PDF/LaTeX-rendered numbers, is mapped to
+    ASCII '-' first so a negative value stays negative and matches a token's '-0.10'."""
+    text = (text or "").replace("−", "-")
     out = set()
-    for raw in _NUM_RE.findall(text or ""):
+    for raw in _NUM_RE.findall(text):
         n = raw.replace(",", "").replace(" ", "").strip()
         if n not in ("", "+", "-"):
             out.add(n)
@@ -206,6 +209,13 @@ def cmd_selftest(args):
         expect("standalone literal verifies (0.083)", verify_token(sub2, d)["verified"] is True)
         sub3 = dict(sub); sub3["value"] = "12"
         expect("substring number does NOT verify (12 vs 120)", verify_token(sub3, d)["verified"] is False)
+        # Unicode minus (U+2212) in the artifact matches an ASCII-minus token value
+        art3 = os.path.join(d, "t3.txt")
+        with open(art3, "w", encoding="utf-8") as fh:
+            fh.write("beta_x = −0.10\n")
+        h3 = sha256_file(art3)
+        um = dict(base); um.update(output_file="t3.txt", output_hash=h3, value="-0.10")
+        expect("unicode-minus artifact matches ascii-minus token", verify_token(um, d)["verified"] is True)
     print("selftest: " + ("OK" if ok else "FAILED"))
     return 0 if ok else 1
 

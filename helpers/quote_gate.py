@@ -22,7 +22,7 @@ USAGE
   Batch (verify every finding's quote against the source):
     python quote_gate.py batch --source-file SRC.txt --findings findings.json
   -> prints a JSON array: [{"id","matched","match_level","severity_hint"}...]
-     match_level in: normalized | dehyphenated | exempt-absence | none
+     match_level in: normalized | dehyphenated | exempt-absence | empty-quote | none
      exit code 0 if all non-exempt findings matched, 2 otherwise.
 
 The same normalization is used everywhere so results are reproducible.
@@ -49,7 +49,12 @@ _SPACES = {
     " ": " ", " ": " ", " ": " ", " ": " ",
     " ": " ", "\t": " ", "\r": " ", "\n": " ", "\f": " ",
 }
+# Zero-width / invisible characters that survive NFKC and are neither whitespace nor in the
+# maps above. PDF/Word extraction sprinkles these (soft hyphen, ZWSP, BOM, word-joiner,
+# ZWNJ/ZWJ); left in, they make a real quote fail to match. Deleted on both sides (-> None).
+_ZEROWIDTH = {0x00AD: None, 0x200B: None, 0xFEFF: None, 0x2060: None, 0x200C: None, 0x200D: None}
 _TRANS = {ord(k): v for k, v in {**_QUOTES, **_DASHES, **_SPACES}.items()}
+_TRANS.update(_ZEROWIDTH)
 
 
 def normalize(text, casefold=True):

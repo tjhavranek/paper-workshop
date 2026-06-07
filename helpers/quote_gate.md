@@ -32,6 +32,8 @@ python helpers/quote_gate.py batch --source-file input/paper.txt --findings roun
 - `dehyphenated` — matched only after also joining `-`-at-line-break (PDF
   hyphenation). Still a pass; note it.
 - `exempt-absence` — the finding is `absence-silence` with an empty quote; not gated.
+- `empty-quote` — the quote normalized to nothing on a finding that is **not** `absence-silence`.
+  Treated exactly like `none`: a fail, status forced to `needs-author-confirmation`.
 - `none` — **no match. Fail closed.** The finding's `verification_status` is forced to
   `needs-author-confirmation`. The finding is **not** deleted, and its severity is
   **not** changed (rubric.md: status annotates, never vetoes).

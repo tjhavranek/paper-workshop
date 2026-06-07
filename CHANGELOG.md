@@ -2,7 +2,7 @@
 
 ## v0.3.0 — 2026-06-06
 README / pitch overhaul, plus a Roundtable self-stress-test pass (the skill run on its own
-package: 37 agents, 53 delivered findings).
+package: 42 agents, 69 delivered findings, 11 panel-rejected).
 
 - **Stronger, process-first pitch.** New opening hook that doubles as the launch line: "Imagine a
   panel of AI referees built for your exact paper, arguing it out from rival schools and then

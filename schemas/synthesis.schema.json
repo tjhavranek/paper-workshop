@@ -76,9 +76,19 @@
         "claims_covered": { "type": "integer" },
         "sentences_total": { "type": "integer" },
         "sentences_covered": { "type": "integer" },
+        "dimension_coverage": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": { "dimension": { "type": "string" }, "status": { "type": "string" } },
+            "required": ["dimension", "status"]
+          }
+        },
+        "reopen": { "type": "array", "items": { "type": "string" } },
         "not_covered": { "type": "array", "items": { "type": "string" } }
       },
-      "required": ["claims_total", "claims_covered", "sentences_total", "sentences_covered", "not_covered"]
+      "required": ["claims_total", "claims_covered", "sentences_total", "sentences_covered", "dimension_coverage", "reopen", "not_covered"]
     }
   },
   "required": ["verdict", "top_strengths", "prioritized_findings", "kill_shots", "referee_verdicts", "venue_verdict", "validity_verdict", "minority_report", "rejected_suggestions", "coverage_certificate"]
