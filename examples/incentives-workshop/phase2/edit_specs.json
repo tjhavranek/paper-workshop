@@ -1,0 +1,42 @@
+{
+  "note": "Act II edit specs for the prose-only edits applied in this degraded run (no source .tex, no code re-run). original_quote fields are exact quote-gate-verified substrings of the manuscript; revised_text adds prose only and changes no number.",
+  "edits": [
+    {
+      "edit_id": "E1",
+      "answers_findings": ["F-057", "F-066", "F-044", "F-058"],
+      "lane": "A-writing",
+      "location": {"section": "Abstract"},
+      "edit_type": "insert-after-sentence",
+      "touches_number": false,
+      "original_quote": "Our results suggest that increasing financial rewards rarely produces large performance gains in the experimental settings most studied by economists.",
+      "inserted_text": "Because this literature tends, by design, to avoid contexts where incentives are expected to have large effects (Section 3), we read this as a statement about the contexts economists have chosen to study rather than about incentive effectiveness in general.",
+      "verification": {"fix-safety": "upheld (prose-only)", "human-voice": "matched to author register; no em-dash, declarative"},
+      "status": "applied-tracked-change"
+    },
+    {
+      "edit_id": "E2",
+      "answers_findings": ["F-086", "F-030", "F-101", "F-102"],
+      "lane": "A-writing",
+      "location": {"section": "4 Heterogeneity"},
+      "edit_type": "insert-after-sentence",
+      "touches_number": false,
+      "original_quote": "The Bayesian approach, however, treats all observations as independent, and to account for within-study dependence we also employ frequentist model averaging with Mallow's weights (Hansen, 2007) and orthogonalization of model space according to Amini & Parmeter (2012).",
+      "inserted_text": "Because most studies contribute many correlated estimates, we treat the dependence-aware frequentist averaging as the primary basis for our heterogeneity conclusions and report the Bayesian inclusion probabilities alongside it for comparison.",
+      "verification": {"fix-safety": "upheld for prose; numeric promotion of Table 5 DEFERRED to author re-run", "human-voice": "matched"},
+      "status": "applied-tracked-change"
+    },
+    {
+      "edit_id": "E3",
+      "answers_findings": ["F-053", "F-121"],
+      "lane": "A-writing",
+      "location": {"section": "3 Publication Bias"},
+      "edit_type": "insert-after-sentence",
+      "touches_number": false,
+      "original_quote": "Such an instrument is correlated with the standard error by the definition of the latter and can be expected to be less related to method choices.",
+      "inserted_text": "We treat the instrument's independence from method choices as an identifying assumption rather than a tested property; absent a formal falsification of this exclusion restriction in our sample, we read MAIVE as one member of the correction battery rather than a decisive arbiter of the corrected effect.",
+      "verification": {"fix-safety": "upheld (prose-only)", "human-voice": "matched"},
+      "status": "applied-tracked-change"
+    }
+  ],
+  "deferred_or_author_decision": "See changes_map.md for the full triage of the remaining must-fix findings (numeric re-run / author scientific decision / author-supplied statistics)."
+}
