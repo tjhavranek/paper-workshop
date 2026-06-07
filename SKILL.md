@@ -46,6 +46,10 @@ tool is Claude-only; it uses Claude 4.8's **Workflow** engine when available and
 plain subagents otherwise, with live work (fetching cited sources, running the
 author's code) via the **Agent/Bash** tools.
 
+**Honest limits.** See [`LIMITATIONS.md`](LIMITATIONS.md): effectiveness is not measured yet
+(no recall or false-positive numbers), same-model decorrelation is a design bet, and Act II's
+rebuild is built and unit-tested but not yet field-proven end to end.
+
 ## The two acts and the gate between them
 
 - **Act I — TRIBUNAL.** Input: **the paper PDF** — no data or code, and it touches none of

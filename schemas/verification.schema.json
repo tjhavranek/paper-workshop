@@ -12,9 +12,10 @@
       "enum": [
         "quote-locator", "logical-validity", "factual-literature",
         "severity-calibration", "decision-relevance", "fix-safety",
-        "steelman-charity", "numeric-provenance", "consistency", "integrity"
+        "steelman-charity", "numeric-provenance", "consistency", "integrity",
+        "human-voice"
       ],
-      "description": "Act-I angles: quote-locator, logical-validity, factual-literature, severity-calibration, decision-relevance, fix-safety, steelman-charity. Act-II adds: numeric-provenance, consistency, integrity."
+      "description": "Act-I angles: quote-locator, logical-validity, factual-literature, severity-calibration, decision-relevance, fix-safety, steelman-charity. Act-II adds: numeric-provenance, consistency, integrity, and human-voice (does a prose edit read as the author, not AI; a hard gate on writing-lane edits)."
     },
     "verdict": {
       "type": "string",

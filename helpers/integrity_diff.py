@@ -62,7 +62,13 @@ def diff(before, after, attenuation_rel=0.05):
                           "before": bv, "after": None})
             continue
         try:
-            bvf, avf = abs(float(bv)), abs(float(ac[label]))
+            bvf_raw, avf_raw = float(bv), float(ac[label])
+            # A sign reversal (e.g. 0.34 -> -0.34) is a direction change, not an attenuation; the
+            # abs() magnitude test below cannot see it, so flag it explicitly for sign-off.
+            if bvf_raw != 0 and avf_raw != 0 and (bvf_raw > 0) != (avf_raw > 0):
+                flags.append({"kind": "result-sign-flipped", "field": "coefficients", "label": label,
+                              "before": bv, "after": ac[label]})
+            bvf, avf = abs(bvf_raw), abs(avf_raw)
             if bvf > 0 and avf < bvf * (1.0 - attenuation_rel):
                 flags.append({"kind": "result-attenuated", "field": "coefficients", "label": label,
                               "before": bv, "after": ac[label],
@@ -119,6 +125,8 @@ def cmd_selftest(args):
            any(f["kind"] == "result-dropped" for f in diff(same, {**same, "coefficients": {}})["flags"]))
     expect("coefficient attenuated -> flagged",
            any(f["kind"] == "result-attenuated" for f in diff(same, {**same, "coefficients": {"b": 0.10}})["flags"]))
+    expect("coefficient sign-flip -> flagged",
+           any(f["kind"] == "result-sign-flipped" for f in diff(same, {**same, "coefficients": {"b": -0.34}})["flags"]))
     expect("caveat removed -> flagged",
            any(f["kind"] == "caveat-removed" for f in diff(same, {**same, "caveats": []})["flags"]))
     expect("sample dropped -> flagged",

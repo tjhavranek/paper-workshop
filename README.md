@@ -118,6 +118,7 @@ Stata), `latexmk` (LaTeX) or the bundled `docx` skill (Word), and `git`.
 ## Use
 
 ```
+workshop my paper: mypaper.pdf  desk review     # the lightest pass, one expert (good first run)
 workshop my paper: mypaper.pdf                 # default Workshop mode, supportive register
 workshop my paper: mypaper.pdf  roundtable     # a quick adversarial pass
 workshop my paper: mypaper.pdf  summit brutal  # the most exhaustive pass, brutal register
@@ -155,6 +156,6 @@ submission, or data release. The author remains the author.
 CC-BY-4.0 ([`LICENSE`](LICENSE)). If it helps your work, please cite:
 
 > Havranek, T. & Irsova, Z. (2026). *CRUCIBLE (`paper-workshop`): an adversarial multi-expert
-> workshop that stress-tests and rebuilds a research paper.* GitHub.
+> workshop that stress-tests and rebuilds a research paper.* GitHub. https://github.com/tjhavranek/paper-workshop
 
 > *Every paper leaves changed.*

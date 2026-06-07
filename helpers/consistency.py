@@ -39,8 +39,9 @@ def norm_num(s):
 
 
 def numbers_in(text):
-    """The multiset (as a set + list) of normalized numeric literals in a text."""
-    raw = _NUM_RE.findall(text or "")
+    """The multiset (as a set + list) of normalized numeric literals in a text.
+    Unicode MINUS (U+2212) is mapped to ASCII '-' first so PDF/LaTeX negatives match."""
+    raw = _NUM_RE.findall((text or "").replace("−", "-"))
     norm = [norm_num(x) for x in raw if norm_num(x) not in ("", "+", "-")]
     return set(norm), norm
 
@@ -61,7 +62,7 @@ def _token_list(data):
 
 def value_literals(value):
     """Normalized numeric literals inside a (possibly multi-part) token value string."""
-    return [norm_num(x) for x in _NUM_RE.findall(value or "") if norm_num(x) not in ("", "+", "-")]
+    return [norm_num(x) for x in _NUM_RE.findall((value or "").replace("−", "-")) if norm_num(x) not in ("", "+", "-")]
 
 
 def check(manuscript_text, tokens, baseline_text=None):
@@ -135,6 +136,10 @@ def cmd_selftest(args):
            check("the headline estimate is 0.083", [{"value": "0.08"}])["run_mismatches"] == ["0.08"])
     expect("12 does NOT match inside 120",
            check("N = 120 observations", [{"value": "12"}])["run_mismatches"] == ["12"])
+
+    # Unicode minus (U+2212) in the manuscript matches an ASCII-minus token value
+    expect("unicode-minus manuscript matches ascii-minus token",
+           "-0.10" in check("the coefficient is −0.10", [{"value": "-0.10"}])["reconciled"])
 
     expect("thousands-comma normalization (1,200 == 1200)",
            "1200" in check(rev, [{"value": "1200"}])["reconciled"])

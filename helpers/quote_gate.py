@@ -22,7 +22,7 @@ USAGE
   Batch (verify every finding's quote against the source):
     python quote_gate.py batch --source-file SRC.txt --findings findings.json
   -> prints a JSON array: [{"id","matched","match_level","severity_hint"}...]
-     match_level in: normalized | dehyphenated | exempt-absence | none
+     match_level in: normalized | dehyphenated | exempt-absence | empty-quote | none
      exit code 0 if all non-exempt findings matched, 2 otherwise.
 
 The same normalization is used everywhere so results are reproducible.
@@ -49,7 +49,12 @@ _SPACES = {
     " ": " ", " ": " ", " ": " ", " ": " ",
     " ": " ", "\t": " ", "\r": " ", "\n": " ", "\f": " ",
 }
+# Zero-width / invisible characters that survive NFKC and are neither whitespace nor in the
+# maps above. PDF/Word extraction sprinkles these (soft hyphen, ZWSP, BOM, word-joiner,
+# ZWNJ/ZWJ); left in, they make a real quote fail to match. Deleted on both sides (-> None).
+_ZEROWIDTH = {0x00AD: None, 0x200B: None, 0xFEFF: None, 0x2060: None, 0x200C: None, 0x200D: None}
 _TRANS = {ord(k): v for k, v in {**_QUOTES, **_DASHES, **_SPACES}.items()}
+_TRANS.update(_ZEROWIDTH)
 
 
 def normalize(text, casefold=True):
@@ -66,8 +71,16 @@ def normalize(text, casefold=True):
 
 
 def dehyphenate(text):
-    """Join words split by a soft hyphen at a (former) line break: 'inter- national' -> 'international'."""
-    return re.sub(r"-\s+", "", text)
+    """Join a word split by a hyphen at a (former) line break: 'inter- national' -> 'international',
+    'covid- 19' -> 'covid19'. Does NOT join a numeric range such as '5- 10' (joining it would
+    fabricate '510' and let a bogus quote match). Only a hyphen sitting between two word characters
+    is joined, and never when both sides are digits."""
+    return re.sub(
+        r"(\w)-\s+(\w)",
+        lambda m: m.group(0) if (m.group(1).isdigit() and m.group(2).isdigit())
+        else m.group(1) + m.group(2),
+        text,
+    )
 
 
 def check(quote, source, casefold=True):
@@ -138,6 +151,41 @@ def cmd_batch(args):
     return 0 if all_ok else 2
 
 
+def cmd_selftest(args):
+    ok = True
+
+    def expect(name, cond):
+        nonlocal ok
+        print(("  PASS " if cond else "  FAIL ") + name)
+        ok = ok and cond
+
+    src = ("The corrected mean effect is close to zero. We use inter- national\n"
+           "evidence on covid- 19 and type- 2 tasks, with rates of 5- 10 percent.")
+    # exact normalized substring + casefold
+    expect("exact normalized match", check("corrected mean effect is close to zero", src)[0] is True)
+    expect("casefold match", check("CORRECTED MEAN", src)[0] is True)
+    # unicode dash/quote/space canonicalization
+    expect("unicode-minus -> ascii", normalize("−0.10") == normalize("-0.10"))
+    expect("en-dash -> ascii", normalize("0.10–0.20") == normalize("0.10-0.20"))
+    expect("smart quotes -> ascii", normalize("“x”") == normalize('"x"'))
+    # zero-width / soft hyphen stripped
+    expect("soft hyphen stripped", check("international", "inter­national")[0] is True)
+    expect("ZWSP stripped", check("abc", "a​b​c")[0] is True)
+    # dehyphenation joins genuine line-break splits (letters, letter-digit)
+    expect("dehyphenate joins letters", check("international", src) == (True, "dehyphenated"))
+    expect("dehyphenate joins covid19 (letter-digit)", check("covid19", src)[0] is True)
+    expect("dehyphenate joins type2 (letter-digit)", check("type2", src)[0] is True)
+    # dehyphenation must NOT join a numeric range (no fabricated 510)
+    expect("numeric range NOT joined", check("510", src)[0] is False)
+    # fail-closed cases
+    expect("empty quote -> empty-quote", check("", src) == (False, "empty-quote"))
+    expect("absent quote -> none", check("phrase that is not present at all", src) == (False, "none"))
+    # determinism
+    expect("normalize idempotent", normalize(normalize(src)) == normalize(src))
+    print("selftest: " + ("OK" if ok else "FAILED"))
+    return 0 if ok else 1
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(description="Deterministic quote gate for paper-workshop.")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -155,6 +203,9 @@ def main(argv=None):
     b.add_argument("--findings", required=True)
     b.add_argument("--case-sensitive", action="store_true")
     b.set_defaults(func=cmd_batch)
+
+    s = sub.add_parser("selftest", help="run built-in tests (no external files needed)")
+    s.set_defaults(func=cmd_selftest)
 
     args = p.parse_args(argv)
     return args.func(args)
