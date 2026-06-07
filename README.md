@@ -35,7 +35,7 @@ A [Claude Code](https://claude.com/claude-code) skill. Claude-only. Runs on any 
 Good AI paper-reviewers already exist: multi-agent review, grounded critique, and
 topic-adaptive reviewers are all prior art, and dedicated citation-checkers triangulate more
 reference databases than CRUCIBLE's web-based check does. CRUCIBLE's bet is the combination
-two of them rarely make together — reviewers that genuinely **debate** from opposed objective
+that two of them rarely make together — reviewers that genuinely **debate** from opposed objective
 functions, and an integrated **rebuild** that re-runs your analysis and hands back a corrected,
 reproducing manuscript.
 
