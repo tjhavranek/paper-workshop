@@ -1,0 +1,263 @@
+{
+  "paper_type": ["meta-analysis"],
+  "precis": "The paper meta-analyzes 2,193 estimates from 88 economics experiments (1,252 in a peer-reviewed baseline, plus working-paper and Cohen's-d 'expanded' robustness samples) on whether financial incentives improve task performance, converting heterogeneous outcome measures into partial correlation coefficients and hand-coding 48 contextual moderators. It applies a battery of publication-bias and p-hacking corrections (linear meta-regression, WAAP, Top10, stem-based, Andrews-Kasy selection model, endogenous kink, MAIVE instrumental-variable estimator chosen as preferred, p-uniform*, caliper/p-curve tests) and Bayesian (plus frequentist) model averaging over 35 usable moderators to address model uncertainty and collinearity. It reports that the corrected mean effect is close to zero and statistically insignificant in most contexts, with laboratory settings combined with loss (negative) framing as the only robust exception (PCC about 0.07), and frames this against a literature split between economists (incentives help) and psychologists (incentives can crowd out intrinsic motivation).",
+  "central_tensions": [
+    "Whether the chosen publication-bias/p-hacking correction battery (especially the preferred MAIVE instrument and the choice to prefer it over Andrews-Kasy, p-uniform*, and the linear meta-regression) is the right one, consistently justified, and not itself a source of selective reporting of methods.",
+    "Whether the Bayesian model-averaging exercise over 35-48 correlated, hand-coded moderators meaningfully resolves model uncertainty or merely launders it through priors (g-prior, dilution prior) and a search algorithm whose choices are themselves contestable, and whether posterior-inclusion-probability claims license the causal/behavioral interpretations drawn from them.",
+    "Whether the partial-correlation-coefficient metric, built from t-statistics and degrees of freedom and aggregated across 88 studies that each contribute on average 25 dependent estimates (93% of studies multi-estimate), is a valid common currency, and whether clustering at the study level is sufficient to handle that dependence and the resulting weighting choices.",
+    "Whether the headline 'lab + loss framing' exception is a robust, theoretically motivated finding or a single fragile cell sitting exactly on the negligible/small threshold, picked out of 35-48 candidate moderators and a combinatorial space of >30 billion models — i.e., whether it is discovery or curation.",
+    "Whether the design-stage selection the authors flag (researchers avoid 'obvious' incentive contexts) is a containable caveat or actually undercuts the paper's central policy claim that 'financial rewards rarely produce large performance gains' — i.e., whether the conclusion the abstract foregrounds is licensed by a literature the authors themselves say is selected to avoid exactly the contexts where large effects would appear."
+  ],
+  "mandatory_floor": [
+    "S-CLOSE-READER",
+    "S-METHODS-AUDITOR",
+    "S-RELATED-WORK",
+    "S-ROBUSTNESS-CRITIC",
+    "S-PRESENTATION",
+    "S-DESK-REJECT",
+    "S-MISSING-ANALYSIS",
+    "S-PUBBIAS-FATAL"
+  ],
+  "seats": [
+    {
+      "seat_id": "S-CLOSE-READER",
+      "role_title": "Close reader of the manuscript's argumentative chain",
+      "tradition": "philological / argument-mapping close reading",
+      "objective_function": "neutral-audit",
+      "jurisdiction": "Sentence-by-sentence fidelity: does every headline claim in the Abstract, Introduction, and Conclusion follow from the evidence presented in Sections 3-4 and the Appendix tables; are qualifiers (e.g. 'most field contexts', 'borderline exception') preserved consistently across sections, or does the framing drift (e.g. from 'close to zero' to 'rarely produces large gains' to policy-relevant claims about 'real-world settings')?",
+      "justifying_quote": "Our results suggest that increasing financial rewards rarely produces large performance gains in the experimental settings most studied by economists",
+      "rival_of": null,
+      "out_of_scope": "Statistical correctness of the underlying techniques (owned by methods-auditor and the contested-method seats); literature positioning (owned by related-work).",
+      "owned_claim_ids": ["C-001", "C-002", "C-003", "C-024", "C-053", "C-054", "C-055", "C-064"]
+    },
+    {
+      "seat_id": "S-METHODS-AUDITOR",
+      "role_title": "General meta-analysis methods & statistical-validity auditor",
+      "tradition": "applied econometrics / meta-analysis methodology (Stanley-Doucouliagos tradition)",
+      "objective_function": "neutral-audit",
+      "jurisdiction": "End-to-end methodological coherence: the chain from raw estimates -> PCC conversion -> winsorizing -> meta-regression -> bias correction -> BMA, including whether each link's assumptions are stated, tested, and mutually consistent (e.g., does winsorizing at 1% interact with the bias-correction battery; is clustering applied uniformly; are weights defined consistently across tables).",
+      "justifying_quote": "We winsorize the effects at the 1% level to limit the influence of outliers.",
+      "rival_of": null,
+      "out_of_scope": "Adjudicating which single bias-correction technique is 'best' (owned by the rival pub-bias pair); BMA prior choice (owned by the rival BMA pair).",
+      "owned_claim_ids": ["C-029", "C-036", "C-042", "C-043", "C-061", "C-062"]
+    },
+    {
+      "seat_id": "S-RELATED-WORK",
+      "role_title": "Literature-positioning referee (economics vs. psychology meta-analyses)",
+      "tradition": "history-of-the-field / citation-network analysis",
+      "objective_function": "neutral-audit",
+      "jurisdiction": "Whether the paper accurately and completely situates itself relative to Weibel et al. (2010), Kim et al. (2022), Brown et al. (2024), Matousek et al. (2022), and the broader motivation-crowding literature; whether the claimed gaps in those studies (no bias correction, lab-dominated samples, non-standardized task coding) are fairly characterized and whether any relevant prior work is missing or mischaracterized.",
+      "justifying_quote": "Notably, none of the psychology metaanalyses correct for publication bias.",
+      "rival_of": null,
+      "out_of_scope": "Whether the psychology-vs-economics theoretical framing itself is the right lens for interpreting the results (owned by the rival framing pair).",
+      "owned_claim_ids": ["C-007", "C-008", "C-011", "C-057", "C-058", "C-059", "C-060"]
+    },
+    {
+      "seat_id": "S-ROBUSTNESS-CRITIC",
+      "role_title": "Robustness & sensitivity stress-tester",
+      "tradition": "replication / specification-curve analysis",
+      "objective_function": "find-the-fatal-flaw",
+      "jurisdiction": "Whether the headline 'close to zero, except lab+loss framing' result survives the alternative specifications the authors themselves report (non-winsorized data, expanded Cohen's-d dataset, working papers, one-estimate-per-study/experiment, preferred-vs-non-preferred subsets) and whether the pattern of where significance appears/disappears across these checks undercuts rather than supports the headline.",
+      "justifying_quote": "we lose statistical significance in some specifications, but most of them are consistent with the baseline case, with our preferred MAIVE model giving almost identical results",
+      "rival_of": null,
+      "out_of_scope": "Whether the correction techniques are individually valid (owned by the pub-bias pair); whether the moderator results themselves are specification-dependent (owned by the heterogeneity pair).",
+      "owned_claim_ids": ["C-042", "C-043", "C-044", "C-064"]
+    },
+    {
+      "seat_id": "S-PRESENTATION",
+      "role_title": "Presentation, academic-writing & voice critic",
+      "tradition": "scientific writing / editorial craft",
+      "objective_function": "neutral-audit",
+      "jurisdiction": "Clarity and self-containedness of figures/tables (especially Table 2's bias-correction battery, Table 4's BMA/FMA results, and Table 5's implied-context estimates), notational consistency (PCC vs. Cohen's d vs. t-statistics across panels), whether prose passages read as authentically authored versus templated/boilerplate, and whether a reader can reconstruct the headline number (0.03 'best practice' mean) from the tables without re-deriving it.",
+      "justifying_quote": "The overall mean incentive-performance effect based on our definition of \"best practice\" described above is 0.03.",
+      "rival_of": null,
+      "out_of_scope": "Whether the underlying numbers are correct (owned by methods-auditor); whether the framing/policy claims are warranted (owned by relevance generalist and framing pair).",
+      "owned_claim_ids": ["C-052", "C-053"]
+    },
+    {
+      "seat_id": "S-DESK-REJECT",
+      "role_title": "Desk-reject pre-mortem / first-pass referee",
+      "tradition": "editorial gatekeeping (top-journal referee simulation)",
+      "objective_function": "find-the-fatal-flaw",
+      "jurisdiction": "Simulating a skeptical referee's first 30 minutes: is there a single claim, number, or framing choice in the Abstract/Introduction that, if challenged, would by itself justify rejection or major revision (e.g., the jump from 'corrected effect near zero' to the policy-relevant headline that 'incentives rarely produce large gains', given the design-stage-selection caveat the authors themselves volunteer)?",
+      "justifying_quote": "This design-stage selection narrows the scope of the available evidence and cannot be corrected in a meta-analysis",
+      "rival_of": null,
+      "out_of_scope": "Detailed statistical re-derivation (owned by methods-auditor); generating the fix itself (owned by robustness critic / synthesis).",
+      "owned_claim_ids": ["C-020", "C-021", "C-065"]
+    },
+    {
+      "seat_id": "S-MISSING-ANALYSIS",
+      "role_title": "Load-bearing-analysis-gap hunter",
+      "tradition": "absence-as-evidence / pre-registration audit",
+      "objective_function": "find-what-no-seat-staffed",
+      "jurisdiction": "What analyses, robustness checks, or disclosures a rigorous reader would expect but that the manuscript never performs or reports — e.g., no apparent pre-registration of the meta-analysis protocol (PRISMA is invoked for search reporting but not for an ex-ante analysis plan), no formal test of whether the 48-moderator coding scheme itself was piloted/validated for inter-coder reliability beyond 'discussed among co-authors', no power analysis for the lab-times-loss-framing interaction cell, and no sensitivity analysis of the BMA results to the MCMC walk length or convergence diagnostics.",
+      "justifying_quote": "The discovered inconsistencies in coding were discussed among the co-authors and corrected for the entire dataset.",
+      "rival_of": null,
+      "out_of_scope": "Critiquing analyses that ARE present (owned by other seats); this seat only owns what is absent.",
+      "owned_claim_ids": ["C-034"]
+    },
+    {
+      "seat_id": "S-PUBBIAS-FATAL",
+      "role_title": "Publication-bias & p-hacking correction skeptic (paper-type-locked specialist)",
+      "tradition": "selection-model skepticism / instrumental-variable critique",
+      "objective_function": "find-the-fatal-flaw",
+      "jurisdiction": "Whether the chosen correction battery — and especially the decision to designate MAIVE as the 'preferred' estimator on the strength of a single specification test (Table B10) — is internally consistent, whether the instrument (inverse square root of degrees of freedom) is plausibly excludable from the structural error given that degrees of freedom also proxies for study design and method choices, and whether the battery as a whole is the right one or merely the currently fashionable one.",
+      "justifying_quote": "test of the Andrews-Kasy model, shown in Table B10 in the Appendix, suggests that in our case estimates are indeed correlated with standard errors even in the absence of publication bias, we prefer the MAIVE approach",
+      "rival_of": "S-PUBBIAS-DEFENSE",
+      "out_of_scope": "The BMA/heterogeneity exercise (owned by the BMA pair); the raw publication-bias finding itself, which is largely uncontested across techniques (owned by methods-auditor for consistency-checking only).",
+      "owned_claim_ids": ["C-016", "C-017", "C-040", "C-041"]
+    },
+    {
+      "seat_id": "S-PUBBIAS-DEFENSE",
+      "role_title": "Publication-bias & p-hacking correction defender",
+      "tradition": "best-practice meta-analysis methodology (modern selection-model and instrumental-variable consensus)",
+      "objective_function": "find-the-strongest-defensible-version",
+      "jurisdiction": "Constructing the strongest case that the battery — five nonlinear techniques plus MAIVE plus p-uniform* plus caliper/p-curve tests, all converging on 'substantial bias, near-zero corrected effect' — is in fact unusually thorough by meta-analysis standards, that triangulation across methods with different assumptions is precisely the right response to the linearity/uncorrelation problems the authors themselves flag, and that the MAIVE preference is defensible given the diagnostic test reported.",
+      "justifying_quote": "Taken together, the nonlinear models provide a robust evidence that the mean corrected incentiveperformance effect is negligible.",
+      "rival_of": "S-PUBBIAS-FATAL",
+      "out_of_scope": "Originating new correction techniques; the BMA exercise.",
+      "owned_claim_ids": ["C-037", "C-038", "C-039", "C-040", "C-041", "C-019"]
+    },
+    {
+      "seat_id": "S-BMA-FATAL",
+      "role_title": "Bayesian-model-averaging / model-uncertainty skeptic",
+      "tradition": "frequentist specification-search critique / prior-sensitivity analysis",
+      "objective_function": "find-the-fatal-flaw",
+      "jurisdiction": "Whether BMA over 35 (of 48 collected) moderators with an agnostic g-prior and a dilution prior meaningfully tames model uncertainty or merely re-packages researcher discretion (which 13 of 48 variables were dropped as 'reference categories' and how that choice shapes the model space of >30 billion candidates), whether the posterior-inclusion-probability threshold of 0.5 is principled or arbitrary, and whether the headline moderator findings (standard error, framing, lab-vs-field) would survive a materially different prior or variable set.",
+      "justifying_quote": "Only 8 variables have posterior inclusion probabilities above 0.5, which means that most of the variables are not useful for the explanation of the differences in the reported incentive-performance effects.",
+      "rival_of": "S-BMA-DEFENSE",
+      "out_of_scope": "The publication-bias correction techniques themselves (owned by the pub-bias pair); the substantive interpretation of the lab/loss-framing finding (owned by the heterogeneity pair).",
+      "owned_claim_ids": ["C-022", "C-023", "C-045", "C-046", "C-047"]
+    },
+    {
+      "seat_id": "S-BMA-DEFENSE",
+      "role_title": "Bayesian-model-averaging / model-uncertainty defender",
+      "tradition": "Bayesian model-uncertainty methodology (Steel/Eicher/George tradition)",
+      "objective_function": "find-the-strongest-defensible-version",
+      "jurisdiction": "Constructing the strongest case that BMA with a dilution prior plus a frequentist Mallows-weights cross-check (and the appendix robustness with BRIC g-prior / beta-binomial model prior) is exactly the principled, transparent, pre-specified-enough response to 35-variable model uncertainty that the literature recommends, and that the convergence of only 4 robust moderators across both Bayesian and frequentist approaches is a sign of rigor rather than of an underpowered fishing expedition.",
+      "justifying_quote": "As additional robustness checks, in the Appendix (Table B12) we provide two adjusted versions of our baseline Bayesian model averaging exercise.",
+      "rival_of": "S-BMA-FATAL",
+      "out_of_scope": "The publication-bias battery; the raw moderator coding (owned by the data-construction seat).",
+      "owned_claim_ids": ["C-046", "C-047", "C-048", "C-049", "C-050"]
+    },
+    {
+      "seat_id": "S-PCC-FATAL",
+      "role_title": "Effect-size metric & dependence-structure critic (PCC, clustering, weighting)",
+      "tradition": "psychometric measurement critique / hierarchical-data meta-analysis",
+      "objective_function": "find-the-fatal-flaw",
+      "jurisdiction": "Whether converting wildly heterogeneous outcome measures (grades, games, charitable giving, work output) into a single partial-correlation-coefficient metric via t-statistics and degrees of freedom is defensible as a common currency, and whether clustering standard errors at the study level is sufficient to handle the fact that 93% of studies contribute multiple, often highly correlated, estimates (averaging 25 per study) drawn from overlapping subsamples, treatment arms, and estimation frameworks within the same experiment.",
+      "justifying_quote": "For 93% of the studies we collect multiple estimates, with an average of 25 estimates included per study",
+      "rival_of": "S-PCC-DEFENSE",
+      "out_of_scope": "The bias-correction battery applied to the resulting PCCs (owned by the pub-bias pair); BMA over moderators of the PCC (owned by the BMA pair).",
+      "owned_claim_ids": ["C-029", "C-033", "C-061", "C-063"]
+    },
+    {
+      "seat_id": "S-PCC-DEFENSE",
+      "role_title": "Effect-size metric & dependence-structure defender",
+      "tradition": "Stanley-Doucouliagos meta-analysis-in-economics methodology",
+      "objective_function": "find-the-strongest-defensible-version",
+      "jurisdiction": "Constructing the strongest case that PCCs from t-statistics/df is the field-standard, defensible solution to incommensurable outcome scales (as used across the cited Brown et al. 2024 / Matousek et al. 2022 economics meta-analyses), that study-level clustering is the conventional and adequate response to within-study dependence, and that the reported robustness to one-estimate-per-study/per-experiment subsetting and to alternative weighting schemes (equal-per-study vs. precision-weighted) demonstrates the dependence structure is not driving the result.",
+      "justifying_quote": "different weights do not change the conclusion, and any systematic differences seem to be small",
+      "rival_of": "S-PCC-FATAL",
+      "out_of_scope": "Whether the underlying primary-study estimates are themselves trustworthy (a primary-study identification question, explicitly out of scope for this meta-analysis review).",
+      "owned_claim_ids": ["C-029", "C-043", "C-061", "C-062"]
+    },
+    {
+      "seat_id": "S-HETEROGENEITY-FATAL",
+      "role_title": "Heterogeneity-claim fragility critic (lab-vs-field, loss framing)",
+      "tradition": "specification-curve / garden-of-forking-paths critique",
+      "objective_function": "find-the-fatal-flaw",
+      "jurisdiction": "Whether the 'lab settings + loss framing' exception — the paper's single positive headline finding, sitting 'on the threshold between a negligible and small effect' and based on only 19% of estimates — is a robust, theory-anchored discovery or a single cell selected post hoc from a combinatorial space of >30 billion moderator-combination models, and whether the 'distraction effect' explanation offered for it is tested or merely asserted as a plausible story.",
+      "justifying_quote": "This estimate lies on the threshold between a negligible and small effect according to the guidelines by Doucouliagos (2011)",
+      "rival_of": "S-HETEROGENEITY-DEFENSE",
+      "out_of_scope": "The general validity of BMA as a method (owned by the BMA pair); the publication-bias correction applied before heterogeneity analysis (owned by the pub-bias pair).",
+      "owned_claim_ids": ["C-009", "C-010", "C-024", "C-049", "C-050", "C-051", "C-053", "C-064"]
+    },
+    {
+      "seat_id": "S-HETEROGENEITY-DEFENSE",
+      "role_title": "Heterogeneity-claim defender (lab-vs-field, loss framing)",
+      "tradition": "loss-aversion / behavioral-economics theory-grounded interpretation",
+      "objective_function": "find-the-strongest-defensible-version",
+      "jurisdiction": "Constructing the strongest case that the lab/loss-framing finding is well-anchored: it converges across BMA (PIP = 1 for SE, robust framing and lab coefficients) and frequentist model averaging, it has an a priori theoretical rationale (loss aversion, and the lab-vs-field 'distraction effect' from Rusz et al. 2020), and the authors transparently flag it as borderline rather than overselling it.",
+      "justifying_quote": "We find that positive framing tends to be associated with smaller estimates, which is consistent with loss aversion.",
+      "rival_of": "S-HETEROGENEITY-FATAL",
+      "out_of_scope": "Whether BMA itself is the right tool (owned by the BMA pair); whether the PCC metric supports cross-context comparison (owned by the PCC pair).",
+      "owned_claim_ids": ["C-049", "C-050", "C-051", "C-026"]
+    },
+    {
+      "seat_id": "S-DATA-CONSTRUCTION",
+      "role_title": "Data construction, search strategy & moderator-coding auditor",
+      "tradition": "systematic-review / PRISMA methodology",
+      "objective_function": "neutral-audit",
+      "jurisdiction": "The literature search and screening pipeline (Google Scholar query, 4,812 -> 88 funnel, snowballing, working-paper inclusion), the inclusion/exclusion criteria (economics journals, English language, reportable standard errors and degrees of freedom), and the construction and validation of the 48 hand-coded contextual variables (definitions, reference-category choices, the 'preferred vs. non-preferred' classification, and the cross-checking procedure among co-authors).",
+      "justifying_quote": "We use the following query in Google Scholar: (``financial reward'' OR ``financial incentive'' OR ``money'' OR ``monetary'') AND (``performance'' OR ``motivation'' OR ``effort'') AND ``experiment'' AND (``estimate'' or ``empirical'')",
+      "rival_of": null,
+      "out_of_scope": "The statistical use made of the coded variables once collected (owned by BMA pair and heterogeneity pair).",
+      "owned_claim_ids": ["C-027", "C-028", "C-030", "C-031", "C-032", "C-033", "C-034", "C-035"]
+    },
+    {
+      "seat_id": "S-FRAMING-FATAL",
+      "role_title": "Psychology-vs-economics framing & policy-interpretation critic",
+      "tradition": "behavioral/psychological theory of motivation (motivation-crowding tradition)",
+      "objective_function": "find-the-fatal-flaw",
+      "jurisdiction": "Whether the paper's central interpretive move — reading a near-zero corrected effect as evidence against an 'incentives always help' view, while also declaring the result inconsistent with motivation-crowding theory because effects look similar for interesting and uninteresting tasks — fairly represents either side, and whether the policy-relevant language ('rarely produces large performance gains', 'premature to proclaim') is warranted given that this is a meta-analysis of experiments the authors say were never designed to detect such gains in the first place.",
+      "justifying_quote": "we find it premature to proclaim that experimental research shows, without qualification, that financial incentives improve performance",
+      "rival_of": "S-FRAMING-DEFENSE",
+      "out_of_scope": "The statistical machinery underlying the corrected estimates (owned by the pub-bias and BMA pairs); literature completeness (owned by related-work).",
+      "owned_claim_ids": ["C-025", "C-054", "C-055", "C-056"]
+    },
+    {
+      "seat_id": "S-FRAMING-DEFENSE",
+      "role_title": "Psychology-vs-economics framing & policy-interpretation defender",
+      "tradition": "evidence-synthesis / cautious-inference economics tradition",
+      "objective_function": "find-the-strongest-defensible-version",
+      "jurisdiction": "Constructing the strongest case that the paper's interpretive stance is in fact unusually careful — it explicitly declines to side with either economists' or psychologists' priors, offers multiple candidate explanations (distraction effect, measurement error, design-stage selection) without overcommitting to any, and couches its policy language in the repeated qualifier that rewards 'rarely' (not 'never') produce gains and that misalignment (not incentives per se) is the risk.",
+      "justifying_quote": "A key insight from the literature is that incentives do not operate in isolation: they interact with task characteristics, intrinsic motivation, and social norms.",
+      "rival_of": "S-FRAMING-FATAL",
+      "out_of_scope": "The technical correctness of the corrected estimates that ground the interpretation (owned by other specialist seats).",
+      "owned_claim_ids": ["C-025", "C-026", "C-055", "C-056"]
+    },
+    {
+      "seat_id": "S-EXTERNAL-VALIDITY",
+      "role_title": "External validity & design-stage-selection scope referee",
+      "tradition": "generalizability / scope-conditions methodology",
+      "objective_function": "find-the-fatal-flaw",
+      "jurisdiction": "Whether the authors' own admission that 'researchers rarely conduct experiments in contexts where incentives are expected to have large and obvious effects' is adequately carried through into the paper's framing, headline, and abstract — i.e., does the paper's confident, generalizing language about what 'financial incentives' do match the narrower, scope-limited claim the authors say is all the data can support, and is the reader warned early enough (abstract/intro) rather than only in a late caveat?",
+      "justifying_quote": "Researchers rarely conduct experiments in contexts where incentives are expected to have large and obvious effects (for example, comparing one dollar to one thousand dollars for a routine task) because such results are considered trivial",
+      "rival_of": null,
+      "out_of_scope": "The statistical correction for ordinary publication bias (owned by the pub-bias pair, which is a distinct, correctable phenomenon from this uncorrectable design-stage selection).",
+      "owned_claim_ids": ["C-020", "C-021", "C-065"]
+    }
+  ],
+  "generalist_seats": [
+    {
+      "seat_id": "G-RELEVANCE",
+      "function": "relevance",
+      "rationale": "The paper makes a strong so-what claim aimed squarely at practitioners and policymakers ('increasing financial rewards rarely produces large performance gains') and explicitly targets a popular misconception attributed to a 'leading management consultancy.' A relevance seat is needed to test whether the corrected near-zero finding actually changes what an informed reader, manager, or policymaker should do differently — and whether the 'borderline' lab+loss-framing exception is large enough to matter in practice, or is a statistical curiosity dressed as a finding."
+    },
+    {
+      "seat_id": "G-UNDERSTANDABILITY",
+      "function": "understandability",
+      "rationale": "The paper stacks a dense sequence of technical machinery (PCC conversion, winsorizing, five-plus bias-correction techniques, MAIVE instrumental variables, BMA with g-priors and dilution priors, posterior inclusion probabilities, Mallows weights) before arriving at a one-sentence headline. A brilliant outsider (e.g., a labor economist or a psychologist who is not a meta-analysis specialist) needs a seat dedicated to flagging exactly where the chain of reasoning from '2,193 estimates' to 'corrected mean ≈ 0.03' becomes opaque, and whether the paper ever pauses to explain, in plain language, what a partial correlation of 0.03 versus 0.07 actually means for a person deciding how to design an incentive scheme."
+    },
+    {
+      "seat_id": "G-CROSS-FIELD",
+      "function": "cross-field-significance",
+      "rationale": "The paper explicitly stages itself as a bridge (or corrective) between economics and psychology — two fields the authors say hold 'vast differences in priors and methodological approaches' about incentives — and positions its findings against named psychology meta-analyses (Weibel et al. 2010, Kim et al. 2022). A cross-field seat is needed to assess whether the paper's claims would actually travel into psychology, management science, personnel economics, or public policy, or whether they remain a narrow methodological correction legible mainly to meta-analysis specialists within economics."
+    }
+  ],
+  "not_staffed": [
+    {
+      "dimension": "Identification / causal validity (in the primary-study, design-based sense)",
+      "why": "This is a meta-analysis, not a primary causal study; the paper aggregates estimates from 88 already-published experiments rather than identifying a causal effect itself. Auditing the internal validity of each of the 88 underlying experiments (e.g., Lazear 2000's piece-rate natural experiment, Angrist & Lavy 2009's school incentive RCT) is out of scope for a review of THIS paper — that burden was discharged by the original studies' own referees, and re-litigating 88 separate identification strategies would dwarf the paper under review. The closest analogue that IS staffed is S-PCC-FATAL/S-PCC-DEFENSE (whether the meta-analytic aggregation step, not the primary identification, is sound) and S-DATA-CONSTRUCTION (whether inclusion criteria let in studies of adequate underlying quality)."
+    },
+    {
+      "dimension": "Ethics, integrity & disclosure (human-subjects/data ethics, conflicts, AI-involvement disclosure)",
+      "why": "The manuscript shows no evidence of human-subjects concerns (it analyzes published estimates, not new human-subject data), no apparent conflict-of-interest signal, and no AI-authorship question worth a dedicated seat — the prose reads as conventional applied-economics academic writing throughout, and the presentation seat (S-PRESENTATION) already carries a brief to flag if any passage reads as machine-generated. A standalone ethics seat would have no live grounding quote to staff against (a seat with no justifying quote is invalid), so this dimension is logged as reviewed-and-folded into S-PRESENTATION rather than separately staffed."
+    },
+    {
+      "dimension": "Reproducibility (data & code availability)",
+      "why": "The paper states the dataset and code are posted online ('The final dataset, together with the code used in the meta-analysis, is available in an online appendix at meta-analysis.cz/incentives'), which is a strong, verifiable disclosure rather than a contested area needing an adversarial pair. Spot-checking that the posted materials actually match the paper's claims is better handled as a bounded verification-panel task (Act I cross-check / Act II provenance wall) than as a standing specialist seat; staffing a full seat here would not earn its keep relative to the genuinely contested methodological choices that dominate this paper."
+    }
+  ]
+}

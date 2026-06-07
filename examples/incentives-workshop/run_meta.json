@@ -1,0 +1,36 @@
+{
+  "paper": "Financial Incentives and Performance: A Meta-Analysis of Experiments in Economics",
+  "authors": ["Cala P.", "Havranek T.", "Irsova Z.", "Luskova M.", "Matousek J.", "Novak J."],
+  "venue": "Journal of Political Economy Microeconomics (forthcoming, 2026)",
+  "source": "https://meta-analysis.cz/incentives/",
+  "run_date": "2026-06-07",
+  "mode": "Workshop",
+  "tier": "thorough",
+  "register": "supportive",
+  "engine": "Agent-tool subagents (no Workflow tool on host)",
+  "acts_run": ["Act I (TRIBUNAL)", "Act II (ATELIER) — prose-only, degraded"],
+  "agent_count": 27,
+  "seats": {"specialists": 19, "generalists": 3, "total_seat_agents": 22},
+  "counts": {"raw_findings": 137, "delivered": 131, "panel_rejected": 6, "needs_author_confirmation": 3},
+  "severity_post_calibration": {"High": 45, "Medium": 58, "Low": 34},
+  "quote_gate": {"quote_matched": 108, "absence_exempt": 28, "unverified_downgraded": 1, "runner": "node port of helpers/quote_gate.py"},
+  "verification_panel": {"angles_run": ["quote-locator (deterministic)", "logical-validity", "severity-calibration", "fix-safety"], "scope": "all 45 High-severity findings"},
+  "act2": {"edits_applied": 3, "edit_type": "prose-only tracked changes", "numbers_changed": 0, "deferred_to_author_rerun": true, "redline": "phase2/redline.md + phase2/redline_passages.docx"},
+  "central_tensions": [
+    "Does the abstract/title overclaim relative to a design-stage-selected sample (researchers avoid contexts where incentives are expected to have large effects)?",
+    "Are the headline heterogeneity results sound given the BMA 'treats all observations as independent' while a dependence-aware method exists in the paper?",
+    "Is the single positive exception (lab + loss framing, PCC ~0.07) a robust discovery or a fitted, threshold-straddling, dependence-naive quantity?",
+    "Is preferring MAIVE justified beyond a single specification test, and is its instrument defined consistently?",
+    "Is the PCC a valid common currency across 88 heterogeneous experimental designs?"
+  ],
+  "degradations_disclosed": {
+    "python": "absent on host -> quote-gate run via node port",
+    "R_stata": "absent -> Act II could not re-run analysis; no number changed (provenance wall holds)",
+    "manuscript_source": "no .tex/.docx public -> redline reconstructed against PDF text",
+    "model_mix": "Sonnet: cartography, roster, 12 of 22 seats. Haiku: remaining 10 seats + verification panel (usage-limit workaround).",
+    "chair_synthesis": "composed by the orchestrator, not a fresh blind subagent (usage-limit deviation)",
+    "phase_c_web_grounding": "skipped -> cited-source claims not verified against originals; factual-literature angle returned cant-tell",
+    "close_reader_sweep": "not run (Workshop tier); sentences_covered reported as 0 rather than implying full coverage"
+  },
+  "note": "Demonstration run on an already-accepted paper with the authors' consent. Treat as one thorough opinion, not validation; re-derive any numeric sub-claim. See report.md -> 'How this run was conducted'."
+}
