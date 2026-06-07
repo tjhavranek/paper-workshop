@@ -95,7 +95,10 @@ Symposium/Summit for a major pre-submission pass.
 are available (on by default on Max; on Pro, switch them on in `/config`), CRUCIBLE uses them
 to orchestrate those same subagent phases more efficiently; if they're off, Symposium and
 Summit run at Workshop depth and CRUCIBLE tells you rather than downgrading silently. **Desk
-Review** needs neither, so it works anywhere.
+Review** needs neither, so it works anywhere. Those subagents inherit the orchestrating
+session's model and context, so run CRUCIBLE on a model your plan can spawn at scale: a
+large-context (1M) session may need usage credits enabled for that tier, or just run it on a
+standard-context model (see [`helpers/doctor.md`](helpers/doctor.md)).
 
 ## Install
 

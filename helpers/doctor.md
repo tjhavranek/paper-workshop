@@ -19,6 +19,17 @@ rather than failing silently.
   on Max; on Pro, enable it in `/config`) for efficient orchestration; otherwise use the
   subagent fallback (orchestration Step 4b). **Desk Review** needs neither. Detect the
   engine and tell the user which one you're using.
+- **Orchestrator model and context (subagents inherit it).** Every seat and verifier is a
+  subagent, and subagents run on the **same model and context window as the orchestrating
+  session**; the skill cannot override this. Run that session on a model your plan can spawn at
+  scale. In particular, a large-context model (a 1M-token window) may require usage credits
+  enabled for that tier; without them, subagent spawns fail at the very start of a run, before
+  any findings, with a context/credit error. That is an account setting, not a workshop bug.
+  Fixes: (a) run the orchestrator on a standard-context model, so the subagents inherit standard
+  context, or (b) enable usage credits for the large-context tier. Very large fan-outs can also
+  hit transient rate limits that clear on their own; higher-tier plans (e.g. Max) have more
+  headroom. A spawn that fails at the start of a run is almost always one of these settings; a
+  subagent that fails mid-run, after others succeeded, is worth reporting.
 - **Mode sanity & cost preview.** Before launching, tell the user the chosen mode's ≈agent
   count so a weekly-limit-aware user can decide: Desk Review ~1–6, Roundtable ~20–30, Workshop
   ~45–65, Symposium ~90–250, Summit ~300–600 (the last two also grow with paper length). Warn
