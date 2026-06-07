@@ -128,8 +128,9 @@ across statistical models — was retained as F-105). Full list in `synthesis.js
 
 ## Findings ledger
 
-- **137 findings** from **22 seats** (16 specialists + 3 generalists + desk-reject pre-mortem + 2 audit
-  seats); **131 delivered**, 6 dropped by the panel, 3 marked needs-author-confirmation.
+- **137 findings** from **22 seats** (19 specialist seats, which include the desk-reject pre-mortem
+  and the neutral-audit seats, plus 3 generalists); **131 delivered**, 6 dropped by the panel, 3
+  marked needs-author-confirmation.
 - Severity (post-calibration): **45 High / 58 Medium / 34 Low**.
 - Every non-absence quote passed the deterministic quote-gate (108 quote-matched + 28 absence-exempt; 1
   unverified quote was downgraded to needs-author-confirmation).

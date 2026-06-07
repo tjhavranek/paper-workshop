@@ -33,7 +33,7 @@ Full reasoning in [`REPORT.md`](REPORT.md).
 | [`REPORT.md`](REPORT.md) | The Act I human-facing report (verdict, must-fix, kill-shots, minority report, venue read, coverage). |
 | [`synthesis.json`](synthesis.json) | The structured chair synthesis (`schemas/synthesis.schema.json`). |
 | [`findings.json`](findings.json) | All 137 findings (cleaned), with per-finding quote-gate result and verification-panel verdicts. |
-| [`roster_contract.json`](roster_contract.json) | The adversarial panel the scout assembled (16 specialist seats + 3 generalists). |
+| [`roster_contract.json`](roster_contract.json) | The adversarial panel the scout assembled (19 specialist seats + 3 generalists). |
 | [`brief.md`](brief.md) | The on-disk brief every seat read. |
 | [`run_meta.json`](run_meta.json) | Run metadata + the disclosed degradations. |
 | [`phase2/`](phase2/) | Act II, **first pass (degraded)**: a tracked-changes redline + triage produced when no source/interpreters were available (numbers deferred). |
