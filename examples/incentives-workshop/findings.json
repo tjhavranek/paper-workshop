@@ -1,6 +1,7 @@
 [
   {
     "global_id": "F-001",
+    "id": "G-CROSS-FIELD-F1",
     "seat_id": "G-CROSS-FIELD",
     "tradition": "cross-field-significance generalist",
     "finding_type": "absence-silence",
@@ -31,6 +32,7 @@
   },
   {
     "global_id": "F-002",
+    "id": "G-CROSS-FIELD-F2",
     "seat_id": "G-CROSS-FIELD",
     "tradition": "cross-field-significance generalist",
     "finding_type": "relevance",
@@ -61,6 +63,7 @@
   },
   {
     "global_id": "F-003",
+    "id": "G-CROSS-FIELD-F3",
     "seat_id": "G-CROSS-FIELD",
     "tradition": "cross-field-significance generalist",
     "finding_type": "relevance",
@@ -91,6 +94,7 @@
   },
   {
     "global_id": "F-004",
+    "id": "G-CROSS-FIELD-F4",
     "seat_id": "G-CROSS-FIELD",
     "tradition": "cross-field-significance generalist",
     "finding_type": "relevance",
@@ -115,6 +119,7 @@
   },
   {
     "global_id": "F-005",
+    "id": "G-CROSS-FIELD-F5",
     "seat_id": "G-CROSS-FIELD",
     "tradition": "cross-field-significance generalist",
     "finding_type": "absence-silence",
@@ -139,13 +144,14 @@
   },
   {
     "global_id": "F-006",
+    "id": "G-RELEVANCE-F1",
     "seat_id": "G-RELEVANCE",
     "tradition": "relevance generalist",
     "finding_type": "relevance",
     "location": {
-      "section": "5 Conclusion",
+      "section": "5 Conclusion (Second paragraph of conclusion)",
       "page": null,
-      "paragraph": "Second paragraph of conclusion",
+      "paragraph": null,
       "sentence_range": null
     },
     "quote": "Our results suggest little evidence that financial incentives improve performance in experiments unconditionally.",
@@ -163,13 +169,14 @@
   },
   {
     "global_id": "F-007",
+    "id": "G-RELEVANCE-F2",
     "seat_id": "G-RELEVANCE",
     "tradition": "relevance generalist",
     "finding_type": "absence-silence",
     "location": {
-      "section": "5 Conclusion",
+      "section": "5 Conclusion (Final paragraph)",
       "page": null,
-      "paragraph": "Final paragraph",
+      "paragraph": null,
       "sentence_range": null
     },
     "quote": "",
@@ -193,13 +200,14 @@
   },
   {
     "global_id": "F-008",
+    "id": "G-RELEVANCE-F3",
     "seat_id": "G-RELEVANCE",
     "tradition": "relevance generalist",
     "finding_type": "relevance",
     "location": {
-      "section": "Abstract and Introduction",
+      "section": "Abstract and Introduction (Abstract, line 7)",
       "page": null,
-      "paragraph": "Abstract, line 7",
+      "paragraph": null,
       "sentence_range": null
     },
     "quote": "Our results suggest that increasing financial rewards rarely produces large performance gains in the experimental settings most studied by economists.",
@@ -217,13 +225,14 @@
   },
   {
     "global_id": "F-009",
+    "id": "G-RELEVANCE-F4",
     "seat_id": "G-RELEVANCE",
     "tradition": "relevance generalist",
     "finding_type": "absence-silence",
     "location": {
-      "section": "5 Conclusion",
+      "section": "5 Conclusion (Third paragraph, starting 'While our results may appear discouraging')",
       "page": null,
-      "paragraph": "Third paragraph, starting 'While our results may appear discouraging'",
+      "paragraph": null,
       "sentence_range": null
     },
     "quote": "",
@@ -241,13 +250,14 @@
   },
   {
     "global_id": "F-010",
+    "id": "G-RELEVANCE-F5",
     "seat_id": "G-RELEVANCE",
     "tradition": "relevance generalist",
     "finding_type": "relevance",
     "location": {
-      "section": "Introduction",
+      "section": "Introduction (Final paragraph before Section 2)",
       "page": null,
-      "paragraph": "Final paragraph before Section 2",
+      "paragraph": null,
       "sentence_range": null
     },
     "quote": "Our findings should therefore be interpreted as evidence on the experimental margin that economists have chosen to investigate, rather than as a universal claim about incentives in all real-world contexts.",
@@ -271,6 +281,7 @@
   },
   {
     "global_id": "F-011",
+    "id": "G-UNDERSTANDABILITY-F1",
     "seat_id": "G-UNDERSTANDABILITY",
     "tradition": "understandability generalist",
     "finding_type": "understandability",
@@ -301,6 +312,7 @@
   },
   {
     "global_id": "F-012",
+    "id": "G-UNDERSTANDABILITY-F2",
     "seat_id": "G-UNDERSTANDABILITY",
     "tradition": "understandability generalist",
     "finding_type": "clarity",
@@ -325,6 +337,7 @@
   },
   {
     "global_id": "F-013",
+    "id": "G-UNDERSTANDABILITY-F3",
     "seat_id": "G-UNDERSTANDABILITY",
     "tradition": "understandability generalist",
     "finding_type": "absence-silence",
@@ -355,6 +368,7 @@
   },
   {
     "global_id": "F-014",
+    "id": "G-UNDERSTANDABILITY-F4",
     "seat_id": "G-UNDERSTANDABILITY",
     "tradition": "understandability generalist",
     "finding_type": "clarity",
@@ -379,6 +393,7 @@
   },
   {
     "global_id": "F-015",
+    "id": "G-UNDERSTANDABILITY-F5",
     "seat_id": "G-UNDERSTANDABILITY",
     "tradition": "understandability generalist",
     "finding_type": "absence-silence",
@@ -409,6 +424,7 @@
   },
   {
     "global_id": "F-016",
+    "id": "G-UNDERSTANDABILITY-F6",
     "seat_id": "G-UNDERSTANDABILITY",
     "tradition": "understandability generalist",
     "finding_type": "clarity",
@@ -433,12 +449,15 @@
   },
   {
     "global_id": "F-017",
+    "id": "S-BMA-DEFENSE-F1",
     "seat_id": "S-BMA-DEFENSE",
     "tradition": "S-BMA-DEFENSE",
     "finding_type": "claim-support",
     "location": {
-      "section": "4 Heterogeneity / 1 Introduction",
-      "paragraph": "moderator/heterogeneity setup"
+      "section": "4 Heterogeneity / 1 Introduction (moderator/heterogeneity setup)",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "we employ Bayesian model averaging, which is the natural solution to model uncertainty in the Bayesian framework (Steel, 2020). To address collinearity in such an exercise we use the dilution prior (George, 2010). As a robustness check we use frequentist model averaging with Mallow's weights (Hansen, 2007) and orthogonalization of model space following the approach of Amini & Parmeter (2012)",
     "issue": "The paper's BMA exercise is best read not as a single discretionary choice but as a triangulated package: an agnostic Bayesian model-averaging baseline, explicitly paired with a named collinearity remedy (the dilution prior) and cross-checked by an independent frequentist model-averaging procedure with a different dependence-handling mechanism (Mallow's weights, study-level clustering, and orthogonalized model space). This is exactly the multi-method convergence design that the model-uncertainty literature (Steel 2020; Eicher, Papageorgiou & Raftery 2011; Amini & Parmeter 2012) recommends as the principled response to an intractably large model space, rather than a single arbitrarily-chosen specification dressed up as 'the' answer. Read generously, the architecture pre-commits the authors to reporting whichever moderators survive BOTH a Bayesian and a frequentist lens — a structural safeguard against cherry-picking that a critic must engage with on its own terms, not dismiss as 'just BMA.'",
@@ -455,12 +474,15 @@
   },
   {
     "global_id": "F-018",
+    "id": "S-BMA-DEFENSE-F2",
     "seat_id": "S-BMA-DEFENSE",
     "tradition": "S-BMA-DEFENSE",
     "finding_type": "claim-support",
     "location": {
-      "section": "4 Heterogeneity",
-      "paragraph": "model uncertainty / MCMC discussion"
+      "section": "4 Heterogeneity (model uncertainty / MCMC discussion)",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "Because there are more than 30 billion models to consider, we use a Markov chain Monte Carlo algorithm (Zeugner & Feldkircher, 2015) to walk only through the most important part of the model mass.",
     "issue": "The paper is transparent about exactly why a search algorithm is needed and which one it uses: the model space is large enough (>30 billion combinations of 35 variables) that exhaustive enumeration is infeasible, so the authors name the specific MCMC sampler (Zeugner & Feldkircher's BMS algorithm) rather than leaving the search a black box. This is the standard, citable solution to the combinatorial problem the rival jurisdiction (S-BMA-FATAL) would otherwise treat as evidence of an unprincipled 'fishing expedition' — the size of the space is a property of having 35 candidate moderators (itself disclosed and justified by the literature's heterogeneity), not evidence that the authors searched until they found a story.",
@@ -477,12 +499,15 @@
   },
   {
     "global_id": "F-019",
+    "id": "S-BMA-DEFENSE-F3",
     "seat_id": "S-BMA-DEFENSE",
     "tradition": "S-BMA-DEFENSE",
     "finding_type": "claim-support",
     "location": {
-      "section": "4 Heterogeneity",
-      "paragraph": "discussion following Table 4"
+      "section": "4 Heterogeneity (discussion following Table 4)",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "Table 4 also reports the results of frequentist model averaging, which has the benefit of clustering standard errors at the study level. Four of variables with inclusion probabilities above 0.5 are not significant at the 5% level. That leaves 4 variables that are robustly associated with the reported estimates of the incentive-performance nexus.",
     "issue": "The paper does not simply report whichever moderators have high posterior inclusion probability and stop there — it explicitly subjects the BMA 'winners' to a second, independently-motivated filter (frequentist significance with study-level-clustered standard errors) and reports that this shrinks the set from 8 to 4. Reporting that half of one's own headline-adjacent moderators fail a follow-up test is the opposite of a fishing expedition's typical behavior (which would showcase the 8, not prune to 4); it is the kind of self-skeptical convergence requirement the model-uncertainty literature asks for, performed and disclosed in the main text rather than buried.",
@@ -499,12 +524,15 @@
   },
   {
     "global_id": "F-020",
+    "id": "S-BMA-DEFENSE-F4",
     "seat_id": "S-BMA-DEFENSE",
     "tradition": "S-BMA-DEFENSE",
     "finding_type": "claim-support",
     "location": {
-      "section": "4 Heterogeneity",
-      "paragraph": "robustness checks paragraph (referencing Table B12)"
+      "section": "4 Heterogeneity (robustness checks paragraph (referencing Table B12))",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "As additional robustness checks, in the Appendix (Table B12) we provide two adjusted versions of our baseline Bayesian model averaging exercise. First, we use different priors: the BRIC g-prior based on Fernandez et al. (2001) and the beta-binomial model prior according to Ley & Steel (2009). Second, a version of model averaging with additional weights proportional to inverse variance and the inverse of the number of estimates reported per study. Our main results hold, but in one specification the inclusion probability for the positive framing variable falls below 0.5.",
     "issue": "The appendix robustness exercise (Table B12) is precisely the prior-sensitivity check the rival jurisdiction (S-BMA-FATAL) demands as the test of whether the moderator findings 'survive a materially different prior or variable set': the authors re-run BMA under a different g-prior/model-prior combination (BRIC + beta-binomial, an entirely different theoretical lineage from the agnostic Eicher et al. unit-information prior) AND under a different weighting scheme (inverse-variance and inverse-estimates-per-study weights, which addresses a distinct critique — that of within-study dependence). That BOTH alternative specifications leave the qualitative picture intact, with only one coefficient (positive framing) crossing the PIP=0.5 line in one of the two checks, is itself the honest, falsifiable report of fragility the literature calls for — and the authors do not hide or minimize it.",
@@ -521,12 +549,15 @@
   },
   {
     "global_id": "F-021",
+    "id": "S-BMA-DEFENSE-F5",
     "seat_id": "S-BMA-DEFENSE",
     "tradition": "S-BMA-DEFENSE",
     "finding_type": "claim-support",
     "location": {
-      "section": "4 Heterogeneity",
-      "paragraph": "discussion following Table 4 / Figure 6"
+      "section": "4 Heterogeneity (discussion following Table 4 / Figure 6)",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "Only 8 variables have posterior inclusion probabilities above 0.5, which means that most of the variables are not useful for the explanation of the differences in the reported incentive-performance effects.",
     "issue": "The authors do not spin the low inclusion-probability count as a positive finding requiring no further comment — they state plainly, in their own voice, that most of the 35 candidate moderators are NOT systematically useful. A genuine fishing expedition curates and showcases hits; this passage instead reports the (less flattering) base rate of misses as the headline summary statistic for the whole exercise. That self-undercutting candor is itself evidence that the PIP>0.5 threshold is being used as an analytic filter rather than as a post-hoc rationalization for a pre-chosen story — precisely what the rival jurisdiction would need to show is absent to make the 'merely re-packages discretion' charge stick.",
@@ -543,12 +574,15 @@
   },
   {
     "global_id": "F-022",
+    "id": "S-BMA-DEFENSE-F6",
     "seat_id": "S-BMA-DEFENSE",
     "tradition": "S-BMA-DEFENSE",
     "finding_type": "claim-support",
     "location": {
-      "section": "4 Heterogeneity",
-      "paragraph": "transition into Table 5 / implied-context discussion"
+      "section": "4 Heterogeneity (transition into Table 5 / implied-context discussion)",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "While the variables mentioned above are statistically important in influencing the estimates reported in the literature, the economic effects are small, as shown in Table B11 in the Appendix. Even drastic shifts in the variables are associated with relatively modest changes in the partial correlation coefficients",
     "issue": "The authors go a further, often-skipped step beyond statistical significance: having identified which moderators are statistically associated with reported PCCs, they separately quantify and report that most of those associations are economically tiny (Table B11), explicitly distinguishing 'statistically important' from 'economically important' and naming the lab/loss-framing pair as the only economically meaningful exception. This is the correct and complete way to defuse the 'garden of forking paths' charge against a 35-variable BMA: a fishing expedition that had merely curated the largest coefficient out of 35 candidates would not also publish a table showing that 33 of those coefficients move the PCC by economically negligible amounts.",
@@ -565,12 +599,15 @@
   },
   {
     "global_id": "F-023",
+    "id": "S-BMA-DEFENSE-F7",
     "seat_id": "S-BMA-DEFENSE",
     "tradition": "S-BMA-DEFENSE",
     "finding_type": "claim-support",
     "location": {
-      "section": "4 Heterogeneity",
-      "paragraph": "introducing the 35-variable BMA model space"
+      "section": "4 Heterogeneity (introducing the 35-variable BMA model space)",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "After eliminating the reference categories of dummy variables, we are left with 35 factors that can be used in the analysis of heterogeneity.",
     "issue": "The paper discloses that 13 of the 48 hand-coded contextual variables were dropped as 'reference categories' of dummy groups before entering the BMA, leaving 35 — a defensible and conventional step (every dummy-coded categorical variable needs an omitted baseline) — but it does not show its work on which of the 13 were chosen as references versus alternatives, nor does it state whether results are sensitive to that choice (e.g., whether re-coding 'field' rather than 'lab' as the omitted category, or 'manual task' rather than 'cognitive,' would shift which moderators cross the PIP=0.5 line). Because reference-category choice can mechanically relabel which coefficient appears as 'the' lab effect versus 'the' field effect, this is the one link in the BMA chain where the steelman case (an agnostic, pre-specified procedure) and the skeptic's case (discretion dressed as method) are hardest to adjudicate from the text alone — not because the choice looks wrong, but because the paper is silent on whether it was tested.",
@@ -587,12 +624,15 @@
   },
   {
     "global_id": "F-024",
+    "id": "S-BMA-DEFENSE-F8",
     "seat_id": "S-BMA-DEFENSE",
     "tradition": "S-BMA-DEFENSE",
     "finding_type": "claim-support",
     "location": {
-      "section": "4 Heterogeneity",
-      "paragraph": "model uncertainty / prior specification"
+      "section": "4 Heterogeneity (model uncertainty / prior specification)",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "In our baseline application we use agnostic priors recommended by Eicher et al. (2011): each model has the same prior probability, and the prior that each regression coefficient is zero has the same weight as one observation in the data.",
     "issue": "The choice of the 'agnostic' unit-information g-prior of Eicher, Papageorgiou & Raftery (2011) — under which every model gets equal prior probability and every coefficient's zero-prior carries the information weight of a single observation — is not an arbitrary default but the specific prior the cited methodological literature recommends precisely for situations where the analyst has no strong ex ante reason to favor one moderator combination over another, which is exactly the epistemic position the authors are in (35 candidate moderators spanning task type, framing, lab/field, method, and publication characteristics, with no single dominant theory dictating which should matter). Naming the prior, its source, and its rationale in one sentence is the right level of transparency for a baseline choice that the appendix (Table B12, alternative BRIC/beta-binomial priors) then explicitly stress-tests.",
@@ -609,11 +649,13 @@
   },
   {
     "global_id": "F-025",
+    "id": "S-BMA-FATAL-F1",
     "seat_id": "S-BMA-FATAL",
     "tradition": "frequentist specification-search critique / prior-sensitivity analysis",
     "finding_type": "statistical",
     "location": {
       "section": "4 Heterogeneity",
+      "page": null,
       "paragraph": 2,
       "sentence_range": null
     },
@@ -632,11 +674,13 @@
   },
   {
     "global_id": "F-026",
+    "id": "S-BMA-FATAL-F2",
     "seat_id": "S-BMA-FATAL",
     "tradition": "frequentist specification-search critique / prior-sensitivity analysis",
     "finding_type": "statistical",
     "location": {
       "section": "4 Heterogeneity",
+      "page": null,
       "paragraph": 3,
       "sentence_range": null
     },
@@ -661,11 +705,13 @@
   },
   {
     "global_id": "F-027",
+    "id": "S-BMA-FATAL-F3",
     "seat_id": "S-BMA-FATAL",
     "tradition": "frequentist specification-search critique / prior-sensitivity analysis",
     "finding_type": "robustness",
     "location": {
       "section": "4 Heterogeneity",
+      "page": null,
       "paragraph": 4,
       "sentence_range": null
     },
@@ -690,11 +736,13 @@
   },
   {
     "global_id": "F-028",
+    "id": "S-BMA-FATAL-F4",
     "seat_id": "S-BMA-FATAL",
     "tradition": "frequentist specification-search critique / prior-sensitivity analysis",
     "finding_type": "absence-silence",
     "location": {
       "section": "4 Heterogeneity",
+      "page": null,
       "paragraph": 2,
       "sentence_range": null
     },
@@ -719,11 +767,13 @@
   },
   {
     "global_id": "F-029",
+    "id": "S-BMA-FATAL-F5",
     "seat_id": "S-BMA-FATAL",
     "tradition": "frequentist specification-search critique / prior-sensitivity analysis",
     "finding_type": "statistical",
     "location": {
       "section": "4 Heterogeneity",
+      "page": null,
       "paragraph": 1,
       "sentence_range": null
     },
@@ -742,11 +792,13 @@
   },
   {
     "global_id": "F-030",
+    "id": "S-BMA-FATAL-F6",
     "seat_id": "S-BMA-FATAL",
     "tradition": "frequentist specification-search critique / prior-sensitivity analysis",
     "finding_type": "statistical",
     "location": {
       "section": "4 Heterogeneity",
+      "page": null,
       "paragraph": 2,
       "sentence_range": null
     },
@@ -771,11 +823,13 @@
   },
   {
     "global_id": "F-031",
+    "id": "S-BMA-FATAL-F7",
     "seat_id": "S-BMA-FATAL",
     "tradition": "frequentist specification-search critique / prior-sensitivity analysis",
     "finding_type": "framing-overclaim",
     "location": {
       "section": "4 Heterogeneity",
+      "page": null,
       "paragraph": 3,
       "sentence_range": null
     },
@@ -794,6 +848,7 @@
   },
   {
     "global_id": "F-032",
+    "id": "S-CLOSE-READER-F1",
     "seat_id": "S-CLOSE-READER",
     "tradition": "philological / argument-mapping close reading",
     "finding_type": "claim-support",
@@ -818,6 +873,7 @@
   },
   {
     "global_id": "F-033",
+    "id": "S-CLOSE-READER-F2",
     "seat_id": "S-CLOSE-READER",
     "tradition": "philological / argument-mapping close reading",
     "finding_type": "framing-overclaim",
@@ -842,6 +898,7 @@
   },
   {
     "global_id": "F-034",
+    "id": "S-CLOSE-READER-F3",
     "seat_id": "S-CLOSE-READER",
     "tradition": "philological / argument-mapping close reading",
     "finding_type": "claim-support",
@@ -866,6 +923,7 @@
   },
   {
     "global_id": "F-035",
+    "id": "S-CLOSE-READER-F4",
     "seat_id": "S-CLOSE-READER",
     "tradition": "philological / argument-mapping close reading",
     "finding_type": "absence-silence",
@@ -890,6 +948,7 @@
   },
   {
     "global_id": "F-036",
+    "id": "S-CLOSE-READER-F5",
     "seat_id": "S-CLOSE-READER",
     "tradition": "philological / argument-mapping close reading",
     "finding_type": "claim-support",
@@ -914,6 +973,7 @@
   },
   {
     "global_id": "F-037",
+    "id": "S-CLOSE-READER-F6",
     "seat_id": "S-CLOSE-READER",
     "tradition": "philological / argument-mapping close reading",
     "finding_type": "claim-support",
@@ -938,6 +998,7 @@
   },
   {
     "global_id": "F-038",
+    "id": "S-DATA-CONSTRUCTION-F1",
     "seat_id": "S-DATA-CONSTRUCTION",
     "tradition": "systematic-review / PRISMA methodology",
     "finding_type": "absence-silence",
@@ -968,6 +1029,7 @@
   },
   {
     "global_id": "F-039",
+    "id": "S-DATA-CONSTRUCTION-F2",
     "seat_id": "S-DATA-CONSTRUCTION",
     "tradition": "systematic-review / PRISMA methodology",
     "finding_type": "absence-silence",
@@ -992,6 +1054,7 @@
   },
   {
     "global_id": "F-040",
+    "id": "S-DATA-CONSTRUCTION-F3",
     "seat_id": "S-DATA-CONSTRUCTION",
     "tradition": "systematic-review / PRISMA methodology",
     "finding_type": "identification",
@@ -1016,6 +1079,7 @@
   },
   {
     "global_id": "F-041",
+    "id": "S-DATA-CONSTRUCTION-F4",
     "seat_id": "S-DATA-CONSTRUCTION",
     "tradition": "systematic-review / PRISMA methodology",
     "finding_type": "absence-silence",
@@ -1040,6 +1104,7 @@
   },
   {
     "global_id": "F-042",
+    "id": "S-DATA-CONSTRUCTION-F5",
     "seat_id": "S-DATA-CONSTRUCTION",
     "tradition": "systematic-review / PRISMA methodology",
     "finding_type": "absence-silence",
@@ -1064,6 +1129,7 @@
   },
   {
     "global_id": "F-043",
+    "id": "S-DATA-CONSTRUCTION-F6",
     "seat_id": "S-DATA-CONSTRUCTION",
     "tradition": "systematic-review / PRISMA methodology",
     "finding_type": "robustness",
@@ -1088,11 +1154,15 @@
   },
   {
     "global_id": "F-044",
+    "id": "S-DESK-REJECT-F1",
     "seat_id": "S-DESK-REJECT",
     "tradition": "S-DESK-REJECT",
     "finding_type": "framing-overclaim",
     "location": {
-      "section": "Introduction, p.2 (paragraph beginning 'At least since 1971...')"
+      "section": "Introduction, p.2 (paragraph beginning 'At least since 1971...')",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "We show that the experimental evidence in economics does not support this view unconditionally.",
     "issue": "This paper dies the way every meta-analysis dies that lets its abstract say more than its design can license: it tells readers 'increasing financial rewards rarely produces large performance gains' while admitting in its own next breath that the literature it pooled was assembled by researchers who 'rarely conduct experiments in contexts where incentives are expected to have large... effects... because such results are considered trivial' — so the paper spends 40 pages precisely estimating the average size of an effect in a sample explicitly curated to exclude the cases where that effect would be large, and then states the resulting near-zero average as if it were evidence about effect size in general.",
@@ -1115,11 +1185,15 @@
   },
   {
     "global_id": "F-045",
+    "id": "S-DESK-REJECT-F2",
     "seat_id": "S-DESK-REJECT",
     "tradition": "S-DESK-REJECT",
     "finding_type": "claim-support",
     "location": {
-      "section": "Introduction, p.6 (paragraph beginning 'A related limitation, which can be viewed as another form of publication bias...')"
+      "section": "Introduction, p.6 (paragraph beginning 'A related limitation, which can be viewed as another form of publication bias...')",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "Researchers rarely conduct experiments in contexts where incentives are expected to have large and obvious effects (for example, comparing one dollar to one thousand dollars for a routine task) because such results are considered trivial.",
     "issue": "The authors name the fatal confound themselves, in plain language, and then proceed as though naming it discharges the obligation to address it.",
@@ -1142,11 +1216,15 @@
   },
   {
     "global_id": "F-046",
+    "id": "S-DESK-REJECT-F3",
     "seat_id": "S-DESK-REJECT",
     "tradition": "S-DESK-REJECT",
     "finding_type": "claim-support",
     "location": {
-      "section": "Section 2 (Data and Experimental Context), p.9, formula (1)"
+      "section": "Section 2 (Data and Experimental Context), p.9, formula (1)",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "We thus recompute them to partial correlation coefficients (PCCs) according to the following formula:",
     "issue": "The single number that everything in the paper is built on — the partial correlation coefficient — is manufactured by collapsing wildly different statistical objects (OLS coefficients, logit/probit marginal effects, DID estimates, RCT treatment effects measured in grades, dollars, counts, and binary outcomes) through one formula keyed only on a t-statistic and degrees of freedom, and the paper never demonstrates that this transformation preserves a comparable construct across that diversity.",
@@ -1169,11 +1247,15 @@
   },
   {
     "global_id": "F-047",
+    "id": "S-DESK-REJECT-F4",
     "seat_id": "S-DESK-REJECT",
     "tradition": "S-DESK-REJECT",
     "finding_type": "claim-support",
     "location": {
-      "section": "Section 2 (Data and Experimental Context), p.10"
+      "section": "Section 2 (Data and Experimental Context), p.10",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "This procedure yields 396 preferred and 856 non-preferred estimates for the baseline dataset.",
     "issue": "The paper builds an entire 'preferred vs. non-preferred' classification — a variable that the paper's own Bayesian model averaging then tests as a moderator of the headline effect — by having the authors themselves judge, estimate by estimate, which results the ORIGINAL authors 'favored', without ever reporting an inter-coder agreement statistic for that judgment call.",
@@ -1190,11 +1272,15 @@
   },
   {
     "global_id": "F-048",
+    "id": "S-DESK-REJECT-F5",
     "seat_id": "S-DESK-REJECT",
     "tradition": "S-DESK-REJECT",
     "finding_type": "claim-support",
     "location": {
-      "section": "Introduction, p.3 (paragraph beginning 'Figure 1 presents a bird's-eye view...')"
+      "section": "Introduction, p.3 (paragraph beginning 'Figure 1 presents a bird's-eye view...')",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "However, laboratory experiments on this topic are relatively rare in economics, comprising only 19% of the estimates.",
     "issue": "The paper's only positive, statistically significant, headline-worthy finding — the lab-plus-loss-framing effect — is built almost entirely on the rarest cell in the data, and the paper says so in the same breath it reports the result.",
@@ -1217,11 +1303,15 @@
   },
   {
     "global_id": "F-049",
+    "id": "S-DESK-REJECT-F6",
     "seat_id": "S-DESK-REJECT",
     "tradition": "S-DESK-REJECT",
     "finding_type": "absence-silence",
     "location": {
-      "section": "Section 2 (Data and Experimental Context), p.11 — the paragraph describing the coding process ('Three of the co-authors collected 1/3 of the data each; another co-author randomly checked 1/3 of the entire dataset. The discovered inconsistencies in coding were discussed among the co-authors and corrected for the entire dataset.')"
+      "section": "Section 2 (Data and Experimental Context), p.11 — the paragraph describing the coding process ('Three of the co-authors collected 1/3 of the data each; another co-author randomly checked 1/3 of the entire dataset. The discovered inconsistencies in coding were discussed among the co-authors and corrected for the entire dataset.')",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "",
     "issue": "The paper describes its hand-coding quality-control process in terms that sound rigorous but never report the one number that would let a reader judge whether it actually was: an inter-coder reliability statistic for the 100,000+ hand-entered data points.",
@@ -1238,11 +1328,15 @@
   },
   {
     "global_id": "F-050",
+    "id": "S-DESK-REJECT-F7",
     "seat_id": "S-DESK-REJECT",
     "tradition": "S-DESK-REJECT",
     "finding_type": "absence-silence",
     "location": {
-      "section": "Title-page footnote (p.1, corresponding-author note)"
+      "section": "Title-page footnote (p.1, corresponding-author note)",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "We thank Anna Dreber and Uri Gneezy for comments that helped us improve the paper substantially.",
     "issue": "The acknowledgments thank two named scholars — one of whom (Uri Gneezy) is the author or co-author of at least four of the 88 primary studies the meta-analysis itself codes, scores, and in several places singles out by name as illustrative examples — for comments that 'helped... improve the paper substantially,' without the paper anywhere disclosing or discussing this dual role as both commentator-on and subject-of the analysis.",
@@ -1259,11 +1353,15 @@
   },
   {
     "global_id": "F-051",
+    "id": "S-DESK-REJECT-F8",
     "seat_id": "S-DESK-REJECT",
     "tradition": "S-DESK-REJECT",
     "finding_type": "claim-support",
     "location": {
-      "section": "Introduction, p.3 (paragraph beginning 'Figure 1 presents a bird's-eye view...')"
+      "section": "Introduction, p.3 (paragraph beginning 'Figure 1 presents a bird's-eye view...')",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "This estimate lies on the threshold between a negligible and small effect according to the guidelines by Doucouliagos (2011).",
     "issue": "The paper's headline positive finding is reported as sitting precisely on a threshold the authors themselves chose as their interpretive yardstick — and then is narrated, in the abstract and introduction, in language ('statistically significant', 'small but significant positive effects') that reads as more decisive than 'on the threshold between negligible and small' actually is.",
@@ -1280,11 +1378,15 @@
   },
   {
     "global_id": "F-052",
+    "id": "S-DESK-REJECT-F9",
     "seat_id": "S-DESK-REJECT",
     "tradition": "S-DESK-REJECT",
     "finding_type": "absence-silence",
     "location": {
-      "section": "Introduction, p.3 (end of paragraph beginning 'Figure 1 presents a bird's-eye view...')"
+      "section": "Introduction, p.3 (end of paragraph beginning 'Figure 1 presents a bird's-eye view...')",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "Only three studies overlap between our meta-analysis and that of Kim et al. (2022).",
     "issue": "The paper reports, almost in passing, that its sample overlaps with its chief psychology rival (Kim et al., 2022) in only three studies — a number that, if foregrounded rather than buried, would by itself raise the question of whether the paper is comparing two literatures or two largely disjoint samples dressed up as a disciplinary contrast.",
@@ -1301,11 +1403,15 @@
   },
   {
     "global_id": "F-053",
+    "id": "S-DESK-REJECT-F10",
     "seat_id": "S-DESK-REJECT",
     "tradition": "S-DESK-REJECT",
     "finding_type": "claim-support",
     "location": {
-      "section": "Introduction, p.5 (paragraph beginning 'A solution is to use the inverse of the square root...')"
+      "section": "Introduction, p.5 (paragraph beginning 'A solution is to use the inverse of the square root...')",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "Such an instrument is correlated with the standard error by the definition of the latter and can be expected to be less related to method choices.",
     "issue": "The instrument the authors prefer above all other bias-correction techniques — and adopt as 'preferred' on the strength of a single specification test — is defended with an assertion about its exclusion properties that is never independently tested against the very confound (method choices) the paper itself says creates the endogeneity problem in the first place.",
@@ -1328,11 +1434,15 @@
   },
   {
     "global_id": "F-054",
+    "id": "S-DESK-REJECT-F11",
     "seat_id": "S-DESK-REJECT",
     "tradition": "S-DESK-REJECT",
     "finding_type": "claim-support",
     "location": {
-      "section": "Introduction, p.5 (paragraph beginning 'Our initial identification assumptions are based on the Lombard effect...')"
+      "section": "Introduction, p.5 (paragraph beginning 'Our initial identification assumptions are based on the Lombard effect...')",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "It is telling that only half of the studies in our sample mention motivation crowding theory.",
     "issue": "A throwaway parenthetical is asked to do real argumentative work it cannot support: the fact that only half the sampled studies mention motivation-crowding theory is offered as evidence that economists hold a prior belief in incentives' effectiveness — but a study not mentioning a psychological theory says nothing about what its authors believe about incentive effectiveness, only about which theoretical frameworks they cited.",
@@ -1349,11 +1459,15 @@
   },
   {
     "global_id": "F-055",
+    "id": "S-DESK-REJECT-F12",
     "seat_id": "S-DESK-REJECT",
     "tradition": "S-DESK-REJECT",
     "finding_type": "absence-silence",
     "location": {
-      "section": "Appendix A, Figure A1 (PRISMA flow diagram for the baseline dataset), p.40"
+      "section": "Appendix A, Figure A1 (PRISMA flow diagram for the baseline dataset), p.40",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "Studies excluded due to lack of correspondence or data (n = 163)",
     "issue": "163 studies were excluded from the baseline sample for 'lack of correspondence or data' — a number nearly three times the size of the final included sample (54) — and the paper never reports whether these exclusions are random with respect to the reported effect, leaving open the possibility that an entire tier of studies with non-corresponding authors or unavailable data systematically differs in effect size or direction from the studies that made it in.",
@@ -1370,11 +1484,15 @@
   },
   {
     "global_id": "F-056",
+    "id": "S-DESK-REJECT-F13",
     "seat_id": "S-DESK-REJECT",
     "tradition": "S-DESK-REJECT",
     "finding_type": "absence-silence",
     "location": {
-      "section": "Title-page footnote (p.1, corresponding-author note); repeated near-verbatim at pp.11, 21, 30"
+      "section": "Title-page footnote (p.1, corresponding-author note); repeated near-verbatim at pp.11, 21, 30",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "Data and code are available in an online appendix at meta-analysis.cz/incentives.",
     "issue": "The paper repeatedly promises that 'data and code are available,' but nowhere in the manuscript does it specify a license, a persistent archival mechanism (e.g., a DOI-backed repository such as Zenodo or OSF), or a commitment to maintain the linked website beyond the authors' own institutional lifespans — leaving the paper's central replicability claim resting entirely on a single self-hosted URL.",
@@ -1391,6 +1509,7 @@
   },
   {
     "global_id": "F-057",
+    "id": "S-EXTERNAL-VALIDITY-F1",
     "seat_id": "S-EXTERNAL-VALIDITY",
     "tradition": "generalizability / scope-conditions methodology",
     "finding_type": "framing-overclaim",
@@ -1421,6 +1540,7 @@
   },
   {
     "global_id": "F-058",
+    "id": "S-EXTERNAL-VALIDITY-F2",
     "seat_id": "S-EXTERNAL-VALIDITY",
     "tradition": "generalizability / scope-conditions methodology",
     "finding_type": "framing-overclaim",
@@ -1451,6 +1571,7 @@
   },
   {
     "global_id": "F-059",
+    "id": "S-EXTERNAL-VALIDITY-F3",
     "seat_id": "S-EXTERNAL-VALIDITY",
     "tradition": "generalizability / scope-conditions methodology",
     "finding_type": "framing-overclaim",
@@ -1475,6 +1596,7 @@
   },
   {
     "global_id": "F-060",
+    "id": "S-EXTERNAL-VALIDITY-F4",
     "seat_id": "S-EXTERNAL-VALIDITY",
     "tradition": "generalizability / scope-conditions methodology",
     "finding_type": "absence-silence",
@@ -1499,6 +1621,7 @@
   },
   {
     "global_id": "F-061",
+    "id": "S-FRAMING-DEFENSE-F1",
     "seat_id": "S-FRAMING-DEFENSE",
     "tradition": "evidence-synthesis / cautious-inference economics",
     "finding_type": "framing-overclaim",
@@ -1523,6 +1646,7 @@
   },
   {
     "global_id": "F-062",
+    "id": "S-FRAMING-DEFENSE-F2",
     "seat_id": "S-FRAMING-DEFENSE",
     "tradition": "evidence-synthesis / cautious-inference economics",
     "finding_type": "identification",
@@ -1547,6 +1671,7 @@
   },
   {
     "global_id": "F-063",
+    "id": "S-FRAMING-DEFENSE-F3",
     "seat_id": "S-FRAMING-DEFENSE",
     "tradition": "evidence-synthesis / cautious-inference economics",
     "finding_type": "clarity",
@@ -1571,6 +1696,7 @@
   },
   {
     "global_id": "F-064",
+    "id": "S-FRAMING-DEFENSE-F4",
     "seat_id": "S-FRAMING-DEFENSE",
     "tradition": "evidence-synthesis / cautious-inference economics",
     "finding_type": "claim-support",
@@ -1595,6 +1721,7 @@
   },
   {
     "global_id": "F-065",
+    "id": "S-FRAMING-DEFENSE-F5",
     "seat_id": "S-FRAMING-DEFENSE",
     "tradition": "evidence-synthesis / cautious-inference economics",
     "finding_type": "framing-overclaim",
@@ -1619,6 +1746,7 @@
   },
   {
     "global_id": "F-066",
+    "id": "S-FRAMING-FATAL-F1",
     "seat_id": "S-FRAMING-FATAL",
     "tradition": "behavioral/psychological theory of motivation (motivation-crowding tradition)",
     "finding_type": "framing-overclaim",
@@ -1649,6 +1777,7 @@
   },
   {
     "global_id": "F-067",
+    "id": "S-FRAMING-FATAL-F2",
     "seat_id": "S-FRAMING-FATAL",
     "tradition": "behavioral/psychological theory of motivation (motivation-crowding tradition)",
     "finding_type": "framing-overclaim",
@@ -1679,6 +1808,7 @@
   },
   {
     "global_id": "F-068",
+    "id": "S-FRAMING-FATAL-F3",
     "seat_id": "S-FRAMING-FATAL",
     "tradition": "behavioral/psychological theory of motivation (motivation-crowding tradition)",
     "finding_type": "absence-silence",
@@ -1709,6 +1839,7 @@
   },
   {
     "global_id": "F-069",
+    "id": "S-FRAMING-FATAL-F4",
     "seat_id": "S-FRAMING-FATAL",
     "tradition": "behavioral/psychological theory of motivation (motivation-crowding tradition)",
     "finding_type": "claim-support",
@@ -1739,6 +1870,7 @@
   },
   {
     "global_id": "F-070",
+    "id": "S-FRAMING-FATAL-F5",
     "seat_id": "S-FRAMING-FATAL",
     "tradition": "behavioral/psychological theory of motivation (motivation-crowding tradition)",
     "finding_type": "clarity",
@@ -1763,6 +1895,7 @@
   },
   {
     "global_id": "F-071",
+    "id": "S-HETEROGENEITY-DEFENSE-F1",
     "seat_id": "S-HETEROGENEITY-DEFENSE",
     "tradition": "loss-aversion / behavioral-economics theory-grounded interpretation",
     "finding_type": "claim-support",
@@ -1787,6 +1920,7 @@
   },
   {
     "global_id": "F-072",
+    "id": "S-HETEROGENEITY-DEFENSE-F2",
     "seat_id": "S-HETEROGENEITY-DEFENSE",
     "tradition": "loss-aversion / behavioral-economics theory-grounded interpretation",
     "finding_type": "claim-support",
@@ -1811,6 +1945,7 @@
   },
   {
     "global_id": "F-073",
+    "id": "S-HETEROGENEITY-DEFENSE-F3",
     "seat_id": "S-HETEROGENEITY-DEFENSE",
     "tradition": "loss-aversion / behavioral-economics theory-grounded interpretation",
     "finding_type": "claim-support",
@@ -1835,6 +1970,7 @@
   },
   {
     "global_id": "F-074",
+    "id": "S-HETEROGENEITY-DEFENSE-F4",
     "seat_id": "S-HETEROGENEITY-DEFENSE",
     "tradition": "loss-aversion / behavioral-economics theory-grounded interpretation",
     "finding_type": "robustness",
@@ -1859,6 +1995,7 @@
   },
   {
     "global_id": "F-075",
+    "id": "S-HETEROGENEITY-DEFENSE-F5",
     "seat_id": "S-HETEROGENEITY-DEFENSE",
     "tradition": "loss-aversion / behavioral-economics theory-grounded interpretation",
     "finding_type": "robustness",
@@ -1883,6 +2020,7 @@
   },
   {
     "global_id": "F-076",
+    "id": "S-HETEROGENEITY-DEFENSE-F6",
     "seat_id": "S-HETEROGENEITY-DEFENSE",
     "tradition": "loss-aversion / behavioral-economics theory-grounded interpretation",
     "finding_type": "claim-support",
@@ -1907,6 +2045,7 @@
   },
   {
     "global_id": "F-077",
+    "id": "S-HETEROGENEITY-DEFENSE-F7",
     "seat_id": "S-HETEROGENEITY-DEFENSE",
     "tradition": "loss-aversion / behavioral-economics theory-grounded interpretation",
     "finding_type": "identification",
@@ -1931,6 +2070,7 @@
   },
   {
     "global_id": "F-078",
+    "id": "S-HETEROGENEITY-FATAL-F1",
     "seat_id": "S-HETEROGENEITY-FATAL",
     "tradition": "specification-curve / garden-of-forking-paths critique",
     "finding_type": "robustness",
@@ -1961,6 +2101,7 @@
   },
   {
     "global_id": "F-079",
+    "id": "S-HETEROGENEITY-FATAL-F2",
     "seat_id": "S-HETEROGENEITY-FATAL",
     "tradition": "specification-curve / garden-of-forking-paths critique",
     "finding_type": "statistical",
@@ -1991,6 +2132,7 @@
   },
   {
     "global_id": "F-080",
+    "id": "S-HETEROGENEITY-FATAL-F3",
     "seat_id": "S-HETEROGENEITY-FATAL",
     "tradition": "specification-curve / garden-of-forking-paths critique",
     "finding_type": "robustness",
@@ -2021,6 +2163,7 @@
   },
   {
     "global_id": "F-081",
+    "id": "S-HETEROGENEITY-FATAL-F4",
     "seat_id": "S-HETEROGENEITY-FATAL",
     "tradition": "specification-curve / garden-of-forking-paths critique",
     "finding_type": "identification",
@@ -2051,6 +2194,7 @@
   },
   {
     "global_id": "F-082",
+    "id": "S-HETEROGENEITY-FATAL-F5",
     "seat_id": "S-HETEROGENEITY-FATAL",
     "tradition": "specification-curve / garden-of-forking-paths critique",
     "finding_type": "absence-silence",
@@ -2081,6 +2225,7 @@
   },
   {
     "global_id": "F-083",
+    "id": "S-HETEROGENEITY-FATAL-F6",
     "seat_id": "S-HETEROGENEITY-FATAL",
     "tradition": "specification-curve / garden-of-forking-paths critique",
     "finding_type": "claim-support",
@@ -2105,6 +2250,7 @@
   },
   {
     "global_id": "F-084",
+    "id": "S-HETEROGENEITY-FATAL-F7",
     "seat_id": "S-HETEROGENEITY-FATAL",
     "tradition": "specification-curve / garden-of-forking-paths critique",
     "finding_type": "framing-overclaim",
@@ -2135,6 +2281,7 @@
   },
   {
     "global_id": "F-085",
+    "id": "S-METHODS-AUDITOR-F1",
     "seat_id": "S-METHODS-AUDITOR",
     "tradition": "applied econometrics / meta-analysis methodology (Stanley-Doucouliagos tradition)",
     "finding_type": "statistical",
@@ -2165,6 +2312,7 @@
   },
   {
     "global_id": "F-086",
+    "id": "S-METHODS-AUDITOR-F2",
     "seat_id": "S-METHODS-AUDITOR",
     "tradition": "applied econometrics / meta-analysis methodology (Stanley-Doucouliagos tradition)",
     "finding_type": "statistical",
@@ -2195,6 +2343,7 @@
   },
   {
     "global_id": "F-087",
+    "id": "S-METHODS-AUDITOR-F3",
     "seat_id": "S-METHODS-AUDITOR",
     "tradition": "applied econometrics / meta-analysis methodology (Stanley-Doucouliagos tradition)",
     "finding_type": "statistical",
@@ -2219,11 +2368,15 @@
   },
   {
     "global_id": "F-088",
+    "id": "S-METHODS-AUDITOR-F4",
     "seat_id": "S-METHODS-AUDITOR",
     "tradition": "applied econometrics / meta-analysis methodology (Stanley-Doucouliagos tradition)",
     "finding_type": "absence-silence",
     "location": {
-      "section": "2 Data and Experimental Context / 3 Publication Bias"
+      "section": "2 Data and Experimental Context / 3 Publication Bias",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "",
     "issue": "The paper states 'We winsorize the effects at the 1% level to limit the influence of outliers' immediately after introducing the PCC transformation and its formula ('Using the computed partial correlation and the original t-statistic we then obtain the corresponding standard error of the standardized measure (Stanley & Doucouliagos, 2012)'), but never says (a) whether winsorizing is applied to the PCC, to the underlying t-statistic/point estimate before the PCC transform, or to both PCC and Cohen's d in the expanded dataset; (b) whether the standard error of the winsorized PCC is recomputed from the winsorized value or still derived from the original (pre-winsorizing) t-statistic via the Stanley & Doucouliagos formula referenced in the same breath; and (c) how winsorizing at the 1% level interacts with bias-correction techniques that are explicitly tail-sensitive by design -- Top10 (uses only the most precise 10% of estimates), the stem-based method (endogenously trades off bias and variance at the tails), the endogenous-kink model (defines a 'highly statistically significant' segment), and the Andrews-Kasy selection model (models publication probability as a step function of significance thresholds). Each of these techniques' behavior could plausibly be sensitive to whether the 1% trimming was performed before or after the PCC/SE pairing was fixed, yet the chain from 'raw estimate -> winsorize -> PCC -> SE -> bias-correction battery' is never made fully explicit.",
@@ -2240,11 +2393,15 @@
   },
   {
     "global_id": "F-089",
+    "id": "S-METHODS-AUDITOR-F5",
     "seat_id": "S-METHODS-AUDITOR",
     "tradition": "applied econometrics / meta-analysis methodology (Stanley-Doucouliagos tradition)",
     "finding_type": "presentation",
     "location": {
-      "section": "Table 2 notes / Tables B4, B6, B7, B9, B12 notes (boilerplate methods glossary)"
+      "section": "Table 2 notes / Tables B4, B6, B7, B9, B12 notes (boilerplate methods glossary)",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "Study = weighted by the inverse of the number of estimates reported per study, Precision = weighted by the inverse of the estimate's standard error",
     "issue": "Minor notes folded into one item: (i) the identical multi-paragraph methods glossary in the notes to Table 2 is reproduced verbatim across at least seven tables (B4, B6, B7, B9, plus the Cohen's-d variants), which is exactly the kind of copy-paste boilerplate that let the MAIVE 'degrees of freedom' vs. 'number of observations' inconsistency (S-METHODS-AUDITOR-F1) propagate silently into every reproduction rather than being caught once; (ii) the claim that 'different weights do not change the conclusion, and any systematic differences seem to be small' (Table 1 discussion) is asserted qualitatively without a pointer to where a reader could see the weighted-vs-unweighted comparison quantified beyond the two summary columns of Table 1 itself; (iii) the phrase 'we had to fill more than 100,000 data points by hand after reading the primary studies' together with 'another co-author randomly checked 1/3 of the entire dataset' leaves unstated what error rate that spot-check found, which would let a reader gauge how much to trust the hand-coded moderators that the entire heterogeneity and BMA analysis (Section 4) is built on.",
@@ -2261,14 +2418,15 @@
   },
   {
     "global_id": "F-090",
+    "id": "S-MISSING-ANALYSIS-F1",
     "seat_id": "S-MISSING-ANALYSIS",
     "tradition": "absence-as-evidence / pre-registration audit",
     "finding_type": "absence-silence",
     "location": {
       "section": "1 Introduction / Table 5 (Effects implied for different contexts)",
+      "page": null,
       "paragraph": null,
-      "sentence_range": null,
-      "page": null
+      "sentence_range": null
     },
     "quote": "",
     "issue": "The paper reports a single point estimate and one 95% CI for the headline 'lab + loss framing' exception (PCC = 0.07, CI (0.01, 0.14)) and explicitly says this value 'lies on the threshold between a negligible and small effect.' But nowhere does the paper report a power/precision analysis for this specific cell -- e.g., how many of the 2,193 (or 1,252 baseline) estimates actually fall jointly into 'laboratory' AND 'loss framing' (a sub-sub-sample of the already-rare 19% lab estimates), what the implied minimum detectable effect is for that cell, or how sensitive the 0.07 figure is to the inclusion/exclusion of a handful of studies. Given that the entire paper's one positive finding rests on this borderline cell, the absence of any stated cell size, design-based power calculation, or precision discussion for it is a load-bearing gap: a reader cannot tell whether (0.01, 0.14) reflects a well-powered estimate of a real small effect or a thinly-populated cell whose CI happens to exclude zero.",
@@ -2291,14 +2449,15 @@
   },
   {
     "global_id": "F-091",
+    "id": "S-MISSING-ANALYSIS-F2",
     "seat_id": "S-MISSING-ANALYSIS",
     "tradition": "absence-as-evidence / pre-registration audit",
     "finding_type": "claim-support",
     "location": {
       "section": "2 Data and Experimental Context",
+      "page": null,
       "paragraph": null,
-      "sentence_range": null,
-      "page": null
+      "sentence_range": null
     },
     "quote": "Three of the co-authors collected 1/3 of the data each; another co-author randomly checked 1/3 of the entire dataset. The discovered inconsistencies in coding were discussed among the co-authors and corrected for the entire dataset.",
     "issue": "This is the paper's only account of how the 48-variable, >100,000-data-point hand-coding exercise was quality-controlled. It describes a spot-check by a single co-author over one third of the data and an informal 'discussed among the co-authors' resolution process, but reports no inter-coder reliability statistic (e.g., Cohen's/Fleiss' kappa, percent agreement, or even a count of how many discrepancies were found and in which variables). For a meta-analysis whose entire heterogeneity/BMA apparatus depends on these 48 hand-coded moderators being measured consistently, the absence of any quantitative reliability check on the coding itself -- only a description of an informal cross-check -- is a missing validation step a rigorous reader would expect (analogous to reporting inter-rater reliability in any systematic-review/PRISMA-style protocol).",
@@ -2315,14 +2474,15 @@
   },
   {
     "global_id": "F-092",
+    "id": "S-MISSING-ANALYSIS-F3",
     "seat_id": "S-MISSING-ANALYSIS",
     "tradition": "absence-as-evidence / pre-registration audit",
     "finding_type": "absence-silence",
     "location": {
       "section": "1 Introduction / 2 Data and Experimental Context (search-strategy description and Figure A1-A3 PRISMA diagrams)",
+      "page": null,
       "paragraph": null,
-      "sentence_range": null,
-      "page": null
+      "sentence_range": null
     },
     "quote": "",
     "issue": "PRISMA flow diagrams are used to document the search-and-screening funnel (Figures A1-A3), but the paper never states that the meta-analysis protocol itself -- the inclusion criteria, the moderator list, the choice of PCC as the common-currency metric, the winsorizing threshold, the planned bias-correction battery, or the BMA specification -- was registered ex ante (e.g., in PROSPERO, OSF, or as a pre-analysis plan) before the data were collected and inspected. PRISMA documents what was searched and found; it says nothing about whether the analytic choices were locked down beforehand or adapted after seeing the data. Given the very large garden-of-forking-paths the central tensions flag (>30 billion BMA models, a battery of 6+ bias-correction techniques, a 'preferred vs non-preferred' classification that is itself a judgment call), the absence of any statement about ex ante registration of the analysis plan -- as opposed to merely the search protocol -- is a load-bearing gap.",
@@ -2345,14 +2505,15 @@
   },
   {
     "global_id": "F-093",
+    "id": "S-MISSING-ANALYSIS-F4",
     "seat_id": "S-MISSING-ANALYSIS",
     "tradition": "absence-as-evidence / pre-registration audit",
     "finding_type": "claim-support",
     "location": {
       "section": "1 Introduction (footnote 3)",
+      "page": null,
       "paragraph": null,
-      "sentence_range": null,
-      "page": null
+      "sentence_range": null
     },
     "quote": "These experiments also tend to have low power. Esteves-Sorenson & Broce (2022) report that across the 82 papers they review, the median number of subjects per experimental condition was merely 15.",
     "issue": "The paper acknowledges -- via a citation to a different study -- that the underlying experimental literature is plausibly underpowered, and even floats this as a candidate explanation for the null headline result later ('economics experiments have, on average, failed to detect the underlying positive effects of incentives due to measurement error and limited statistical power'). Yet the paper never performs its own power/precision diagnostic on its actual collected sample of 2,193 estimates / 88 studies (e.g., a retrospective power curve, a funnel-based assessment of how many included estimates could even in principle have detected a 'small' Doucouliagos-scale PCC of 0.07-0.17 at conventional power). It borrows someone else's power claim as a post hoc explanatory hand-wave rather than quantifying power within its own dataset -- a striking omission for a paper that otherwise builds an elaborate statistical apparatus.",
@@ -2375,14 +2536,15 @@
   },
   {
     "global_id": "F-094",
+    "id": "S-MISSING-ANALYSIS-F5",
     "seat_id": "S-MISSING-ANALYSIS",
     "tradition": "absence-as-evidence / pre-registration audit",
     "finding_type": "absence-silence",
     "location": {
       "section": "3 Publication Bias (robustness paragraph, and Appendix Tables B6-B9)",
+      "page": null,
       "paragraph": null,
-      "sentence_range": null,
-      "page": null
+      "sentence_range": null
     },
     "quote": "",
     "issue": "The robustness battery reported (non-winsorized data, expanded Cohen's-d dataset, working-paper subset, one-estimate-per-study/experiment, preferred-vs-non-preferred) never includes a leave-one-study-out (or leave-one-out by source/journal) analysis -- i.e., systematically dropping each of the 88 (or 54 baseline) studies in turn and checking whether the corrected mean effect, the publication-bias slope, or the lab+loss-framing exception survives. Given that the paper itself documents extreme concentration of estimates within studies (93% of studies contribute multiple estimates, averaging 25 per study), a single influential study could be disproportionately responsible for either the overall near-zero corrected mean or the one positive exception, and the reader has no way to assess that from the reported checks.",
@@ -2399,14 +2561,15 @@
   },
   {
     "global_id": "F-095",
+    "id": "S-MISSING-ANALYSIS-F6",
     "seat_id": "S-MISSING-ANALYSIS",
     "tradition": "absence-as-evidence / pre-registration audit",
     "finding_type": "absence-silence",
     "location": {
       "section": "3 Publication Bias / Table 2 and Table 5 (reporting of corrected means and implied estimates)",
+      "page": null,
       "paragraph": null,
-      "sentence_range": null,
-      "page": null
+      "sentence_range": null
     },
     "quote": "",
     "issue": "Throughout the corrected-mean and implied-estimate reporting (the 0.03 'best practice' figure, the 0.025 Lazear/Angrist-Lavy figure, and the per-context implied estimates in Table 5 other than the singled-out 0.07 lab+loss cell), the paper reports point estimates and significance levels but never a prediction interval -- the range within which a new study's true effect would be expected to fall, given the estimated heterogeneity (tau^2) across the 88 studies. A confidence interval describes uncertainty about the mean; a prediction interval describes the dispersion of true study-level effects, which is what a practitioner deciding whether to use incentives in their own context actually needs. The paper documents substantial heterogeneity informally ('there is also substantial heterogeneity' from the funnel plot, Figure 1's 'median estimates... typically range between 0 and 0.2... some studies report values as low as -0.2 or as high as 0.4') but never translates that into a formal prediction interval around any of its headline corrected-mean numbers.",
@@ -2423,14 +2586,15 @@
   },
   {
     "global_id": "F-096",
+    "id": "S-MISSING-ANALYSIS-F7",
     "seat_id": "S-MISSING-ANALYSIS",
     "tradition": "absence-as-evidence / pre-registration audit",
     "finding_type": "claim-support",
     "location": {
       "section": "4 Heterogeneity (BMA implementation paragraph)",
+      "page": null,
       "paragraph": null,
-      "sentence_range": null,
-      "page": null
+      "sentence_range": null
     },
     "quote": "Markov chain Monte Carlo algorithm (Zeugner & Feldkircher, 2015) to walk only through the most important part of the model mass",
     "issue": "The paper states that, because the BMA model space exceeds 30 billion candidate models, an MCMC algorithm is used to sample it -- but it never reports any convergence diagnostics for that sampler (e.g., chain length / number of draws, burn-in, the correlation between analytical and MCMC-based posterior model probabilities that the BMS package conventionally reports, or any check that the walk actually covered the high-probability region rather than getting stuck in a local mode). For an exercise whose entire credibility rests on the MCMC having adequately explored a combinatorial space this large, the absence of any stated convergence check is a load-bearing methodological gap that a careful referee in the Bayesian-econometrics tradition would flag immediately.",
@@ -2447,14 +2611,15 @@
   },
   {
     "global_id": "F-097",
+    "id": "S-MISSING-ANALYSIS-F8",
     "seat_id": "S-MISSING-ANALYSIS",
     "tradition": "absence-as-evidence / pre-registration audit",
     "finding_type": "absence-silence",
     "location": {
       "section": "1 Introduction / 5 Conclusion (discussion of the lab + loss-framing exception and its proposed explanations)",
+      "page": null,
       "paragraph": null,
-      "sentence_range": null,
-      "page": null
+      "sentence_range": null
     },
     "quote": "",
     "issue": "The paper offers two competing explanations for why the corrected effect is positive specifically in the lab+loss-framing cell and near-zero elsewhere -- the 'distraction effect' (citing Rusz et al. 2020, more pronounced in field settings) and a measurement-error/low-power story (citing Esteves-Sorenson & Broce 2022) -- but never designs or reports any analysis that would discriminate between them, nor any falsification/placebo check that would stress-test either story (e.g., does the lab effect appear, or fail to appear, in a placebo cell where the distraction-effect mechanism predicts it should not; does the framing effect persist when restricted to high-powered studies only, which would favor the distraction story over the low-power story). Both explanations are floated as 'possible' and left untested side by side.",
@@ -2471,6 +2636,7 @@
   },
   {
     "global_id": "F-098",
+    "id": "S-PCC-DEFENSE-F1",
     "seat_id": "S-PCC-DEFENSE",
     "tradition": "Stanley-Doucouliagos economics meta-analysis",
     "finding_type": "robustness",
@@ -2495,6 +2661,7 @@
   },
   {
     "global_id": "F-099",
+    "id": "S-PCC-DEFENSE-F2",
     "seat_id": "S-PCC-DEFENSE",
     "tradition": "Stanley-Doucouliagos economics meta-analysis",
     "finding_type": "absence-silence",
@@ -2519,6 +2686,7 @@
   },
   {
     "global_id": "F-100",
+    "id": "S-PCC-DEFENSE-F3",
     "seat_id": "S-PCC-DEFENSE",
     "tradition": "Stanley-Doucouliagos economics meta-analysis",
     "finding_type": "identification",
@@ -2543,11 +2711,15 @@
   },
   {
     "global_id": "F-101",
+    "id": "S-PCC-FATAL-F1",
     "seat_id": "S-PCC-FATAL",
     "tradition": "S-PCC-FATAL",
     "finding_type": "claim-support",
     "location": {
-      "section": "4 Heterogeneity (Bayesian model averaging discussion)"
+      "section": "4 Heterogeneity (Bayesian model averaging discussion)",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "The Bayesian approach, however,\ntreats all observations as independent, and to account for within-study dependence we also\nemploy frequentist model averaging with Mallow's weights (Hansen, 2007) and orthogonalization",
     "issue": "The paper's central headline moderator finding -- the 'lab + loss framing' exception (PCC ~0.07, the only positive result in the paper) -- is identified primarily through the Bayesian model-averaging exercise (Table 4, Figure 6, PIP=1 for SE/framing/lab). The authors themselves admit this Bayesian engine 'treats all observations as independent,' i.e. it ignores that 93% of the 2,193 estimates are nested in just 88 studies (avg. 25/study, many sharing subject pools, specifications, and treatment arms). The only attempt to handle this dependence -- frequentist model averaging with Mallow's weights -- is explicitly demoted to a 'robustness check,' meaning the paper's preferred, headline-generating procedure is the one that gets the dependence structure wrong, while the dependence-aware procedure is relegated to secondary status. This inverts the natural priority: the analysis that respects the actual data-generating/sampling structure should be the baseline, not the check.",
@@ -2570,11 +2742,15 @@
   },
   {
     "global_id": "F-102",
+    "id": "S-PCC-FATAL-F2",
     "seat_id": "S-PCC-FATAL",
     "tradition": "S-PCC-FATAL",
     "finding_type": "claim-support",
     "location": {
-      "section": "Appendix B (Multiple estimates per study) / Section 3 Table 2 notes"
+      "section": "Appendix B (Multiple estimates per study) / Section 3 Table 2 notes",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "For 93% of the studies we collect multiple estimates, with an average of 25 estimates included per study",
     "issue": "Single-level clustering at the study level is the paper's sole adjustment for dependence in every linear/meta-regression specification (Table 2, Table B8, etc.), yet the paper's own description of why studies yield ~25 estimates each reveals at least three distinct, nested sources of correlation that a flat one-way study cluster cannot distinguish: (i) multiple specifications run on the *same* sample/regression (mechanically correlated coefficients and standard errors), (ii) multiple treatment arms within one experiment (estimates sharing a common control group), and (iii) multiple experiments within one study (a coarser grouping than 'experiment' but finer than 'study'). Treating all ~25 estimates per study as exchangeable members of one cluster, when some pairs share an entire regression sample and others merely share an author team, materially understates the true effective sample size used for inference (the cluster-robust variance estimator's asymptotics assume a moderate number of roughly homogeneous, independent clusters -- 88 clusters of wildly heterogeneous internal correlation structure is a known stress case).",
@@ -2597,11 +2773,15 @@
   },
   {
     "global_id": "F-103",
+    "id": "S-PCC-FATAL-F3",
     "seat_id": "S-PCC-FATAL",
     "tradition": "S-PCC-FATAL",
     "finding_type": "claim-support",
     "location": {
-      "section": "2 Data and Experimental Context (PCC formula, eq. 1)"
+      "section": "2 Data and Experimental Context (PCC formula, eq. 1)",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "where t stands for the t-statistic of the reported coefficient and df indicates the number of degrees of freedom in the estimation",
     "issue": "The PCC formula (t / sqrt(t^2 + df)) is presented as THE mechanism that converts incommensurable outcome measures (grades, game scores, charitable donations, work output, time-to-completion) into a single comparable metric. But the formula's comparability hinges entirely on 't' and 'df' meaning the same statistical thing across the 88 primary studies. The paper never discusses whether the 'degrees of freedom' it collects are computed consistently across studies that use very different inference frameworks -- e.g., a study with cluster-robust standard errors at the subject level reports an effective df that is not the residual df of an OLS regression on the full sample; fixed-effects panel models, multi-level/hierarchical models, and bootstrap-based inference each define 'df' differently or not at all in the classical sense. If primary studies' reported df values are not on a common footing, the resulting PCCs -- despite their superficial numerical comparability -- are not actually standardized onto a common scale, undermining the paper's central claim that PCC is a valid 'common currency' (the very property the formula is invoked to deliver).",
@@ -2624,11 +2804,15 @@
   },
   {
     "global_id": "F-104",
+    "id": "S-PCC-FATAL-F4",
     "seat_id": "S-PCC-FATAL",
     "tradition": "S-PCC-FATAL",
     "finding_type": "claim-support",
     "location": {
-      "section": "Table 3 (Description and summary statistics of regression variables -- 'Effect: negative')"
+      "section": "Table 3 (Description and summary statistics of regression variables -- 'Effect: negative')",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "= 1 if the proxy for performance i",
     "issue": "The procedure for harmonizing the *sign* of the PCC across outcome measures with opposite polarity (e.g., 'time to finish a task,' where a negative coefficient on the incentive means BETTER performance, versus 'quantity produced,' where positive means better) is disclosed only as a one-line aside inside a Table-3 variable definition ('...has to be multiplied by -1 for consistency in our meta-analysis'), not in Section 2 where the PCC formula and aggregation are introduced and where a reader would need it to assess whether pooling 2,193 estimates into one mean PCC is even coherent. Worse, this hand-applied sign-flip is itself a discretionary coding decision made by the same co-author team that 'filled more than 100,000 data points by hand' (a process the paper says was checked by re-coding only 1/3 of the dataset) -- yet 'Effect: positive' subsequently appears as a moderator in the BMA/heterogeneity analysis (Table 4: posterior mean 0.013, PIP 0.461) with a non-trivial estimated relationship to the (supposedly already-harmonized) PCC. If the harmonization fully removed the sign artifact, 'Effect: positive' should carry no residual explanatory power over the response variable it was used to construct/clean; its surviving PIP suggests either incomplete harmonization, a confound between measurement-direction and substantive context (e.g., lab tasks disproportionately use 'positive' proxies), or both -- any of which casts doubt on whether the pooled PCC numbers reported as the headline (0.051, 0.03, 0.07) are measuring a single coherent construct.",
@@ -2651,11 +2835,15 @@
   },
   {
     "global_id": "F-105",
+    "id": "S-PCC-FATAL-F5",
     "seat_id": "S-PCC-FATAL",
     "tradition": "S-PCC-FATAL",
     "finding_type": "absence-silence",
     "location": {
-      "section": "2 Data and Experimental Context / 3 Publication Bias (Section introducing PCC and clustering)"
+      "section": "2 Data and Experimental Context / 3 Publication Bias (Section introducing PCC and clustering)",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "",
     "issue": "Nowhere does the paper discuss -- or test -- whether the partial correlation coefficient itself is comparable across the very different statistical models from which it is extracted. A PCC computed from a simple bivariate OLS t-statistic and an PCC computed from a t-statistic on a single coefficient inside a saturated fixed-effects panel regression with dozens of controls are not measuring 'the same thing' in any straightforward sense -- the latter's t-statistic (and hence PCC) is partialling out a completely different (and study-specific) set of confounders, so the 'partial' in 'partial correlation' means something different study to study. The paper presents PCC as if it neutralizes model heterogeneity ('the point estimates cannot be compared directly. We thus recompute them to partial correlation coefficients...for comparability'), but converting to a partial correlation does not equalize what is being partialled out. This is a foundational, load-bearing assumption of the entire meta-analysis -- it determines whether 2,193 numbers can be meaningfully averaged at all -- and it receives no acknowledgment, test, or even a caveat anywhere in the manuscript or appendix.",
@@ -2678,11 +2866,15 @@
   },
   {
     "global_id": "F-106",
+    "id": "S-PCC-FATAL-F6",
     "seat_id": "S-PCC-FATAL",
     "tradition": "S-PCC-FATAL",
     "finding_type": "claim-support",
     "location": {
-      "section": "3 Publication Bias (robustness paragraph referencing Table B8)"
+      "section": "3 Publication Bias (robustness paragraph referencing Table B8)",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "Our results do not change substantially if we consider just one estimate per study or one estimate per experiment.",
     "issue": "This is offered as the paper's main reassurance that within-study/within-experiment dependence does not drive the results, but it only checks the *publication-bias correction* (Table B8 reports the same OLS/W-Study/BE-Study/W-Experiment/BE-Experiment panel structure as Table 2). It is never extended to the heterogeneity/BMA exercise -- the very place where the paper's headline positive finding (lab + loss framing, PCC ~0.07, 'on the threshold between negligible and small') lives, and where, per F1 above, dependence is explicitly assumed away. A reassurance that the *mean* is robust to one-estimate-per-study subsetting says nothing about whether a *moderator* result built on 2,193 correlated observations and a 35-variable BMA search would survive the same collapse to ~88-200 independent observations -- a search with a much higher ratio of candidate explanations to truly independent data points than the headline-mean exercise.",
@@ -2699,11 +2891,15 @@
   },
   {
     "global_id": "F-107",
+    "id": "S-PCC-FATAL-F7",
     "seat_id": "S-PCC-FATAL",
     "tradition": "S-PCC-FATAL",
     "finding_type": "absence-silence",
     "location": {
-      "section": "3 Publication Bias (Table 2 weighting columns / Section 2 weighting discussion)"
+      "section": "3 Publication Bias (Table 2 weighting columns / Section 2 weighting discussion)",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "",
     "issue": "The paper offers two weighting regimes throughout (unweighted = each estimate counted equally; 'Study'/'Weighted' = inverse of the number of estimates per study, giving each study equal weight) but never weights by precision *and* study membership jointly, nor does it discuss -- or even flag as an open question -- which weighting scheme is theoretically appropriate given that the within-study estimate count (1 to 107+, per Figure 3's N values) is itself plausibly correlated with study quality, sample size, or the very publication-bias mechanisms the paper is trying to correct (a study that ran more specifications/treatment arms to find a publishable result would, under 'each study counts equally,' have its 25 fishing-expedition estimates collapsed to the same weight as another study's 1 clean estimate -- diluting exactly the signal the publication-bias correction is designed to detect). This is a load-bearing methodological choice with no stated justification beyond 'different weights do not change the conclusion.'",
@@ -2720,12 +2916,15 @@
   },
   {
     "global_id": "F-108",
+    "id": "S-PRESENTATION-F1",
     "seat_id": "S-PRESENTATION",
     "tradition": "S-PRESENTATION",
     "finding_type": "presentation",
     "location": {
       "section": "Abstract / Introduction (p.1, p.3)",
-      "table_or_figure": "no corresponding cell in Table 5"
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "which yield a mean partial correlation of 0.07, with a 95% confidence interval of (0.01, 0.14)",
     "issue": "The paper's single positive headline finding -- the joint 'laboratory + loss (negative) framing' implied effect of about 0.07 -- is stated repeatedly in prose (Abstract, Introduction, Heterogeneity section, Conclusion) but never appears as a tabulated cell anywhere the reader can check it. Table 5 ('Effects implied for different contexts'), which is explicitly billed as 'the bottom line of our analysis' and the source of implied-context PCCs, reports each moderator's implied effect one at a time (e.g., 'Laboratory experiment 0.073', 'Negative framing 0.066') but never the joint lab-times-loss-framing cell. A careful reader who wants to verify or locate the provenance of the 0.07 number that anchors the abstract has to either re-derive an interaction from marginal effects (which is not how BMA fitted values combine, and 0.073 and 0.066 do not obviously average or compound to 0.07) or take the number entirely on faith. This is exactly the kind of 'reconstruct the headline number from the tables without re-deriving it' gap the paper's presentation should close, and it concerns the more newsworthy of the paper's two headline numbers (the positive exception, not the near-zero baseline).",
@@ -2742,12 +2941,15 @@
   },
   {
     "global_id": "F-109",
+    "id": "S-PRESENTATION-F2",
     "seat_id": "S-PRESENTATION",
     "tradition": "S-PRESENTATION",
     "finding_type": "presentation",
     "location": {
       "section": "Section 4 Heterogeneity, final paragraph before Conclusion (p.30)",
-      "table_or_figure": "Table 5, row 'Mean best practice'"
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "The overall mean incentive-performance effect based on our definition of \"best practice\" described above is 0.03.",
     "issue": "The prose rounds the 'best practice' headline figure to 0.03 ('is 0.03'), while the corresponding row of Table 5 reports it to three decimals as 0.031. Because this is the number the Abstract and the seat's own justifying material foreground as the paper's central corrected estimate, the rounding mismatch between the in-text statement and its tabulated source (0.03 vs 0.031) is a small but avoidable inconsistency that a careful referee or reader cross-checking the number will notice -- especially given that the paper otherwise reports most quantities to two or three decimals (e.g., 0.051, 0.069, 0.07).",
@@ -2764,12 +2966,15 @@
   },
   {
     "global_id": "F-110",
+    "id": "S-PRESENTATION-F3",
     "seat_id": "S-PRESENTATION",
     "tradition": "S-PRESENTATION",
     "finding_type": "presentation",
     "location": {
       "section": "Section 3 Publication Bias, opening paragraph (p.16-17)",
-      "table_or_figure": "cf. Section 2: 'Fifty-four studies satisfy our inclusion criteria...' and 'In total, in this meta-analysis we consider 88 studies'"
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "has been noted by only 27 of the 54 economics studies we collect for our baseline analysis",
     "issue": "The manuscript uses two different headline counts of 'studies' -- 54 and 88 -- in ways that are internally consistent once parsed carefully (54 = peer-reviewed baseline studies that define 'primary studies'; 88 = 54 + 19 working papers + additional snowballed studies in the expanded/Cohen's-d dataset) but are not signposted at the point of use. The sentence at issue refers to 'the 54 economics studies we collect for our baseline analysis' immediately after the paper has spent a full page emphasizing '88 economics experiments' (Abstract) and 'we consider 88 studies' (Section 2, end). A reader who has just absorbed '88' as the headline sample size encounters '54' described as 'our baseline analysis' sample without an explicit reminder of how the two relate, inviting a moment of confusion about which number is the 'real' baseline N.",
@@ -2786,12 +2991,15 @@
   },
   {
     "global_id": "F-111",
+    "id": "S-PRESENTATION-F4",
     "seat_id": "S-PRESENTATION",
     "tradition": "S-PRESENTATION",
     "finding_type": "presentation",
     "location": {
       "section": "Table 4 notes (p.28-29)",
-      "table_or_figure": "Table 4"
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "using orthogonalization of covariate space suggested Amini & Parmeter (2012) to reduce the number of estimated models",
     "issue": "A grammatical slip in the Table 4 notes -- 'orthogonalization of covariate space suggested Amini & Parmeter (2012)' is missing the preposition 'by' (it should read '...suggested by Amini & Parmeter (2012)'). This is a minor copy-editing lapse, but it sits in the notes of one of the paper's two central results tables (the BMA/FMA table the seat is specifically charged with checking for self-containedness), and similar phrasing elsewhere in the body text ('orthogonalization of model space according to Amini & Parmeter (2012)', Introduction) shows the authors know the correct construction, making this a one-off slip rather than a stylistic choice.",
@@ -2808,12 +3016,15 @@
   },
   {
     "global_id": "F-112",
+    "id": "S-PRESENTATION-F5",
     "seat_id": "S-PRESENTATION",
     "tradition": "S-PRESENTATION",
     "finding_type": "absence-silence",
     "location": {
       "section": "Section 4 Heterogeneity / Table 4 and Table 5 (p.27-30)",
-      "table_or_figure": "Table 4, Table 5"
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "",
     "issue": "Tables 4 and 5 -- the paper's central heterogeneity results, and the tables this seat was specifically asked to check for self-containedness -- never restate, in their own notes, the scale on which the reported partial correlation coefficients should be read (negligible/small/large per Doucouliagos 2011 thresholds of roughly <0.07, <0.17, >0.33). That interpretive scale is introduced once, in a footnote to Section 2 (footnote 4, attached to Figure 2's discussion), and the reader is expected to carry it, unstated, through ten more pages to correctly judge whether a Table 5 implied effect of 0.07 or 0.073 is 'negligible,' 'small,' or 'borderline.' For a results table that is explicitly billed as 'the bottom line of our analysis' and whose whole rhetorical point rests on classifying numbers as negligible vs. small vs. borderline, omitting even a one-line reminder of the classification thresholds in the table notes themselves makes the table less self-contained than it could be -- a reader who encounters Table 5 without having Figure 2's footnote fresh in mind cannot, from the table alone, tell whether 0.073 or 0.066 should be read as meaningful or negligible.",
@@ -2830,12 +3041,15 @@
   },
   {
     "global_id": "F-113",
+    "id": "S-PUBBIAS-DEFENSE-F1",
     "seat_id": "S-PUBBIAS-DEFENSE",
     "tradition": "S-PUBBIAS-DEFENSE",
     "finding_type": "claim-support",
     "location": {
       "section": "3 Publication Bias",
-      "table_or_panel": "Table 2, Panels A-C; Table B1"
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "we employ a battery of recently developed nonlinear tests (Ioannidis et al., 2017; Andrews & Kasy, 2019; Bom & Rachinger, 2019; Furukawa, 2020), which all corroborate our previous findings regarding publication bias and the mean underlying effect.",
     "issue": "Read in its strongest form, the correction battery is not a single fragile estimator dressed up with cosmetic robustness checks but a genuine triangulation across techniques with materially different identifying assumptions: linear meta-regression (Lombard-effect/uncorrelation logic), five nonlinear corrections (WAAP, Top10, stem-based, Andrews-Kasy selection, endogenous kink) that relax linearity, an instrumental-variable approach (MAIVE) that relaxes the uncorrelation assumption, p-uniform* which relies on neither assumption, and caliper/p-curve tests (Gerber & Malhotra; Elliott et al.) that test for bias directly from the t-statistic/p-value distribution without using the standard error as a regressor at all. That so many methods resting on different (and in places mutually incompatible) assumptions converge on 'substantial publication bias, near-zero corrected effect' is precisely the kind of cross-validation the meta-analysis methodology literature recommends as the antidote to any single technique's fragility -- and is considerably more thorough than the typical economics meta-analysis, which often reports only a linear funnel-asymmetry test (the very gap the authors note 'none of the psychology meta-analyses correct for publication bias' at all).",
@@ -2852,12 +3066,15 @@
   },
   {
     "global_id": "F-114",
+    "id": "S-PUBBIAS-DEFENSE-F2",
     "seat_id": "S-PUBBIAS-DEFENSE",
     "tradition": "S-PUBBIAS-DEFENSE",
     "finding_type": "claim-support",
     "location": {
-      "section": "3 Publication Bias",
-      "paragraph": "paragraph introducing MAIVE, citing Table B10"
+      "section": "3 Publication Bias (paragraph introducing MAIVE, citing Table B10)",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "test of the Andrews-Kasy model, shown in Table B10 in the Appendix, suggests that in our case estimates are indeed correlated with standard errors even in the absence of publication bias, we prefer the MAIVE approach (available also as a web app at easymeta.org). MAIVE suggests strong publication bias and negligible mean effect beyond the bias.",
     "issue": "The rival's framing -- that MAIVE is anointed 'preferred' on the strength of a single specification test -- understates how much independent justification the paper actually offers before that test is invoked. The text first lays out, in general terms, *three distinct theoretical sources of endogeneity* in the standard meta-regression (measurement error in the standard error itself, reverse causality via clustering choices, and unobserved method-driven heterogeneity), explains *why* the inverse-square-root-of-degrees-of-freedom instrument should be immune to exactly those three sources ('correlated with the standard error by definition... does not suffer from the three sources of endogeneity described above'), and only THEN reports the Table B10 test as a confirmatory diagnostic that the endogeneity concern is empirically live in this dataset (not merely theoretical). On a generous reading, Table B10 is not the sole basis for the preference -- it is the empirical trigger that converts a general econometric worry (which could apply to any meta-analysis) into a dataset-specific reason to trust the IV approach over the selection-model alternative whose own identifying assumption (constant publication probability conditional on significance band) the test shows is violated here.",
@@ -2874,12 +3091,15 @@
   },
   {
     "global_id": "F-115",
+    "id": "S-PUBBIAS-DEFENSE-F3",
     "seat_id": "S-PUBBIAS-DEFENSE",
     "tradition": "S-PUBBIAS-DEFENSE",
     "finding_type": "claim-support",
     "location": {
       "section": "1 Introduction",
-      "sentence": "sentence introducing the inverse-square-root-of-df instrument"
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "Such an instrument is correlated with the standard error by the definition of the latter and can be expected to be less related to method choices.",
     "issue": "Even granting the instrument the most charitable reading, the exclusion-restriction defense offered here is a plausibility claim ('can be expected to be less related'), not a demonstrated property. Sample size / degrees of freedom is itself a design choice correlated with the very 'method choices' (e.g., whether a study uses a large lab sample vs. a small natural-experiment sample, whether clustering reduces effective observations, whether the study design is a within-subject vs. between-subject comparison) that the paper itself lists as one of the three endogeneity sources the instrument is supposed to escape. This is the one place where the rival's 'is the instrument plausibly excludable' challenge has real traction, and a generous reading should concede that the paper's hedge ('can be expected to') is doing real work -- it is an assumption the authors flag as an assumption, not a proven fact, and the discipline-wide MAIVE literature (Irsova et al. 2025; Havranek et al. 2024) treats it the same way. The honest characterization is: the instrument is the best *currently available* solution to a genuinely hard identification problem, defended by analogy and by the corroborating Table B10 test rather than by a direct test of the exclusion restriction itself (which is, as in all IV settings, fundamentally untestable).",
@@ -2896,12 +3116,15 @@
   },
   {
     "global_id": "F-116",
+    "id": "S-PUBBIAS-DEFENSE-F4",
     "seat_id": "S-PUBBIAS-DEFENSE",
     "tradition": "S-PUBBIAS-DEFENSE",
     "finding_type": "claim-support",
     "location": {
       "section": "1 Introduction / Appendix Table B1",
-      "quote_location": "introduction passage on caliper/p-curve corroboration"
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "In addition, we use the tests of Gerber & Malhotra (2008) and Elliott et al. (2022), which also do not rely on the uncorrelation assumption and both corroborate publication bias.",
     "issue": "A skeptic could characterize the whole battery as 'currently fashionable techniques that all share the same blind spot.' The caliper test (Gerber & Malhotra 2008) and the Elliott et al. (2022) histogram-based p-curve tests are the strongest rebuttal to that charge: they operate directly on the distribution of t-statistics/p-values and explicitly do *not* use the standard error as a regressor or weighting variable at all, so they cannot share the endogeneity problem the paper itself identifies as afflicting the standard-error-based techniques. That these structurally different tests independently confirm publication bias (Table B1, Panel A: a jump in the t-statistic distribution at zero; Panel B: rejection of no-p-hacking for baseline/expanded/working-paper samples) is a genuinely independent line of evidence, not just another draw from the same well -- and the paper is commendably candid that the tests lose power on the smaller 'preferred-estimates' subsample rather than papering over that limitation.",
@@ -2918,12 +3141,15 @@
   },
   {
     "global_id": "F-117",
+    "id": "S-PUBBIAS-DEFENSE-F5",
     "seat_id": "S-PUBBIAS-DEFENSE",
     "tradition": "S-PUBBIAS-DEFENSE",
     "finding_type": "claim-support",
     "location": {
       "section": "3 Publication Bias",
-      "sentence": "sentence reporting the p-uniform* corrected mean"
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "Once again we obtain evidence for publication bias, though the mean estimated incentive-performance effect is larger than in the previous cases.",
     "issue": "Granting the steelman that triangulation is the right strategy, the honest accounting must note that the techniques do not all converge on the same *number* -- only on the same *qualitative* verdict (substantial bias, small residual effect). p-uniform* yields a corrected mean (0.0675 per Table 2 Panel C) that is roughly twice MAIVE's (0.0181) and meaningfully closer to the 'small-effect' threshold the paper itself uses (Doucouliagos 2011 guidelines). A rigorous reader could ask whether 'negligible' is the right word for a range that spans roughly 0.018-0.07 depending on technique, and whether the paper's choice to foreground MAIVE's lower number (rather than, say, an average or range across the battery) as 'the' corrected effect is itself a form of selecting among methods. The paper is transparent that the estimates differ -- which is to its credit -- but the headline framing ('close to zero... negligible') compresses a real spread of point estimates into a single adjective.",
@@ -2940,12 +3166,15 @@
   },
   {
     "global_id": "F-118",
+    "id": "S-PUBBIAS-DEFENSE-F6",
     "seat_id": "S-PUBBIAS-DEFENSE",
     "tradition": "S-PUBBIAS-DEFENSE",
     "finding_type": "claim-support",
     "location": {
       "section": "3 Publication Bias (Appendix robustness discussion)",
-      "table": "Table B9"
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "Finally, we find less evidence for bias among working papers (Table B9). This finding is consistent with publication bias in the traditional sense, in which editors or referees prefer certain results",
     "issue": "On a generous reading this passage is a model of intellectual honesty: the authors report a result that could have been quietly shelved (working papers showing less evidence of bias would seem, naively, to undercut the 'p-hacking is the dominant mechanism' framing they adopt via Brodeur et al. 2023), and instead they offer a coherent alternative interpretation (editors/referees as the bias channel rather than authors' own specification search) AND immediately flag the limitation that undercuts over-reading it ('our sample of working papers is small, resulting in low statistical power; moreover, five techniques still find evidence of bias'). That said, a careful referee would note that this single finding sits in tension with the paper's chosen framing throughout (which leans on the Brodeur et al. claim that 'the latter [p-hacking] drives most distortion' to justify treating publication bias and p-hacking as observationally equivalent) -- if editorial/referee-stage bias is live in the working-paper-vs-published contrast, that is a different mechanism than the within-author p-hacking story the paper's broad definition is built to subsume, and the paper does not fully reconcile the two.",
@@ -2962,12 +3191,15 @@
   },
   {
     "global_id": "F-119",
+    "id": "S-PUBBIAS-DEFENSE-F7",
     "seat_id": "S-PUBBIAS-DEFENSE",
     "tradition": "S-PUBBIAS-DEFENSE",
     "finding_type": "absence-silence",
     "location": {
       "section": "3 Publication Bias / Table 2 Panel C and Appendix robustness tables",
-      "table": "Table 2, Panel C ('First-stage robust F-stat Observations' row, value 4,180)"
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "",
     "issue": "ABSENCE: the paper reports a first-stage robust F-statistic of 4,180 for the baseline MAIVE specification (Table 2, Panel C) -- a number so large it would normally foreclose any weak-instrument concern outright, which is a genuine point in the defense's favor. However, the paper never states this explicitly in prose (no sentence reads, e.g., 'the first-stage F-statistic of 4,180 indicates the instrument is far from weak'), nor does it report or discuss the corresponding first-stage F-statistics for the robustness-table variants (expanded dataset, non-winsorized data, working papers, preferred-estimates subset) where sample sizes shrink substantially and instrument strength could plausibly weaken. A rigorous reader is left to notice the strong baseline F-stat by combing the table rather than being walked through why instrument strength is not a live concern -- and left wondering whether it remains strong in the smaller subsamples where the IV machinery is also deployed.",
@@ -2984,12 +3216,15 @@
   },
   {
     "global_id": "F-120",
+    "id": "S-PUBBIAS-FATAL-F1",
     "seat_id": "S-PUBBIAS-FATAL",
     "tradition": "S-PUBBIAS-FATAL",
     "finding_type": "claim-support",
     "location": {
-      "section": "3 Publication Bias",
-      "paragraph": "paragraph beginning 'Nevertheless, all the models mentioned so far assume...'"
+      "section": "3 Publication Bias (paragraph beginning 'Nevertheless, all the models mentioned so far assume...')",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "test of the Andrews-Kasy model, shown in Table B10 in the Appendix, suggests that in our case estimates are indeed correlated with standard errors even in the absence of publication bias, we prefer the MAIVE approach (available also as a web app at easymeta.org). MAIVE suggests strong publication bias and negligible mean effect beyond the bias.",
     "issue": "The paper designates MAIVE as its 'preferred' bias-correction estimator — the one that effectively anchors the headline 'negligible/close to zero' framing — on the strength of a single auxiliary diagnostic: a specification test of the Andrews-Kasy model (Table B10) that finds a nonzero correlation between (transformed) estimates and standard errors net of estimated publication probability. That single test is used to (a) indict the uncorrelation assumption underlying the linear meta-regression AND the AK selection model itself, and (b) simultaneously promote MAIVE to 'preferred' status. But the test result is a double-edged sword the paper does not turn on itself: if the AK-weighted residual correlation is large enough to disqualify AK and the linear techniques, the same finding (real, non-publication-bias correlation between estimates and standard errors driven by 'method choices,' as the paper itself says two sentences earlier) equally threatens MAIVE's own identifying exclusion restriction — MAIVE's instrument (inverse sqrt of degrees of freedom) is admitted by the authors to be 'correlated with the standard error by definition,' and degrees of freedom is plausibly one of exactly the 'method choices' (sample size, clustering, fixed effects, control sets) that the Table B10 test is diagnosing as a contaminant. The paper never runs an analogous over-identification or falsification test on the MAIVE instrument itself; it merely asserts the instrument 'can be expected to be less related to method choices' (a hedge: 'can be expected,' not demonstrated). One specification test is thus made to do triple duty — disqualify the linear baseline, disqualify (implicitly) the AK selection model the paper elsewhere calls the most rigorously founded technique, and crown MAIVE — without any test of MAIVE's own exclusion restriction.",
@@ -3012,12 +3247,15 @@
   },
   {
     "global_id": "F-121",
+    "id": "S-PUBBIAS-FATAL-F2",
     "seat_id": "S-PUBBIAS-FATAL",
     "tradition": "S-PUBBIAS-FATAL",
     "finding_type": "claim-support",
     "location": {
-      "section": "1 Introduction",
-      "paragraph": "paragraph beginning 'The two assumptions mentioned above are commonly used...'"
+      "section": "1 Introduction (paragraph beginning 'The two assumptions mentioned above are commonly used...')",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "A solution is to use the inverse of the square root of the number of degrees of freedom as an instrument for the standard error (Irsova et al., 2025). Such an instrument is correlated with the standard error by the definition of the latter and can be expected to be less related to method choices.",
     "issue": "The exclusion-restriction argument for the MAIVE instrument is asserted, not established, and is internally in tension with the paper's own three-part taxonomy of endogeneity sources two sentences earlier (measurement error, reverse causality via 'changes in clustering,' and 'unobserved heterogeneity, because some method choices may systematically influence both estimates and standard errors'). Degrees of freedom is mechanically determined by sample size and the number of estimated parameters — i.e., precisely by 'method choices' such as the inclusion of fixed effects, control variables, clustering structure, and subsample restrictions. The instrument (inverse sqrt of df) is therefore a function of the same method-design choices the paper just identified as a third source of endogeneity contaminating the standard error. The claim that the instrument 'can be expected to be less related to method choices' is a plausibility assertion with a hedge ('can be expected'), not a demonstrated exclusion restriction, and no falsification test, placebo, or over-identification check is reported to support it.",
@@ -3040,12 +3278,15 @@
   },
   {
     "global_id": "F-122",
+    "id": "S-PUBBIAS-FATAL-F3",
     "seat_id": "S-PUBBIAS-FATAL",
     "tradition": "S-PUBBIAS-FATAL",
     "finding_type": "claim-support",
     "location": {
-      "section": "3 Publication Bias",
-      "paragraph": "Table 2, Panel C: Endogeneity-robust techniques"
+      "section": "3 Publication Bias (Table 2, Panel C: Endogeneity-robust techniques)",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "MAIVE 0.892 (0.273) {0.378, 1.407}\n0.0181 (0.00996)",
     "issue": "The quantitative results in Table 2 undercut the prose's framing of MAIVE as simply joining a chorus of techniques that 'corroborate' a negligible effect. MAIVE's reported 'effect beyond bias' coefficient is 0.0181 — larger than three of the five nonlinear techniques the paper showcases as 'robust evidence that the mean corrected incentive-performance effect is negligible' (Top10 = 0.0105, Andrews-Kasy = 0.00143, Kink = 0.00718) and roughly comparable to the simple OLS linear estimate (0.0195) the paper treats as the naively-biased baseline. MAIVE's 'publication bias' coefficient of 0.892 is also far larger than the AK model's analogous parameter (P = 0.309) and sits in the same range as the linear OLS slope (0.854) the paper says suffers from endogeneity. In other words, on the numbers actually reported, MAIVE looks more like the linear/OLS baseline the paper says is unreliable than like the nonlinear battery it is grouped with rhetorically — yet the prose folds it seamlessly into 'MAIVE suggests strong publication bias and negligible mean effect beyond the bias,' eliding that its point estimate is 2-13x larger than several of the techniques used moments earlier to establish 'negligible.'",
@@ -3068,12 +3309,15 @@
   },
   {
     "global_id": "F-123",
+    "id": "S-PUBBIAS-FATAL-F4",
     "seat_id": "S-PUBBIAS-FATAL",
     "tradition": "S-PUBBIAS-FATAL",
     "finding_type": "claim-support",
     "location": {
-      "section": "3 Publication Bias",
-      "paragraph": "paragraph beginning 'The fourth technique in Panel B of Table 2 is the selected model by Andrews & Kasy (2019)...'"
+      "section": "3 Publication Bias (paragraph beginning 'The fourth technique in Panel B of Table 2 is the selected model by Andrews & Kasy (2019)...')",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "This technique has arguably the most rigorous foundations, and has been shown to perform relatively well both in simulations (Hong & Reed, 2021) and in comparisons of metaanalyses and pre-registered replications (Kvarven et al., 2019).",
     "issue": "The paper praises the Andrews-Kasy selection model as having 'arguably the most rigorous foundations' and citing favorable simulation and replication-comparison evidence (Hong & Reed 2021; Kvarven et al. 2019), then — two paragraphs later — uses a single specification test built on that very model's assumptions (Table B10, following Kranz & Putz 2022) to demote it in favor of MAIVE. This creates an unexamined tension: either the AK model's foundations are rigorous enough that its own diagnostic test should be taken at face value (in which case the paper should explain why a model it just called the most rigorously founded one fails its own specification check in this application, and what that implies for trusting the same model's weights when computing the Table B10 statistic itself — a logical circularity, since the test uses AK-estimated publication probabilities to weight the correlation it then uses to indict the uncorrelation assumption AK relies on), or the foundations are not as decisive as claimed and the earlier praise oversells the technique the paper is about to set aside. The manuscript does not address this tension.",
@@ -3090,12 +3334,15 @@
   },
   {
     "global_id": "F-124",
+    "id": "S-PUBBIAS-FATAL-F5",
     "seat_id": "S-PUBBIAS-FATAL",
     "tradition": "S-PUBBIAS-FATAL",
     "finding_type": "absence-silence",
     "location": {
-      "section": "3 Publication Bias",
-      "paragraph": "paragraph beginning 'Nevertheless, all the models mentioned so far assume...' (the three-source endogeneity taxonomy and the immediately following instrument proposal)"
+      "section": "3 Publication Bias (paragraph beginning 'Nevertheless, all the models mentioned so far assume...' (the three-source endogeneity taxonomy and the immediately following instrument proposal))",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "",
     "issue": "The paper enumerates three sources of endogeneity that contaminate the linear meta-regression's standard-error regressor — measurement error, reverse causality (e.g., via clustering choices), and unobserved heterogeneity from method choices — and then immediately proposes MAIVE's degrees-of-freedom-based instrument as 'a solution.' But the manuscript never explains, for any of these three specific sources, why the chosen instrument is immune to it. In particular, source two ('reverse causality, because some researchers may, intentionally or not, manipulate the standard error... for example, by changes in clustering') maps directly onto degrees of freedom: clustering choices mechanically change the effective degrees of freedom used in significance tests, which is exactly the quantity the instrument is built from. The paper is silent on whether (and why) an instrument constructed from degrees of freedom escapes a contamination channel ('changes in clustering') that the paper itself names as operating through degrees-of-freedom-adjacent statistics.",
@@ -3118,12 +3365,15 @@
   },
   {
     "global_id": "F-125",
+    "id": "S-PUBBIAS-FATAL-F6",
     "seat_id": "S-PUBBIAS-FATAL",
     "tradition": "S-PUBBIAS-FATAL",
     "finding_type": "absence-silence",
     "location": {
-      "section": "3 Publication Bias",
-      "paragraph": "footnote 5"
+      "section": "3 Publication Bias (footnote 5)",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "5Another, more technical source of endogeneity is the transformation to standardized coefficients such as",
     "issue": "Footnote 5 begins to flag 'another, more technical source of endogeneity... the transformation to standardized coefficients such as [partial correlations]' but the footnote's content is interrupted by a page break in the extracted text and the substantive explanation appears to resume only as a fragment later ('partial correlations, which introduces a mechanical correlation between estimates and standard errors... MAIVE accounts for this problem as well'). The paper asserts that 'MAIVE accounts for this problem as well' but never shows how — there is no derivation, citation to a specific result, or even a sentence explaining the mechanism by which MAIVE's instrument neutralizes the mechanical correlation introduced by the PCC transformation itself. This is a load-bearing claim (a fourth, self-identified source of endogeneity specific to this paper's metric choice) asserted without support immediately before MAIVE is crowned 'preferred.'",
@@ -3140,12 +3390,15 @@
   },
   {
     "global_id": "F-126",
+    "id": "S-PUBBIAS-FATAL-F7",
     "seat_id": "S-PUBBIAS-FATAL",
     "tradition": "S-PUBBIAS-FATAL",
     "finding_type": "claim-support",
     "location": {
-      "section": "Appendix Table B10",
-      "paragraph": "Table B10 notes"
+      "section": "Appendix Table B10 (Table B10 notes)",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "Following Kranz & Putz (2022), the table shows, for various subsets of the literature, the correlation coefficient between the logarithm of the absolute value of the estimated inverse elasticity and the logarithm of the corresponding standard error, weighted by the inverse publication probability estimated by the Andrews & Kasy (2019) model. If the assumptions of the model hold, the correlation is zero.",
     "issue": "Table B10's specification test — the sole piece of evidence cited to justify preferring MAIVE — is itself a fairly indirect diagnostic: it reports a correlation between the log absolute value of an 'estimated inverse elasticity' and the log of the standard error, weighted by AK-model-implied inverse publication probabilities, and interprets a nonzero correlation as evidence that 'estimates are indeed correlated with standard errors even in the absence of publication bias.' This inferential chain runs through (a) a log-transformed re-expression of the PCC as an 'inverse elasticity' not otherwise used or defined in the main text, (b) AK-model-estimated weights (creating the circularity noted in F4), and (c) an implicit assumption that any residual correlation surviving AK-reweighting must be attributable to non-publication-bias sources rather than, e.g., AK model misspecification or weight-estimation noise (note the test's own reported correlation estimates carry wide bootstrapped confidence intervals, e.g. 0.647 [0.567, 0.668] for the baseline). The paper treats a positive point estimate from this multi-step, assumption-laden diagnostic as sufficient grounds to overturn the uncorrelation assumption and re-rank its entire preferred-method hierarchy, without discussing alternative interpretations of the same test result.",
@@ -3162,11 +3415,13 @@
   },
   {
     "global_id": "F-127",
+    "id": "S-RELATED-WORK-F1",
     "seat_id": "S-RELATED-WORK",
     "tradition": "history-of-the-field / citation-network analysis",
     "finding_type": "related-work",
     "location": {
       "section": "1 Introduction",
+      "page": null,
       "paragraph": null,
       "sentence_range": null
     },
@@ -3185,11 +3440,13 @@
   },
   {
     "global_id": "F-128",
+    "id": "S-RELATED-WORK-F2",
     "seat_id": "S-RELATED-WORK",
     "tradition": "history-of-the-field / citation-network analysis",
     "finding_type": "related-work",
     "location": {
       "section": "1 Introduction",
+      "page": null,
       "paragraph": null,
       "sentence_range": null
     },
@@ -3208,11 +3465,13 @@
   },
   {
     "global_id": "F-129",
+    "id": "S-RELATED-WORK-F3",
     "seat_id": "S-RELATED-WORK",
     "tradition": "history-of-the-field / citation-network analysis",
     "finding_type": "absence-silence",
     "location": {
       "section": "1 Introduction",
+      "page": null,
       "paragraph": null,
       "sentence_range": null
     },
@@ -3231,11 +3490,13 @@
   },
   {
     "global_id": "F-130",
+    "id": "S-RELATED-WORK-F4",
     "seat_id": "S-RELATED-WORK",
     "tradition": "history-of-the-field / citation-network analysis",
     "finding_type": "related-work",
     "location": {
       "section": "1 Introduction",
+      "page": null,
       "paragraph": null,
       "sentence_range": null
     },
@@ -3254,11 +3515,13 @@
   },
   {
     "global_id": "F-131",
+    "id": "S-RELATED-WORK-F5",
     "seat_id": "S-RELATED-WORK",
     "tradition": "history-of-the-field / citation-network analysis",
     "finding_type": "related-work",
     "location": {
       "section": "1 Introduction",
+      "page": null,
       "paragraph": null,
       "sentence_range": null
     },
@@ -3277,13 +3540,15 @@
   },
   {
     "global_id": "F-132",
+    "id": "S-ROBUSTNESS-CRITIC-F1",
     "seat_id": "S-ROBUSTNESS-CRITIC",
     "tradition": "S-ROBUSTNESS-CRITIC",
     "finding_type": "claim-support",
     "location": {
-      "section": "3 Publication Bias",
-      "table_or_figure": "Table B8",
-      "paragraph": "robustness-checks summary paragraph beginning 'In the Appendix we provide several robustness checks'"
+      "section": "3 Publication Bias (robustness-checks summary paragraph beginning 'In the Appendix we provide several robustness checks')",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "Fourth, we account for potential interdependence of reported estimates (Table B8). Our results do not change substantially if we consider just one estimate per study or one estimate per experiment.",
     "issue": "The paper offers the one-estimate-per-study/one-estimate-per-experiment exercise as the dependence-robustness check for its baseline headline result (the PCC-based, 1,252-estimate, '~0.03 corrected mean' finding). But Table B8's own regression notes state the dependent variable is Cohen's d, not the partial correlation coefficient ('Results of regression Dis = D0 + SE(Dis) + is, where Dis denotes Cohen's d coefficient'), and its observation counts (2,193 / 1,785 / 567) match the pooled/expanded Cohen's-d sample described elsewhere in the paper, not the 1,252-estimate baseline PCC sample that produces the headline '0.03' number. In other words, the check cited as evidence that the within-study/within-experiment dependence structure does not drive the baseline headline result is actually run on a different effect-size metric and a different (larger, robustness-only) sample -- it cannot, by construction, demonstrate that the baseline PCC headline survives one-estimate-per-study/-experiment subsetting, because no such subsetting of the baseline PCC sample is shown anywhere.",
@@ -3306,13 +3571,15 @@
   },
   {
     "global_id": "F-133",
+    "id": "S-ROBUSTNESS-CRITIC-F2",
     "seat_id": "S-ROBUSTNESS-CRITIC",
     "tradition": "S-ROBUSTNESS-CRITIC",
     "finding_type": "claim-support",
     "location": {
-      "section": "3 Publication Bias",
-      "table_or_figure": "Table B4 / Table B5",
-      "paragraph": "robustness-checks summary paragraph beginning 'In the Appendix we provide several robustness checks'"
+      "section": "3 Publication Bias (robustness-checks summary paragraph beginning 'In the Appendix we provide several robustness checks')",
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "Second, we analyze the expanded dataset, which is based on Cohen's d (Table B4). Here, evidence is even stronger for publication bias, and the corrected mean effect is close to zero.",
     "issue": "The text claims the expanded-dataset check shows publication-bias evidence 'even stronger' than baseline, citing only Table B4 (Cohen's d). But the companion Table B5 -- the expanded dataset expressed in the paper's own preferred PCC metric, arguably the more relevant comparison to the headline -- shows the p-uniform* endogeneity-robust technique finding essentially zero evidence of bias (publication-bias test statistic L = 0.008, p = 0.931, against a null of no bias), the opposite of 'even stronger.' The summary sentence cherry-picks the metric (Cohen's d) that supports 'stronger' bias and is silent about the PCC version of the same expanded-data check, which directly undercuts that characterization for one of the two endogeneity-robust techniques the paper otherwise treats as its most credible bias tests.",
@@ -3329,12 +3596,15 @@
   },
   {
     "global_id": "F-134",
+    "id": "S-ROBUSTNESS-CRITIC-F3",
     "seat_id": "S-ROBUSTNESS-CRITIC",
     "tradition": "S-ROBUSTNESS-CRITIC",
     "finding_type": "robustness",
     "location": {
       "section": "3 Publication Bias",
-      "table_or_figure": "Table B6"
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "Third, we run the publication bias tests on the raw, non-winsorized dataset. For the baseline dataset (Table B6), we lose statistical significance in some specifications, but most of them are consistent with the baseline case, with our preferred MAIVE model giving almost identical results.",
     "issue": "The phrase 'we lose statistical significance in some specifications' is the paper's own admission that the headline publication-bias finding is sensitive to a basic, defensible choice (winsorizing vs. raw data), yet the prose neither names which specifications lose significance nor discusses what that pattern implies for the robustness of the headline. A reader is left to reverse-engineer from Table B6 which of the five linear and five nonlinear models flip; the prose's own framing -- 'lose... but most... consistent' -- concedes a non-trivial minority of specifications do not replicate, without telling the reader whether those are the more or less defensible specifications (e.g., OLS vs. fixed effects vs. precision-weighted), which matters because a specification-curve critique would ask precisely whether the surviving specifications are the theoretically preferred ones or merely the more numerous ones.",
@@ -3351,12 +3621,15 @@
   },
   {
     "global_id": "F-135",
+    "id": "S-ROBUSTNESS-CRITIC-F4",
     "seat_id": "S-ROBUSTNESS-CRITIC",
     "tradition": "S-ROBUSTNESS-CRITIC",
     "finding_type": "claim-support",
     "location": {
       "section": "3 Publication Bias",
-      "table_or_figure": "Table B8 Panel C"
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "In a similar vein, focusing on estimates emphasized by the authors of the primary studies (Panel C of Table B8) also yields substantial publication bias and a small corrected mean effect.",
     "issue": "This sentence reuses the 'preferred estimates' robustness framing that elsewhere (Section 2 / Table 1) is anchored to the baseline PCC sample's 396 'preferred' vs. 856 'non-preferred' split (1,252 total). But Panel C of Table B8 -- the panel this sentence cites -- reports N = 567 with Cohen's d as the dependent variable (per the table's own regression notes, inherited from the same Dis = D0 + SE(Dis) note that defines the whole table), i.e., a 'preferred' subsample of the expanded/Cohen's-d pool, not the baseline PCC 'preferred' subsample (396 estimates) that Table 1 and the main text describe. The reader is given no signal that 'preferred estimates' here means something different from 'preferred estimates' three pages earlier, creating a false sense that the same 396-estimate preferred-PCC subsample has been re-tested for dependence robustness when it has not.",
@@ -3373,12 +3646,15 @@
   },
   {
     "global_id": "F-136",
+    "id": "S-ROBUSTNESS-CRITIC-F5",
     "seat_id": "S-ROBUSTNESS-CRITIC",
     "tradition": "S-ROBUSTNESS-CRITIC",
     "finding_type": "robustness",
     "location": {
       "section": "3 Publication Bias",
-      "table_or_figure": "Table B9"
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "Finally, we find less evidence for bias among working papers (Table B9). This finding is consistent with publication bias in the traditional sense, in which editors or referees prefer certain results",
     "issue": "The working-paper subsample (408 estimates, 19 studies) is the one specification where the headline publication-bias story changes direction -- 'less evidence for bias' -- and the authors immediately supply a post hoc explanatory story (editors/referees as the bias source rather than p-hacking) for why the pattern flips there. But this is precisely the kind of 'where significance appears/disappears across checks' pattern a specification-curve critique flags as concerning: a result that weakens in exactly the subsample most plausibly driven by a different selection mechanism (no peer review filter) is consistent with either the authors' preferred story (editorial bias) or with the alternative that the working-paper sample is simply underpowered and noisy (which the authors concede in the same breath: 'our sample of working papers is small, resulting in low statistical power'). The paper does not test which of these two accounts is correct, yet uses the pattern to corroborate its bias-mechanism narrative.",
@@ -3395,12 +3671,15 @@
   },
   {
     "global_id": "F-137",
+    "id": "S-ROBUSTNESS-CRITIC-F6",
     "seat_id": "S-ROBUSTNESS-CRITIC",
     "tradition": "S-ROBUSTNESS-CRITIC",
     "finding_type": "claim-support",
     "location": {
       "section": "4 Heterogeneity",
-      "table_or_figure": "Table 5"
+      "page": null,
+      "paragraph": null,
+      "sentence_range": null
     },
     "quote": "we obtain small and statistically insignificant effects in all cases, again with the borderline exception of lab experiments and framing as a loss (0.07)",
     "issue": "The paper's single positive headline finding -- the lab+loss-framing PCC of ~0.07 -- is repeatedly described by the authors themselves as sitting exactly 'on the threshold between a negligible and small effect' (per Doucouliagos 2011 guidelines), i.e., a hairline classification call rather than a robustly 'small' effect. From a specification-curve standpoint, a finding whose qualitative label (negligible vs. small, significant vs. not) hinges on which side of a guideline threshold a single point estimate with a reported 95% CI of (0.01, 0.14) happens to fall is fragile by construction: small perturbations to the bias-correction choice, the moderator set, or the implied-context computation (zero SE, preferred=1, sample-max year/impact factor/citations) could easily move the point estimate across that line. The robustness section never re-derives this specific implied-context number under the alternative bias-correction techniques (e.g., Andrews-Kasy, p-uniform*, non-winsorized data) that the paper otherwise uses to stress-test the overall mean -- the lab+loss cell is shown only once, from the MAIVE-anchored BMA pipeline.",
