@@ -122,7 +122,10 @@ directly. When **dynamic workflows** are enabled (default on Max; on Pro, turn t
 `/config`), the skill uses `workflow/*.js` to orchestrate those same subagent phases more
 efficiently (same phases, prompts, schemas); the subagents still do the work. **Desk Review**
 needs neither a fleet nor workflows and is the safe choice on the lightest setups. See
-`helpers/orchestration.md` for how the orchestrator picks the engine.
+`helpers/orchestration.md` for how the orchestrator picks the engine. Subagents inherit the
+orchestrating session's model and context, so run on a model your plan can spawn at scale: a
+1M-context session may need usage credits enabled for that tier, or run on a standard-context
+model (`helpers/doctor.md` covers this pre-flight).
 
 ## Reading order for the orchestrating Claude
 
