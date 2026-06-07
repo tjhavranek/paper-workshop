@@ -86,7 +86,7 @@ if (PATHS.paper_txt_path) {
   carto = await agent('Read the paper at ' + A.pdf_path + ' (PDF or text). Following the method in ' + PATHS.helpers_dir + '/pdf_extraction.md, write into ' + PATHS.session + '/cartography: paper.txt (verbatim full text — do NOT paraphrase; the quote-gate matches against it), claim_inventory.json, sentence_map.json (disjoint, gapless sentence ranges with ids), precis.md (neutral, no praise/critique), source_manifest.json. Return the paths and counts.', { ...GP, label: 'cartography', phase: 'Cartography', schema: CARTO })
   log('Cartography: ' + carto.n_claims + ' claims, ' + carto.n_sentences + ' sentences')
 }
-const seatPaths = { PAPER_TXT_PATH: carto.paper_txt_path, INVENTORY_PATH: carto.inventory_path, PRECIS_PATH: carto.precis_path, RULES_PATH: PATHS.rules || '', RUBRIC_PATH: PATHS.rubric || '', STAGED_SOURCES_DIR: PATHS.staged_sources || '(none)', QUOTE_GATE_PATH: PATHS.quote_gate || '', REGISTER }
+const seatPaths = { PAPER_TXT_PATH: carto.paper_txt_path, INVENTORY_PATH: carto.inventory_path, PRECIS_PATH: carto.precis_path, RULES_PATH: PATHS.rules || '', RUBRIC_PATH: PATHS.rubric || '', STAGED_SOURCES_DIR: PATHS.staged_sources || '(none)', QUOTE_GATE_PATH: PATHS.quote_gate || '' }
 
 // ---------- PHASE B: Roster ----------
 phase('Roster')

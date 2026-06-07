@@ -74,8 +74,8 @@ Initial release.
   blocks the run; never transmits the author's unpublished results).
 - **Atelier redline:** tracked-changes / latexdiff **redline** + a **clean accepted
   version** + a `changes_map.md` tying every change to the reviewer concern it answers.
-- **Dogfooded on itself** before release (`examples/self-audit/`): a real brutal Act I run
-  (40 agents, 76/82 findings delivered, 6 panel-rejected). It caught genuine overclaims in
-  the design **and a fail-open bug in its own quote-gate** — both fixed in response (the
-  quote-gate now fails closed and tolerates BOM files). A self-audit is a
-  development pass, not independent validation.
+- **Dogfooded on itself** before release: a real brutal Act I run on its own design. It caught
+  genuine overclaims in the design **and a fail-open bug in its own quote-gate** — both fixed in
+  response (the quote-gate now fails closed and tolerates BOM files). A self-audit is a
+  development pass, not independent validation. (`examples/self-audit/` now holds the later
+  v0.3.0 self-audit run; see the v0.3.0 entry above for its counts.)
