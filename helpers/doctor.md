@@ -14,20 +14,21 @@ rather than failing silently.
   launcher (`py -3 --version`) or add Python to PATH. If the gate ever can't run, a
   finding degrades to `needs-author-confirmation` (still valid, but unconfirmed) — never
   a silent pass.
-- **Agent tool (subagents) — required, available on every plan.** The workshop always
-  runs via subagents. The **Workflow tool is OPTIONAL**: prefer it when available (default
-  on Max; on Pro, enable it in `/config`) for efficient orchestration; otherwise use the
-  subagent fallback (orchestration Step 4b). **Desk Review** needs neither. Detect the
-  engine and tell the user which one you're using.
-- **Orchestrator model and context (subagents inherit it).** Every seat and verifier is a
-  subagent, and subagents run on the **same model and context window as the orchestrating
-  session**; the skill cannot override this. Run that session on a model your plan can spawn at
-  scale. In particular, a large-context model (a 1M-token window) may require usage credits
-  enabled for that tier; without them, subagent spawns fail at the very start of a run, before
-  any findings, with a context/credit error. That is an account setting, not a workshop bug.
-  Fixes: (a) run the orchestrator on a standard-context model, so the subagents inherit standard
-  context, or (b) enable usage credits for the large-context tier. Very large fan-outs can also
-  hit transient rate limits that clear on their own; higher-tier plans (e.g. Max) have more
+- **Engine: dynamic workflows are the intended path; subagents are the universal fallback.** The
+  fleet can always run via the Agent tool (every plan), but the **Workflow engine** runs the same
+  phases far more efficiently, spawns its own agents, and is how the tool reaches full scale. It is
+  **default on Max**; on **Pro, enable it in `/config`** (recommended, especially for
+  Symposium/Summit). Detect the active engine, tell the user, and if the subagent fallback is
+  active, recommend enabling dynamic workflows. **Desk Review** needs neither.
+- **Subagent-fallback caveat: model/context inheritance.** On the direct-subagent fallback, every
+  seat and verifier inherits the orchestrating session's model and context; the skill cannot
+  override this (the Workflow engine avoids it by spawning its own agents, one more reason to
+  prefer it). If the orchestrator runs on a large-context (1M-token) model, that context tier may
+  require usage credits enabled on the account; without them, subagent spawns fail at the very
+  start of a run, before any findings, with a context/credit error. That is an account setting,
+  not a workshop bug. Remedies: (a) enable usage credits for that tier, or (b) run the orchestrator
+  on a standard-context model so the subagents inherit standard context. Very large fan-outs can
+  also hit transient rate limits that clear on their own; higher-tier plans (e.g. Max) have more
   headroom. A spawn that fails at the start of a run is almost always one of these settings; a
   subagent that fails mid-run, after others succeeded, is worth reporting.
 - **Mode sanity & cost preview.** Before launching, tell the user the chosen mode's ≈agent

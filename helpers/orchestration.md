@@ -32,10 +32,13 @@ heavy rules in those files; the brief just points to them and states the run's
 specifics.
 
 ## Step 4 — Run ACT I (pick the engine first)
-**Engine choice.** Prefer the **Workflow** engine if the Workflow tool is available
-(default on Max; on Pro, enable it in `/config`). If it is not available, run the **same
-phases via the Agent tool** (Step 4b) — subagents work on every plan, so the workshop
-always runs. **Desk Review** uses neither a fleet nor workflows (Step 4c).
+**Engine choice.** Strongly prefer the **Workflow** engine: it runs the same phases far more
+efficiently, spawns its own agents, and is how the tool reaches full scale (default on Max; on
+Pro, enable it in `/config`). If the Workflow tool is off, say so and **recommend enabling it**
+(especially for Symposium/Summit) before falling back to the **same phases via the Agent tool**
+(Step 4b); the fallback works on every plan, but its subagents inherit the orchestrating
+session's model and context (see `helpers/doctor.md` for the 1M-context credit caveat). **Desk
+Review** uses neither a fleet nor workflows (Step 4c).
 
 **4a — Workflow engine.** Launch `workflow/phase1_tribunal.js` with `args` = `{ pdf_path,
 tier, register, paths: { session, prompts_dir, helpers_dir, rules, rubric,
