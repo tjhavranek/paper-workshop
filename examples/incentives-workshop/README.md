@@ -36,7 +36,8 @@ Full reasoning in [`REPORT.md`](REPORT.md).
 | [`roster_contract.json`](roster_contract.json) | The adversarial panel the scout assembled (16 specialist seats + 3 generalists). |
 | [`brief.md`](brief.md) | The on-disk brief every seat read. |
 | [`run_meta.json`](run_meta.json) | Run metadata + the disclosed degradations. |
-| [`phase2/`](phase2/) | Act II: the tracked-changes redline ([`redline.md`](phase2/redline.md), [`redline_passages.docx`](phase2/redline_passages.docx)), the [`changes_map.md`](phase2/changes_map.md) triage, [`edit_specs.json`](phase2/edit_specs.json), and the [`AI_DISCLOSURE.md`](phase2/AI_DISCLOSURE.md). |
+| [`phase2/`](phase2/) | Act II, **first pass (degraded)**: a tracked-changes redline + triage produced when no source/interpreters were available (numbers deferred). |
+| [`phase2_true/`](phase2_true/) | Act II, **true pass**: the analysis was actually **re-run** (R + BMS) and the manuscript redlined against its real LaTeX source. See [`REPRODUCTION.md`](phase2_true/REPRODUCTION.md). |
 
 ## By the numbers
 
@@ -44,6 +45,25 @@ Full reasoning in [`REPORT.md`](REPORT.md).
 - Severity (post-calibration): **45 High / 58 Medium / 34 Low**.
 - Every non-absence quote passed a deterministic quote-gate (108 quote-matched + 28 absence-exempt).
 - Act II: **3 prose edits** applied as tracked changes; **0 numbers changed**.
+
+## True Act II — the analysis was actually re-run
+
+A second pass (`phase2_true/`) did the *real* ATELIER: installed R + BMS, **re-ran the BMA heterogeneity
+path** of the authors' `incentives.R` on the shipped data, and redlined the **real LaTeX source** with
+`latexdiff`-style tracked changes (compiled, 45 pp; kept private since the source is not public).
+
+- **The headline reproduces.** Corrected mean ≈ **0.030**, Laboratory implied effect **0.072** (paper:
+  0.073), PIP(Laboratory) **0.9997** (paper: 1.000), on the same 1,252 estimates / 35 regressors.
+- **The Execution-Provenance Wall verified for real:** `helpers/provenance.py` ties the value 0.0724 to
+  a content-hashed run artifact + hashed input data → `verified: true`
+  ([`verify_lab.txt`](phase2_true/provenance/verify_lab.txt)); `helpers/consistency.py` confirms the
+  regenerated 0.073 / 0.03 / 0.07 run-match the manuscript.
+- **The re-run resolved two of the workshop's own High findings — in the authors' favor.** A Haiku seat
+  alleged the framing inclusion probability "drops below 0.5" under the BRIC prior (F-080); the re-run
+  shows it is **0.957** (robust). And the "0.07 lab+loss" was clarified as lab and loss-framing each ~0.07
+  (reproduced), not an unestimated combined cell (F-078). The panel had correctly quarantined both as
+  `needs-author-confirmation` rather than asserting them — the wall doing its job.
+- **No number was changed** (they reproduce); the redline carries only the three prose/scope edits.
 
 ## Honest run conditions (read this)
 

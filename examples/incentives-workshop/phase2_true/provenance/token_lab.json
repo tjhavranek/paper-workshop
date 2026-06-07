@@ -1,0 +1,9 @@
+{
+  "value": "0.0724",
+  "script": "bma_rerun.R",
+  "line_or_chunk": "Table 5: Laboratory experiment implied effect",
+  "run_id": "rerun-20260607-1310",
+  "input_data_hash": "46df404ef39aff769f6ea32904c29fdb5290490047040230f26b42f3d6d22902",
+  "output_file": "rerun_keynumbers.json",
+  "output_hash": "8ac892817f060eaabb72327db8bce5a66ecb40f89a79bc4c03975e78447f655b"
+}

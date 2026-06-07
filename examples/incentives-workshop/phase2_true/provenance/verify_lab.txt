@@ -1,0 +1,11 @@
+{
+  "verified": true,
+  "checks": {
+    "fields_present": true,
+    "output_exists": true,
+    "output_hash_match": true,
+    "value_present": true,
+    "input_hash_match": true
+  },
+  "reason": "ok"
+}
