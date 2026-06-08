@@ -48,9 +48,23 @@ def _norm_ws(s):
     return re.sub(r"\s+", " ", (s or "")).strip()
 
 
-# A numeric literal: optional sign, digits with optional thousands commas, optional decimal,
-# optional scientific exponent, optional trailing percent.
-_NUM_RE = re.compile(r"[-+]?\d[\d,]*(?:\.\d+)?(?:[eE][-+]?\d+)?%?")
+# A standalone numeric literal: optional sign, either digits with optional thousands
+# commas and decimal or a leading-dot decimal, optional exponent, optional percent.
+_NUM_RE = re.compile(
+    r"(?<![A-Za-z0-9_.+-])[-+]?(?:\d[\d,]*(?:\.\d+)?|\.\d+)(?:[eE][-+]?\d+)?%?"
+    r"(?![A-Za-z0-9_]|\.[A-Za-z0-9_])"
+)
+
+
+def _canon_num(raw):
+    n = (raw or "").replace(",", "").replace(" ", "").strip()
+    if n.startswith("-."):
+        return "-0" + n[1:]
+    if n.startswith("+."):
+        return "+0" + n[1:]
+    if n.startswith("."):
+        return "0" + n
+    return n
 
 
 def _num_literals(text):
@@ -60,7 +74,7 @@ def _num_literals(text):
     text = (text or "").replace("−", "-")
     out = set()
     for raw in _NUM_RE.findall(text):
-        n = raw.replace(",", "").replace(" ", "").strip()
+        n = _canon_num(raw)
         if n not in ("", "+", "-"):
             out.add(n)
     return out
@@ -201,7 +215,7 @@ def cmd_selftest(args):
         # substring fail-open guard: 0.08 must NOT match inside 0.083, 12 must NOT match 120
         art2 = os.path.join(d, "t2.txt")
         with open(art2, "w", encoding="utf-8") as fh:
-            fh.write("coef = 0.083, N = 120\n")
+            fh.write("coef = 0.083, N = 120, model_12 = on, file2.txt\n")
         h2 = sha256_file(art2)
         sub = dict(base); sub.update(output_file="t2.txt", output_hash=h2, value="0.08")
         expect("substring number does NOT verify (0.08 vs 0.083)", verify_token(sub, d)["verified"] is False)
@@ -209,6 +223,10 @@ def cmd_selftest(args):
         expect("standalone literal verifies (0.083)", verify_token(sub2, d)["verified"] is True)
         sub3 = dict(sub); sub3["value"] = "12"
         expect("substring number does NOT verify (12 vs 120)", verify_token(sub3, d)["verified"] is False)
+        ident = dict(sub); ident["value"] = "2"
+        expect("identifier digit does NOT verify (file2.txt)", verify_token(ident, d)["verified"] is False)
+        ident2 = dict(sub); ident2["value"] = "12"
+        expect("identifier suffix does NOT verify (model_12)", verify_token(ident2, d)["verified"] is False)
         # Unicode minus (U+2212) in the artifact matches an ASCII-minus token value
         art3 = os.path.join(d, "t3.txt")
         with open(art3, "w", encoding="utf-8") as fh:
@@ -216,6 +234,24 @@ def cmd_selftest(args):
         h3 = sha256_file(art3)
         um = dict(base); um.update(output_file="t3.txt", output_hash=h3, value="-0.10")
         expect("unicode-minus artifact matches ascii-minus token", verify_token(um, d)["verified"] is True)
+        art4 = os.path.join(d, "t4.txt")
+        with open(art4, "w", encoding="utf-8") as fh:
+            fh.write("p = .05, beta = -.05, se = +.05\n")
+        h4 = sha256_file(art4)
+        lead = dict(base); lead.update(output_file="t4.txt", output_hash=h4, value=".05")
+        lead_neg = dict(base); lead_neg.update(output_file="t4.txt", output_hash=h4, value="-.05")
+        lead_pos = dict(base); lead_pos.update(output_file="t4.txt", output_hash=h4, value="+.05")
+        false_int = dict(base); false_int.update(output_file="t4.txt", output_hash=h4, value="05")
+        expect("leading-dot decimal verifies (.05)", verify_token(lead, d)["verified"] is True)
+        expect("signed leading-dot decimal verifies (-.05)", verify_token(lead_neg, d)["verified"] is True)
+        expect("plus leading-dot decimal verifies (+.05)", verify_token(lead_pos, d)["verified"] is True)
+        expect("leading-dot decimal does NOT verify as integer 05", verify_token(false_int, d)["verified"] is False)
+        art5 = os.path.join(d, "t5.txt")
+        with open(art5, "w", encoding="utf-8") as fh:
+            fh.write("p = .05\n")
+        h5 = sha256_file(art5)
+        wrong_sign = dict(base); wrong_sign.update(output_file="t5.txt", output_hash=h5, value="-.05")
+        expect("leading-dot sign is preserved", verify_token(wrong_sign, d)["verified"] is False)
     print("selftest: " + ("OK" if ok else "FAILED"))
     return 0 if ok else 1
 

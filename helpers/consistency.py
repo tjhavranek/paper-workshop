@@ -28,14 +28,24 @@ import json
 import re
 import sys
 
-# A numeric literal: optional sign, digits with optional thousands commas, optional decimal,
-# optional scientific exponent, optional trailing percent.
-_NUM_RE = re.compile(r"[-+]?\d[\d,]*(?:\.\d+)?(?:[eE][-+]?\d+)?%?")
+# A standalone numeric literal: optional sign, either digits with optional thousands
+# commas and decimal or a leading-dot decimal, optional exponent, optional percent.
+_NUM_RE = re.compile(
+    r"(?<![A-Za-z0-9_.+-])[-+]?(?:\d[\d,]*(?:\.\d+)?|\.\d+)(?:[eE][-+]?\d+)?%?"
+    r"(?![A-Za-z0-9_]|\.[A-Za-z0-9_])"
+)
 
 
 def norm_num(s):
-    """Canonical form of a numeric literal so '1,200' == '1200' and ' 0.345 ' == '0.345'."""
-    return (s or "").replace(",", "").replace(" ", "").strip()
+    """Canonical form so '1,200' == '1200' and '.05' == '0.05'."""
+    n = (s or "").replace(",", "").replace(" ", "").strip()
+    if n.startswith("-."):
+        return "-0" + n[1:]
+    if n.startswith("+."):
+        return "+0" + n[1:]
+    if n.startswith("."):
+        return "0" + n
+    return n
 
 
 def numbers_in(text):
@@ -136,10 +146,23 @@ def cmd_selftest(args):
            check("the headline estimate is 0.083", [{"value": "0.08"}])["run_mismatches"] == ["0.08"])
     expect("12 does NOT match inside 120",
            check("N = 120 observations", [{"value": "12"}])["run_mismatches"] == ["12"])
+    expect("identifier digit does NOT match (model_1)",
+           check("model_1 is enabled", [{"value": "1"}])["run_mismatches"] == ["1"])
+    expect("identifier suffix does NOT match (file2.txt)",
+           check("file2.txt was generated", [{"value": "2"}])["run_mismatches"] == ["2"])
+    expect("standalone integer after label still matches",
+           "1" in check("model = 1", [{"value": "1"}])["reconciled"])
 
     # Unicode minus (U+2212) in the manuscript matches an ASCII-minus token value
     expect("unicode-minus manuscript matches ascii-minus token",
            "-0.10" in check("the coefficient is −0.10", [{"value": "-0.10"}])["reconciled"])
+
+    lead = check("p = .05; beta = -.05; se = +.05", [{"value": ".05"}, {"value": "-.05"}, {"value": "+.05"}])
+    expect("leading-dot decimals reconcile", set(lead["reconciled"]) == {"0.05", "-0.05", "+0.05"})
+    expect("leading-dot sign is preserved",
+           check("p = .05", [{"value": "-.05"}])["run_mismatches"] == ["-0.05"])
+    expect("leading-dot decimal does NOT match integer 05",
+           check("p = .05", [{"value": "05"}])["run_mismatches"] == ["05"])
 
     expect("thousands-comma normalization (1,200 == 1200)",
            "1200" in check(rev, [{"value": "1200"}])["reconciled"])
