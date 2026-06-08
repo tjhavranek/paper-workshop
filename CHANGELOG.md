@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.3.3 — 2026-06-08
+Showcase polish for the incentives example (reviewed by an adversarial fleet; presentation only, no
+new claims).
+
+- **Promoted the rarest result to the top** of `examples/incentives-workshop/README.md`: a short lede
+  banner that the run re-ran the authors' own Stata + R end to end and regenerated the data
+  byte-for-byte identical, with the deterministic provenance proof, so a visitor sees it in the first
+  lines instead of half a page down.
+- **Surfaced the flagship example in the main README** with a "See it on a real paper" pointer near
+  the differentiator section (it had only appeared inside limitations asides).
+- Reconciled the 2,193 vs 1,252 estimate figures (1,252 is the BMA subsample of the full 2,193) and
+  trimmed a few em-dashes. The honest scope and every caveat are unchanged.
+
 ## v0.3.2 — 2026-06-08
 Completed the Stata path of the incentives end-to-end example.
 

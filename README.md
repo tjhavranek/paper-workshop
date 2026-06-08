@@ -67,6 +67,11 @@ reproducing manuscript.
 If you only want a fast referee-style critique, lighter tools (and CRUCIBLE's own **Desk
 Review** mode) do that. CRUCIBLE earns its keep when you want the argument *and* the rebuild.
 
+**See it on a real paper.** [`examples/incentives-workshop`](examples/incentives-workshop) is CRUCIBLE
+run end to end on an accepted JPE-Microeconomics meta-analysis: a topic-built referee panel that argues,
+then a re-run of the authors' own Stata and R that regenerated the data byte-for-byte identical, with a
+deterministic provenance proof. ([`examples/self-audit`](examples/self-audit) is the tool run on its own design.)
+
 **Honesty about limits.** See **[`LIMITATIONS.md`](LIMITATIONS.md)** for a straight account of
 what is genuinely enforced and what is not proven yet: no measured recall or false-positive
 numbers yet; same-model decorrelation is a design bet; coverage means *attention*, not

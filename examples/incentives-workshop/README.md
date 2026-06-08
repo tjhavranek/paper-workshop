@@ -11,17 +11,24 @@ This complements [`../self-audit/`](../self-audit/) (the tool run on its own des
 on a real third-party meta-analysis: 2,193 estimates from 88 economics experiments, with publication-bias
 correction and Bayesian model averaging.
 
+> **Beyond the critique, the workshop re-ran the paper's analysis end to end.** It executed the
+> authors' own Stata 15.1 and R/BMA on the raw data, and the regenerated R-feed intermediate came out
+> **byte-for-byte identical** to the shipped one (sha256 `46df404...`). A deterministic provenance
+> check ties the headline number `0.0724` to that run (`verified: true`), closing the chain raw data
+> -> Stata -> R -> manuscript. Proof set in [`phase2_true/`](phase2_true/) (see
+> [`stata/STATA_REPRODUCTION.md`](phase2_true/stata/STATA_REPRODUCTION.md)).
+
 ## Headline
 
-A strong, transparent paper. The workshop's two dominant cruxes — each raised independently by **five**
-seats — are:
+A strong, transparent paper. The workshop's two dominant cruxes, each raised independently by **five**
+seats, are:
 
 1. **Scope vs. design-stage selection.** The abstract/title state a general policy claim ("rarely
    produces large performance gains") while the sample is, by the authors' own account, curated to avoid
    contexts where incentives are expected to have large effects (the qualifier lives on p.70).
 2. **The headline heterogeneity rests on a dependence-naive model.** The moderator ranking and Table 5
    come from a BMA that *"treats all observations as independent"*, while the dependence-aware
-   frequentist averaging — already in the paper — is secondary.
+   frequentist averaging (already in the paper) is secondary.
 
 Neither overturns the paper; both are fixable by re-emphasis and promoting the dependence-aware results.
 Full reasoning in [`REPORT.md`](REPORT.md).
@@ -53,7 +60,8 @@ path** of the authors' `incentives.R` on the shipped data, and redlined the **re
 `latexdiff`-style tracked changes (compiled, 45 pp; kept private since the source is not public).
 
 - **The headline reproduces.** Corrected mean ≈ **0.030**, Laboratory implied effect **0.072** (paper:
-  0.073), PIP(Laboratory) **0.9997** (paper: 1.000), on the same 1,252 estimates / 35 regressors.
+  0.073), PIP(Laboratory) **0.9997** (paper: 1.000), on the same 1,252 estimates / 35 regressors (the
+  BMA heterogeneity subsample of the full 2,193-estimate dataset).
 - **The Execution-Provenance Wall verified for real:** `helpers/provenance.py` ties the value 0.0724 to
   a content-hashed run artifact + hashed input data → `verified: true`
   ([`verify_lab.txt`](phase2_true/provenance/verify_lab.txt)); `helpers/consistency.py` confirms the
@@ -65,11 +73,11 @@ path** of the authors' `incentives.R` on the shipped data, and redlined the **re
   (the committed `.tex` hashes are reader-reproducible; the data-side byte-identity is recorded from
   the run and reproducible by re-running the public package). See
   [`stata/STATA_REPRODUCTION.md`](phase2_true/stata/STATA_REPRODUCTION.md).
-- **The re-run resolved two of the workshop's own High findings — in the authors' favor.** A Haiku seat
+- **The re-run resolved two of the workshop's own High findings, in the authors' favor.** A Haiku seat
   alleged the framing inclusion probability "drops below 0.5" under the BRIC prior (F-080); the re-run
   shows it is **0.957** (robust). And the "0.07 lab+loss" was clarified as lab and loss-framing each ~0.07
   (reproduced), not an unestimated combined cell (F-078). The panel had correctly quarantined both as
-  `needs-author-confirmation` rather than asserting them — the wall doing its job.
+  `needs-author-confirmation` rather than asserting them, the wall doing its job.
 - **No number was changed** (they reproduce); the redline carries only the three prose/scope edits.
 
 ## Honest run conditions (read this)
