@@ -55,7 +55,7 @@ reproducing manuscript.
   quote exist, does the criticism actually follow, is the severity calibrated, does the
   proposed fix break something) before it ever reaches you.
 - **It rebuilds the paper itself.** The opt-in second act (the **ATELIER**) turns the agreed
-  findings into a tracked-changes **redline** *and* a **clean accepted version**, **re-runs
+  findings into a tracked-changes **redline** *and* a **clean revised version**, **re-runs
   your own code** to regenerate the affected numbers, tables, and figures, and assembles a
   **replication package**, under one hard rule: *no number enters your paper unless a real,
   logged re-run produced it* (enforced by deterministic provenance and consistency checks).

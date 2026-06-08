@@ -11,7 +11,7 @@ description: |
   confidence scores) and independently re-checked from many angles before
   delivery. ACT II (ATELIER, opt-in): with the author's source + data + code,
   it implements the agreed changes as a tracked-changes redline plus a clean
-  accepted version, RE-RUNS the analysis under an execution-provenance wall
+  revised version, RE-RUNS the analysis under an execution-provenance wall
   (no number enters the paper unless a logged re-run produced it), and
   assembles a replication package — every change multi-angle-verified, nothing
   applied without the author's sign-off on anything that touches the record.
