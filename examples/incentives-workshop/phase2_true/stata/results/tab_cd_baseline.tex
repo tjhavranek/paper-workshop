@@ -1,0 +1,22 @@
+\begin{table}[htbp]\centering
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\caption{FAT-PET Cohen's D\label{tab:fatpet\_cd}}
+\begin{tabular*}{\textwidth}{@{\hskip\tabcolsep\extracolsep\fill}l*{6}{c}}
+\toprule
+                &\multicolumn{1}{c}{OLS} &\multicolumn{1}{c}{FE}  &\multicolumn{1}{c}{BE}  &\multicolumn{1}{c}{Study}&\multicolumn{1}{c}{Precision}&\multicolumn{1}{c}{IV}  \\
+\midrule
+se\_cohens\_d     &    1.065\sym{\sym{***}}&    1.458\sym{\sym{***}}&    0.713\sym{\sym{***}}&    0.889\sym{\sym{***}}&                        &    0.867\sym{\sym{***}}\\
+                &  (0.273)               &  (0.511)               &  (0.246)               &  (0.335)               &                        &  (0.255)               \\
+\addlinespace
+precision\_cohens\_d\_w&                        &                        &                        &                        &   0.0132               &                        \\
+                &                        &                        &                        &                        & (0.0119)               &                        \\
+\addlinespace
+Constant        &   0.0229               & -0.00753               &   0.0690\sym{\sym{**}} &   0.0500\sym{\sym{*}}  &    1.294\sym{\sym{***}}&   0.0382\sym{\sym{*}}  \\
+                & (0.0195)               & (0.0395)               & (0.0335)               & (0.0266)               &  (0.304)               & (0.0197)               \\
+\midrule
+Observations    &     1252               &     1252               &     1252               &     1252               &     1252               &     1252               \\
+\bottomrule
+\multicolumn{7}{l}{\footnotesize Standard errors in parentheses}\\
+\multicolumn{7}{l}{\footnotesize \sym{\sym{*}} \(p<0.10\), \sym{\sym{**}} \(p<0.05\), \sym{\sym{***}} \(p<0.01\)}\\
+\end{tabular*}
+\end{table}

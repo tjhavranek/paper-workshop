@@ -8,9 +8,12 @@ redlined against its real LaTeX source. Run on 2026-06-07, fully autonomously.
   `incentives.R` on the shipped Stata intermediate `auxiliaries/incentives_4R.csv`.
 - **Python 3** — the real deterministic `helpers/provenance.py` and `helpers/consistency.py` (selftests pass).
 - **MiKTeX** `latexmk` — compiled the original and the redline from the authors' `.tex`.
-- **Not available: Stata** (commercial). The Stata-side construction (winsorization, FAT-PET/kink,
-  the CSV intermediates) was **not** re-run; we used the package's shipped intermediates. The R path
-  (BMA Table 4, Table 5 implied effects, and the bias-correction battery) **was** re-run.
+- **Stata (added 2026-06-08).** At the time of this R pass Stata was not available, so the Stata-side
+  construction used the package's shipped intermediates. It has since been re-run in full: see
+  [`stata/STATA_REPRODUCTION.md`](stata/STATA_REPRODUCTION.md). Running the authors' `incentives.do` in
+  Stata 15.1 on the raw `incentives.xlsx` regenerates `auxiliaries/incentives_4R.csv` byte-identically
+  to the shipped intermediate this R pass consumed, so the chain raw data -> Stata -> R is now closed.
+  The R path here (BMA Table 4, Table 5 implied effects, the bias-correction battery) **was** re-run.
 
 ## Baseline-reproduction gate — published vs regenerated
 

@@ -1,0 +1,66 @@
+### Excerpt of results/incentives.log (full log 8324 lines, kept in the local session).
+### Stata 15.1 MP, run 2026-06-08, do-file incentives.do v1.4 on incentives.xlsx (sheet data).
+
+----- data load + winsorization (head) -----
+-------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\Havranek\Dropbox\Study\Other\Agents\Joint\workshop\_incen
+> tives_stata_session\replication_package\results/incentives.log
+  log type:  text
+ opened on:   8 Jun 2026, 09:26:27
+
+. 
+. *****************************************************************************
+> **********
+. *****************************************************************************
+> **********
+. *****************************************************************************
+> **********
+. ***************************  1. Baseline PCC/CD dataset   *******************
+> **********
+. *************************************(1,252 nobs)****************************
+> **********
+. *****************************************************************************
+> **********
+. *****************************************************************************
+> **********
+. 
+. *============================================================================
+> ==========
+. * 1.1 Load data and set panel structure
+. *============================================================================
+> ==========
+. 
+. import excel "incentives.xlsx", sheet("data") firstrow clear
+
+. xtset study_id
+       panel variable:  study_id (unbalanced)
+
+. 
+. *============================================================================
+> ==========
+. * 1.2 Data preparation (baseline PCC dataset)
+. *============================================================================
+> ==========
+. * Keep only top journals without working papers
+. 
+. drop if include == 2 
+(408 observations deleted)
+
+. drop if bma == 0
+(533 observations deleted)
+
+. drop if missing(include)
+(41 observations deleted)
+
+. 
+
+----- ... [omitted: distributions, heterogeneity, full FAT-PET battery] ... -----
+
+----- export of the R-feed intermediate -----
+> thod fe_method re_method did_method other_method2 data_cross data_panel impac
+> t_factor citations
+
+. export delimited using "`OUT_AUX'/incentives_4R.csv", replace
+file auxiliaries/incentives_4R.csv saved
+

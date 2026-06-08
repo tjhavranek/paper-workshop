@@ -37,7 +37,7 @@ Full reasoning in [`REPORT.md`](REPORT.md).
 | [`brief.md`](brief.md) | The on-disk brief every seat read. |
 | [`run_meta.json`](run_meta.json) | Run metadata + the disclosed degradations. |
 | [`phase2/`](phase2/) | Act II, **first pass (degraded)**: a tracked-changes redline + triage produced when no source/interpreters were available (numbers deferred). |
-| [`phase2_true/`](phase2_true/) | Act II, **true pass**: the analysis was actually **re-run** (R + BMS) and the manuscript redlined against its real LaTeX source. See [`REPRODUCTION.md`](phase2_true/REPRODUCTION.md). |
+| [`phase2_true/`](phase2_true/) | Act II, **true pass**: the analysis was actually **re-run** (R + BMS), the **Stata publication-bias path re-run** (Stata 15.1, regenerating the R-feed data byte-identically), and the manuscript redlined against its real LaTeX source. See [`REPRODUCTION.md`](phase2_true/REPRODUCTION.md) and [`stata/STATA_REPRODUCTION.md`](phase2_true/stata/STATA_REPRODUCTION.md). |
 
 ## By the numbers
 
@@ -58,6 +58,13 @@ path** of the authors' `incentives.R` on the shipped data, and redlined the **re
   a content-hashed run artifact + hashed input data → `verified: true`
   ([`verify_lab.txt`](phase2_true/provenance/verify_lab.txt)); `helpers/consistency.py` confirms the
   regenerated 0.073 / 0.03 / 0.07 run-match the manuscript.
+- **The Stata path is now re-run too (2026-06-08).** Running the authors' `incentives.do` in Stata 15.1
+  on the raw `incentives.xlsx` regenerates `auxiliaries/incentives_4R.csv` **byte-for-byte identical** to
+  the shipped intermediate this R pass consumed (sha256 `46df404...`), plus the full FAT-PET /
+  publication-bias tables. The chain raw data -> Stata -> R/BMA -> manuscript is now closed end to end
+  (the committed `.tex` hashes are reader-reproducible; the data-side byte-identity is recorded from
+  the run and reproducible by re-running the public package). See
+  [`stata/STATA_REPRODUCTION.md`](phase2_true/stata/STATA_REPRODUCTION.md).
 - **The re-run resolved two of the workshop's own High findings — in the authors' favor.** A Haiku seat
   alleged the framing inclusion probability "drops below 0.5" under the BRIC prior (F-080); the re-run
   shows it is **0.957** (robust). And the "0.07 lab+loss" was clarified as lab and loss-framing each ~0.07
@@ -72,8 +79,10 @@ constraints, all disclosed in [`run_meta.json`](run_meta.json) and at the foot o
 
 - **No Python on the host** → the deterministic quote-gate ran via a faithful **Node port** of
   `helpers/quote_gate.py` (same normalization).
-- **No R/Stata** → Act II **could not re-run the analysis**, so — exactly as the Execution-Provenance
-  Wall requires — **no number was changed**; numeric findings are routed to the authors' own re-run.
+- **R/Stata** → absent in this first (degraded) pass, so no number was changed here. Both have since
+  been re-run in [`phase2_true/`](phase2_true/): R (the BMA path) and, on 2026-06-08, **Stata 15.1**
+  (the full publication-bias path), which regenerates the R-feed data byte-identically. The redline
+  still changes no number because the numbers reproduce.
 - **No `.tex`/`.docx` source** → the redline is reconstructed against the PDF-extracted text.
 - **Model mix:** Sonnet for cartography/roster/12 seats; Haiku for the remaining 10 seats + the
   verification panel (a usage-limit workaround); the chair synthesis was composed by the orchestrator.

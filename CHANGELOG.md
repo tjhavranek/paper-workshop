@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.3.2 — 2026-06-08
+Completed the Stata path of the incentives end-to-end example.
+
+- **Ran the authors' `incentives.do` in Stata 15.1** on the raw `incentives.xlsx` (a copy; the
+  original was untouched). Clean run (exit 0, no `r(N);` errors). It regenerates the R-feed
+  intermediate `incentives_4R.csv` **byte-for-byte identical** to the shipped one (sha256
+  `46df404…`, 1,252 rows), which is exactly the file the R/BMA pass recorded as its
+  `input_data_hash`. So the chain raw data -> Stata -> R/BMA -> manuscript is now closed and
+  deterministic, plus the full FAT-PET / publication-bias tables regenerate.
+- **Added a lightweight, auditable proof set** under `examples/incentives-workshop/phase2_true/stata/`:
+  `STATA_REPRODUCTION.md`, the regenerated FAT-PET tables, a focused log excerpt, and a provenance
+  token + `helpers/provenance.py verify` output (`verified: true`) + a `hashes.json` recording the chain.
+- **Reconciled the docs** (README, LIMITATIONS, the example README + REPRODUCTION) so the example is
+  described as one end-to-end demonstration with **both the Stata and R paths re-run**, still honestly
+  scoped (one paper, the authors' own group, a single run, not independent validation).
+
 ## v0.3.1 — 2026-06-07
 Reconciliation pass (reviewed via a small adversarial debate): merge a pending fix and correct two
 inaccuracies that had crept in.

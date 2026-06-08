@@ -72,9 +72,10 @@ what is genuinely enforced and what is not proven yet: no measured recall or fal
 numbers yet; same-model decorrelation is a design bet; coverage means *attention*, not
 correctness. Act II is built, unit-tested, and **now demonstrated end-to-end once** on a real
 accepted paper ([`examples/incentives-workshop`](examples/incentives-workshop): the authors' own
-R/BMA path was re-executed, provenance and consistency verified, the headline reproduced), though
-on one paper from the authors' own group and the R path only, so it is a demonstration and not
-independent validation; re-derive any regenerated number yourself. We ran CRUCIBLE on its own
+Stata and R/BMA paths were both re-executed, the regenerated data intermediate is byte-identical to
+the shipped one, provenance and consistency verified, the headline reproduced), though on one paper
+from the authors' own group, so it is a demonstration and not independent validation; re-derive any
+regenerated number yourself. We ran CRUCIBLE on its own
 design before release, and it caught real overclaims and a bug in its own quote-gate, both
 fixed; that run is in [`examples/self-audit/`](examples/self-audit/), framed as a development
 pass, not independent validation.

@@ -46,13 +46,14 @@ independent review panel.
   `helpers/reproduces.py` decides "reproduces" per artifact class (float tolerance + fixed
   seeds; see its `classes` table), so the baseline gate and the package clean-room check are
   code-derived, not asserted. Act II has now been run end-to-end once on a real accepted paper
-  (`examples/incentives-workshop/phase2_true/`): the authors' own R/BMA path was actually
+  (`examples/incentives-workshop/phase2_true/`): the authors' own Stata and R/BMA paths were
   re-executed, `helpers/provenance.py` tied the headline (0.0724) to a content-hashed run artifact
   and hashed input, `helpers/consistency.py` was clean, and the manuscript was redlined against its
   real LaTeX source — the headline reproduced. Caveats, so this is a demonstration and not
-  independent validation: one paper, from the authors' own group; only the R path was re-run (Stata
-  was unavailable, so shipped intermediates were used, and the prose-only redline changed no number
-  because the numbers already reproduced); a single run; and environment capture is not yet
+  independent validation: one paper, from the authors' own group; both the Stata and R paths were
+  re-executed (running the authors' `incentives.do` in Stata 15.1 regenerates the R-feed intermediate
+  byte-identically to the shipped one, closing the chain), and the prose-only redline changed no
+  number because the numbers already reproduced; a single run; and environment capture is not yet
   container-pinned. Treat Act II as *built, unit-tested, and demonstrated once* — and re-derive any
   number yourself before trusting it.
 - **A self-audit is a development pass, not independent validation.** The example in this repo

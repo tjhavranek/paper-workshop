@@ -1,0 +1,9 @@
+{
+  "value": "0.854",
+  "script": "incentives.do (Section 1.6 publication bias: FAT-PET PCC baseline, OLS)",
+  "line_or_chunk": "results/tab_pcc_baseline.tex, OLS column, se_pcc (FAT slope)",
+  "run_id": "stata-rerun-20260608",
+  "input_data_hash": "570e8c09766e377b27853d723e7a4e10689c2e5580b83546152afc0ab53d2221",
+  "output_file": "tab_pcc_baseline.tex",
+  "output_hash": "20e554cf36848d2d1fe2ec99f4e3ea8b41decfa9ec01291785cf28a528c222d2"
+}
