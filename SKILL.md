@@ -123,9 +123,10 @@ directly. When **dynamic workflows** are enabled (default on Max; on Pro, turn t
 efficiently (same phases, prompts, schemas); the subagents still do the work. **Desk Review**
 needs neither a fleet nor workflows and is the safe choice on the lightest setups. See
 `helpers/orchestration.md` for how the orchestrator picks the engine. For the full fleet, prefer
-dynamic workflows (default on Max; on Pro, turn them on in `/config`); they spawn their own
-agents. The subagent fallback inherits the orchestrating session's model and context, so a
-1M-context session may need usage credits enabled there, or run the orchestrator on a
+dynamic workflows (default on Max; on Pro, turn them on in `/config`) for scale and efficiency.
+Either way, the spawned agents inherit the orchestrating session's model and context (the skill
+sets no per-agent model), so dynamic workflows do not bypass the 1M-context credit caveat: a
+1M-context session may need usage credits enabled for that tier, or run the orchestrator on a
 standard-context model (`helpers/doctor.md` covers this pre-flight).
 
 ## Reading order for the orchestrating Claude

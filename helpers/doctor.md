@@ -20,10 +20,11 @@ rather than failing silently.
   **default on Max**; on **Pro, enable it in `/config`** (recommended, especially for
   Symposium/Summit). Detect the active engine, tell the user, and if the subagent fallback is
   active, recommend enabling dynamic workflows. **Desk Review** needs neither.
-- **Subagent-fallback caveat: model/context inheritance.** On the direct-subagent fallback, every
-  seat and verifier inherits the orchestrating session's model and context; the skill cannot
-  override this (the Workflow engine avoids it by spawning its own agents, one more reason to
-  prefer it). If the orchestrator runs on a large-context (1M-token) model, that context tier may
+- **Model/context inheritance (both engines): the 1M-context credit caveat.** Every seat and
+  verifier inherits the orchestrating session's model and context; the skill sets no per-agent
+  model, so this holds on BOTH paths — dynamic workflows do **not** change it (Workflow-spawned
+  agents inherit the session model just as direct subagents do). The remedies below are therefore
+  engine-independent. If the orchestrator runs on a large-context (1M-token) model, that context tier may
   require usage credits enabled on the account; without them, subagent spawns fail at the very
   start of a run, before any findings, with a context/credit error. That is an account setting,
   not a workshop bug. Remedies: (a) enable usage credits for that tier, or (b) run the orchestrator

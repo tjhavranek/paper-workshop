@@ -42,21 +42,28 @@ independent review panel.
 - **Coverage means attention, not correctness.** The sentence-coverage ledger certifies every
   range was *examined*, not that each was *correctly* reviewed; a flaw can hide in a
   "covered" range.
-- **Act II's reproduction predicate is now defined in code, but not yet field-proven.**
+- **Act II is now demonstrated end-to-end once, but not broadly field-proven.**
   `helpers/reproduces.py` decides "reproduces" per artifact class (float tolerance + fixed
   seeds; see its `classes` table), so the baseline gate and the package clean-room check are
-  code-derived, not asserted. Environment capture is recorded but not yet pinned to a container
-  by default, and the full Act-II pipeline has been unit-tested per helper but **not yet run
-  end-to-end on a real paper** — treat Act II as *built and unit-tested, not yet field-proven*,
-  and re-derive any number yourself before trusting it.
+  code-derived, not asserted. Act II has now been run end-to-end once on a real accepted paper
+  (`examples/incentives-workshop/phase2_true/`): the authors' own R/BMA path was actually
+  re-executed, `helpers/provenance.py` tied the headline (0.0724) to a content-hashed run artifact
+  and hashed input, `helpers/consistency.py` was clean, and the manuscript was redlined against its
+  real LaTeX source — the headline reproduced. Caveats, so this is a demonstration and not
+  independent validation: one paper, from the authors' own group; only the R path was re-run (Stata
+  was unavailable, so shipped intermediates were used, and the prose-only redline changed no number
+  because the numbers already reproduced); a single run; and environment capture is not yet
+  container-pinned. Treat Act II as *built, unit-tested, and demonstrated once* — and re-derive any
+  number yourself before trusting it.
 - **A self-audit is a development pass, not independent validation.** The example in this repo
   is the tool reviewing its own design; that is a closed loop and we label it as such.
 
 ## Roadmap
 1. A measured validation run (recall + false-positive rate) on third-party papers; lead the
    README with the number.
-2. An end-to-end Act-II demonstration on a real paper — the deterministic rails (`provenance`,
-   `consistency`, `reproduces`, `integrity_diff`) are unit-tested but not yet field-proven together.
+2. End-to-end Act-II runs on **independent third-party** papers and across the **Stata** path
+   (the interpreter path actually re-executed). The first end-to-end demonstration is done
+   (`examples/incentives-workshop/phase2_true/`); broad, independent field-proofing is the next step.
 3. Default environment pinning (a container/lockfile) for the reproduction predicate.
 4. An optional **independent numerical re-derivation** pass (recompute a key result a second
    way to catch a real coding error; labeled, never auto-applied).

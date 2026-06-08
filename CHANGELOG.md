@@ -1,5 +1,26 @@
 # Changelog
 
+## v0.3.1 — 2026-06-07
+Reconciliation pass (reviewed via a small adversarial debate): merge a pending fix and correct two
+inaccuracies that had crept in.
+
+- **Merged the leading-dot / identifier-boundary fix** to the deterministic numeric gates
+  (`consistency.py` + `provenance.py`): `.05` now reads as `0.05`, and an identifier digit
+  (`model_1`, `file2.txt`) no longer false-matches a bare number. Stdlib-only; all four helper
+  selftests pass.
+- **Corrected the engine guidance.** The docs implied dynamic workflows bypass the model/context
+  inheritance; they do not (Workflow-spawned agents inherit the session model just as direct
+  subagents do). The 1M-context credit caveat is now stated as engine-independent in
+  `helpers/doctor.md`, `README.md`, `SKILL.md`, and `helpers/orchestration.md`: CRUCIBLE runs at
+  full power on Max; on Pro, enable usage credits for the 1M tier or run the session on a
+  standard-context model (`/model sonnet`). Neither remedy weakens the tool.
+- **Reconciled the "field-proven" claims** with the shipped end-to-end demo: Act II has now been
+  demonstrated end-to-end once on a real accepted paper (`examples/incentives-workshop/phase2_true/`
+  — R/BMA path re-executed, provenance + consistency verified, headline reproduced). README and
+  LIMITATIONS now say "demonstrated once, with caveats" (one paper, the authors' own group, R-path
+  only) instead of "not yet field-proven," and roadmap item 2 is re-scoped to independent
+  third-party and Stata-path runs.
+
 ## v0.3.0 — 2026-06-06
 README / pitch overhaul, plus a Roundtable self-stress-test pass (the skill run on its own
 package: 42 agents, 69 delivered findings, 11 panel-rejected).

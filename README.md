@@ -21,10 +21,11 @@ It is for researchers who want more than a list of complaints. You want the *sha
 objection a top referee would raise, argued from more than one angle, plus the *actual edits*
 that answer it before you submit.
 
-It earns trust at the seams: every criticism is pinned to a real quote, and every revised
-number is produced by a real re-run of your own code. It is equally plain about the rest: its
-effectiveness is not measured yet, and the rebuild is not field-proven end to end. Read the
-[honest limits](LIMITATIONS.md) before you rely on it.
+It earns trust at the seams: every criticism is pinned to a real quote, and every revised number
+is produced by a real re-run of your own code. It is equally plain about the rest: effectiveness
+is not measured yet, and Act II has been demonstrated end-to-end only once (one accepted paper,
+the authors' own group; see [`examples/incentives-workshop`](examples/incentives-workshop)), not
+broadly validated. Read the [honest limits](LIMITATIONS.md) before you rely on it.
 
 A [Claude Code](https://claude.com/claude-code) skill. Claude-only. Runs on any paid plan.
 
@@ -69,8 +70,11 @@ Review** mode) do that. CRUCIBLE earns its keep when you want the argument *and*
 **Honesty about limits.** See **[`LIMITATIONS.md`](LIMITATIONS.md)** for a straight account of
 what is genuinely enforced and what is not proven yet: no measured recall or false-positive
 numbers yet; same-model decorrelation is a design bet; coverage means *attention*, not
-correctness. Act II's rebuild is built and unit-tested but **not yet field-proven end-to-end on
-a real paper** — so re-derive any regenerated number yourself. We ran CRUCIBLE on its own
+correctness. Act II is built, unit-tested, and **now demonstrated end-to-end once** on a real
+accepted paper ([`examples/incentives-workshop`](examples/incentives-workshop): the authors' own
+R/BMA path was re-executed, provenance and consistency verified, the headline reproduced), though
+on one paper from the authors' own group and the R path only, so it is a demonstration and not
+independent validation; re-derive any regenerated number yourself. We ran CRUCIBLE on its own
 design before release, and it caught real overclaims and a bug in its own quote-gate, both
 fixed; that run is in [`examples/self-audit/`](examples/self-audit/), framed as a development
 pass, not independent validation.
@@ -96,11 +100,12 @@ are available (on by default on Max; on Pro, switch them on in `/config`), CRUCI
 to orchestrate those same subagent phases more efficiently; if they're off, Symposium and
 Summit run at Workshop depth and CRUCIBLE tells you rather than downgrading silently. **Desk
 Review** needs neither, so it works anywhere. For the full fleet, prefer **dynamic workflows**
-(on by default on Max; on Pro, switch them on in `/config`): they run the phases efficiently and
-spawn their own agents. The subagent fallback works on any plan, but those subagents inherit the
-orchestrating session's model and context, so a large-context (1M) session may need usage credits
-enabled there, or run the orchestrator on a standard-context model (see
-[`helpers/doctor.md`](helpers/doctor.md)).
+(on by default on Max; on Pro, switch them on in `/config`) for scale and efficiency. CRUCIBLE
+runs at full power on Max, with nothing capped. Either engine's agents inherit the orchestrating
+session's model and context, so dynamic workflows do not bypass the one account caveat: a
+large-context (1M) session may need usage credits enabled for that tier, or just run the session
+on a standard-context model (`/model sonnet`), which keeps the methodology identical. Neither
+weakens the tool (see [`helpers/doctor.md`](helpers/doctor.md)).
 
 ## Install
 
