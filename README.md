@@ -1,9 +1,9 @@
 # CRUCIBLE — the `paper-workshop` skill
 
-Imagine a panel of AI referees built for your exact paper, arguing it out from rival schools
-and then rebuilding it, re-running your own code so the numbers are real.
+Imagine a panel of the world's leading experts, assembled for your exact paper, arguing it out
+from rival schools and then rebuilding it themselves, re-running your own code so the numbers are real.
 
-**An adversarial expert workshop that doesn't stop at the critique — it hands back the edits
+**An adversarial expert workshop that doesn't stop at the critique. It hands back the edits
 that answer each objection: a tracked redline, a clean draft, and a replication package,
 before you submit.**
 
@@ -173,5 +173,3 @@ CC-BY-4.0 ([`LICENSE`](LICENSE)). If it helps your work, please cite:
 
 > Havranek, T. & Irsova, Z. (2026). *CRUCIBLE (`paper-workshop`): an adversarial multi-expert
 > workshop that stress-tests and rebuilds a research paper.* GitHub. https://github.com/tjhavranek/paper-workshop
-
-> *Every paper leaves changed.*
