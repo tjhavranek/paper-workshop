@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.3.4 — 2026-06-08
+- **Stronger opening hook:** "Imagine a panel of the world's leading experts, assembled for your
+  exact paper, arguing it out from rival schools and then rebuilding it themselves, re-running your
+  own code so the numbers are real." (also the launch line). Dropped the "Every paper leaves changed."
+  tagline and de-em-dashed the value sentence.
+
 ## v0.3.3 — 2026-06-08
 Showcase polish for the incentives example (reviewed by an adversarial fleet; presentation only, no
 new claims).
