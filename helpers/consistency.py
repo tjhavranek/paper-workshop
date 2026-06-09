@@ -49,11 +49,11 @@ def norm_num(s):
 
 
 def numbers_in(text):
-    """The multiset (as a set + list) of normalized numeric literals in a text.
+    """The set of normalized numeric literals in a text.
     Unicode MINUS (U+2212) is mapped to ASCII '-' first so PDF/LaTeX negatives match."""
     raw = _NUM_RE.findall((text or "").replace("−", "-"))
     norm = [norm_num(x) for x in raw if norm_num(x) not in ("", "+", "-")]
-    return set(norm), norm
+    return set(norm)
 
 
 def _token_list(data):
@@ -76,7 +76,7 @@ def value_literals(value):
 
 
 def check(manuscript_text, tokens, baseline_text=None):
-    rev_set, _ = numbers_in(manuscript_text)
+    rev_set = numbers_in(manuscript_text)
 
     reconciled, run_mismatches, tok_lits = [], [], set()
     for t in tokens:
@@ -92,7 +92,7 @@ def check(manuscript_text, tokens, baseline_text=None):
 
     orphans = []
     if baseline_text is not None:
-        base_set, _ = numbers_in(baseline_text)
+        base_set = numbers_in(baseline_text)
         changed_or_new = rev_set - base_set
         orphans = sorted(n for n in changed_or_new if n not in tok_lits)
 

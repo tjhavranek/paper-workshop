@@ -44,10 +44,6 @@ def sha256_file(path):
     return h.hexdigest()
 
 
-def _norm_ws(s):
-    return re.sub(r"\s+", " ", (s or "")).strip()
-
-
 # A standalone numeric literal: optional sign, either digits with optional thousands
 # commas and decimal or a leading-dot decimal, optional exponent, optional percent.
 _NUM_RE = re.compile(
