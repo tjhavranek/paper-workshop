@@ -1,5 +1,40 @@
 # Changelog
 
+## v0.4.0 — 2026-06-10
+Mythos-class (Claude Fable 5) support pass. Researched against primary sources and decided through
+three adversarial subagent debates (fact verification, design, pre-push stress test). No workflow
+code changed; the fleet's path to Fable is the session-model inheritance the skill already has.
+
+- **README:** a "Running on Claude Fable 5 (mythos-class)" passage. Mechanism (the fleet inherits
+  the session model, so `/model best` lifts every seat, verifier, and chair to the strongest model
+  the plan has, mythos-class where Fable is available, with no configuration) plus the citable
+  design endorsement: Anthropic's Fable 5 prompting guidance states
+  that separate, fresh-context verifier subagents tend to outperform self-critique, which is the
+  skill's verification-panel architecture. Cited as an endorsement, not a measured improvement. The
+  same passage carries the honest constraints: classifier fallback, data retention, 2x pricing.
+- **doctor.md:** session-model preflight (`/model best`), domain routing (biology- and
+  security-flavored papers should start on Opus 4.8 deliberately, since Fable's classifiers reroute
+  benign life-science content, sometimes from workspace context alone), and a model-disclosure rule:
+  record the session model in `meta.json` at kickoff, re-check at the end, and carry both in the
+  report header, because a flagged Fable session silently migrates to Opus 4.8 and stays there.
+- **safety_notes.md:** Fable 5 is a Covered Model (30-day input retention, used for safety defense
+  only, not training; zero-data-retention not available). Confidential manuscripts that require ZDR
+  should run on a non-Covered model.
+- **Runner prompt + sandbox notes:** added Anthropic's tested anti-fabrication instruction verbatim
+  ("Before reporting progress, audit each claim against a tool result from this session...") as a
+  complement to the deterministic provenance gate.
+- **SKILL.md:** engine attribution fixed ("Claude Code's dynamic Workflow engine", not a
+  model-named engine) and one sentence on mythos-class inheritance.
+- **Deliberate non-changes, recorded for the record:** (1) per-agent model casting and cross-tier
+  verification were considered and deferred: the principal Fable benefit already flows through
+  session-level `/model` with zero code, the per-agent model override is observed in the harness but
+  not documented public API, and a cross-tier decorrelation benefit is unmeasured. (2) Anthropic's
+  guidance that prior-model skills can be "too prescriptive" for Fable 5 was reviewed against this
+  skill: the prescriptions were retained because they are integrity rails and machine-parsed
+  contracts (quote-gate inputs, finding/verdict schemas, provenance tokens), not style scaffolding.
+  An audit confirmed the prompts contain no reasoning-echo phrasing (the `reasoning_extraction`
+  refusal hazard).
+
 ## v0.3.4 — 2026-06-08
 - **Stronger opening hook:** "Imagine a panel of the world's leading experts, assembled for your
   exact paper, arguing it out from rival schools and then rebuilding it themselves, re-running your

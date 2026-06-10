@@ -3,6 +3,12 @@
 ## Data never leaves the machine without consent
 - Act I and Act II run on Claude (the model already in your session) and locally.
   The **only** optional external call is the lower-weight dissent leg (below).
+- **Model retention differs by model (as of June 2026).** Running the session on Claude
+  Fable 5 means a Covered Model: inputs are retained for 30 days (used for safety defense
+  only, not to train models), and zero-data-retention is **not** available for it. For
+  manuscripts under strict confidentiality terms that require ZDR, run the session on a
+  model that is not a Covered Model (the designation applies to the Mythos-class models;
+  check Anthropic's current Covered Model list before promising ZDR).
 - **Never send raw data externally**, under any circumstances. The dissent leg
   operates on abstracted findings/claims, never datasets.
 - Before any web fetch (Phase C source-grounding) or any external-model call, warn the

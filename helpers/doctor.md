@@ -20,6 +20,23 @@ rather than failing silently.
   **default on Max**; on **Pro, enable it in `/config`** (recommended, especially for
   Symposium/Summit). Detect the active engine, tell the user, and if the subagent fallback is
   active, recommend enabling dynamic workflows. **Desk Review** needs neither.
+- **Session model: run the strongest model available, and disclose which one served.** The fleet
+  inherits the orchestrating session's model, so the session model **is** the workshop's capability.
+  Recommend `/model best` (Claude Code v2.1.170+), which selects Claude Fable 5 (mythos-class)
+  where the plan has it and the latest Opus otherwise; the skill works unchanged on any model.
+  `/model` on the session is the supported way to choose the fleet's model; the skill deliberately
+  sets no per-agent model. Cost note (as of June 2026): Fable 5's 1M context carries no long-context
+  premium, but its base rate is twice Opus 4.8's, so warn before the heavy tiers. **Record the
+  session model in `meta.json` at kickoff, re-check it at the end of the run, and carry both in the
+  report header.** On Fable 5, a safety-classifier hit silently drops the session back to Opus 4.8
+  and it stays there, so a run that started mythos-class may not finish that way; the deliverable
+  must say so (accurate labeling).
+- **Domain routing (Fable 5 safety classifiers).** Fable 5's classifiers trigger on security
+  content and on benign life-science content (lab methods, molecular mechanisms); the bio
+  classifier can trip on workspace context alone, and the fleet's subagents see the same workspace.
+  For life-science- or security-flavored papers, recommend starting the session on Claude Opus 4.8
+  deliberately: the run is then predictable and honestly labeled, instead of silently migrating
+  mid-fleet.
 - **Model/context inheritance (both engines): the 1M-context credit caveat.** Every seat and
   verifier inherits the orchestrating session's model and context; the skill sets no per-agent
   model, so this holds on BOTH paths — dynamic workflows do **not** change it (Workflow-spawned
@@ -61,4 +78,5 @@ rather than failing silently.
   leg and disclose it — never downgrade silently to a training-eligible free tier,
   and never send raw data.
 
-Record every check result in `meta.json`.
+Record every check result in `meta.json`, including the session model at kickoff (and re-check
+it at the end of the run; see the session-model bullet above).

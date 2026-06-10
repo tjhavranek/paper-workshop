@@ -42,7 +42,7 @@ comment were **independently re-checked from many angles**, and then the best of
 the room **rebuilt the paper and its replication package**.
 
 The deeper modes can run for a while by design (you choose the depth). The whole
-tool is Claude-only; it uses Claude 4.8's **Workflow** engine when available and
+tool is Claude-only; it uses Claude Code's dynamic **Workflow** engine when available and
 plain subagents otherwise, with live work (fetching cited sources, running the
 author's code) via the **Agent/Bash** tools.
 
@@ -127,7 +127,10 @@ dynamic workflows (default on Max; on Pro, turn them on in `/config`) for scale 
 Either way, the spawned agents inherit the orchestrating session's model and context (the skill
 sets no per-agent model), so dynamic workflows do not bypass the 1M-context credit caveat: a
 1M-context session may need usage credits enabled for that tier, or run the orchestrator on a
-standard-context model (`helpers/doctor.md` covers this pre-flight).
+standard-context model. The same inheritance means the session model sets the workshop's
+capability: a session on Claude Fable 5 (Anthropic's mythos-class tier) runs every seat, verifier,
+and chair at that level. `helpers/doctor.md` covers this pre-flight, the Fable safety-classifier
+domain routing, and the model-disclosure rule.
 
 ## Reading order for the orchestrating Claude
 

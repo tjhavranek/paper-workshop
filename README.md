@@ -113,6 +113,26 @@ large-context (1M) session may need usage credits enabled for that tier, or just
 on a standard-context model (`/model sonnet`), which keeps the methodology identical. Neither
 weakens the tool (see [`helpers/doctor.md`](helpers/doctor.md)).
 
+**Running on Claude Fable 5 (mythos-class).** That same inheritance means starting the session on
+Claude Fable 5 (Anthropic's mythos-class tier, the class above Opus) lifts every seat, verifier,
+and chair to that capability with no configuration: select it with `/model best` in Claude Code
+v2.1.170 or later, which picks Fable where your plan has it and the latest Opus where it does not.
+Anthropic's prompting guidance for Fable 5 describes the pattern this skill is built on: it states
+that separate, fresh-context verifier subagents tend to outperform self-critique, which matches
+CRUCIBLE's verification panel. We cite that as a design endorsement, not as a measured improvement;
+we have not measured one.
+
+The honest constraints, as of June 2026. Fable 5 carries safety classifiers that can silently drop
+a flagged session back to Opus 4.8, and the session then stays on Opus until you re-select Fable;
+for substantive biology work expect nearly all requests to reroute, so for biology- or
+security-flavored papers start on Opus 4.8 deliberately (see
+[`helpers/doctor.md`](helpers/doctor.md); the run records which model actually served, and the
+report discloses it). Fable 5 is a Covered Model: inputs are retained for 30 days (for safety
+defense only, not training) and zero-data-retention is not available, which matters for
+unpublished manuscripts (see [`helpers/safety_notes.md`](helpers/safety_notes.md)). It is priced at
+twice Opus. The workshop runs unchanged on Opus and Sonnet; the methodology does not depend on the
+model tier.
+
 ## Install
 
 ```bash

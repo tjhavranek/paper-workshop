@@ -33,6 +33,10 @@ integrity rails.
   the deterministic `helpers/provenance.py` (fail-closed): the Act-II `numeric-provenance`
   verifier rejects any numeric change whose token is missing, whose output hash no longer
   matches, or whose value is not present in the named run artifact.
+- **Evidence-grounded progress reports.** Before reporting progress, audit each claim
+  against a tool result from this session. Only report work you can point to evidence
+  for; if something is not yet verified, say so explicitly. (This complements the
+  deterministic provenance gate above.)
 
 ## Re-running and propagating
 - Re-run the **minimal closure** needed for an affected artifact (prefer `make

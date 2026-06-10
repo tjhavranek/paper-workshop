@@ -31,5 +31,7 @@ Procedure:
 
 Constraints: never alter raw data in place (transformations are new derived files from
 inspectable code); never invent or hand-adjust an output; if the code errors or the
-value is not produced, return `status: failed` with the log — do not guess. Return the
-run record and the provenance tokens.
+value is not produced, return `status: failed` with the log — do not guess. Before
+reporting progress, audit each claim against a tool result from this session. Only
+report work you can point to evidence for; if something is not yet verified, say so
+explicitly. Return the run record and the provenance tokens.

@@ -13,8 +13,8 @@ missing, say so and offer the degraded scope rather than failing silently.
 Make `<cwd>/paper_workshop_sessions/<YYYYMMDD-HHMM-slug>/` with `input/`,
 `brief.md`, `round_artifacts/`, `verification/`, and (Act II) `phase2/`. **Copy**
 the PDF (and later the source/data/code) into `input/` — never read or mutate the
-author's originals in place. Write `meta.json` (session id, timestamp, input hashes,
-tier, register supportive|brutal, codex/external availability).
+author's originals in place. Write `meta.json` (session id, timestamp, session model, input
+hashes, tier, register supportive|brutal, codex/external availability).
 
 ## Step 2 — Choose the mode and register
 Modes (depth) and their internal tier keys: **Desk Review** (no fleet/workflow — Step
