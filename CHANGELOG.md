@@ -1,5 +1,85 @@
 # Changelog
 
+## v0.5.0 — 2026-06-11
+
+The tool run on itself, at scale: a Roundtable self-review on Claude Fable 5 (the fleet inherits
+the session model), with 76 quote-gated findings from 11 blind seats (two rival pairs, a
+premortem, a completeness critic, a records-consistency auditor), each finding cleared or
+rejected by a blind three-angle verification panel, plus one-shot advisory reviews from two
+external models (lower-weight by design; every adopted external point was independently probe-
+or code-confirmed first). 72 findings delivered; the panel rejected 4 as re-litigating settled
+design or already addressed. Everything below passed the full ritual set: 96 selftest assertions
+across the five deterministic helpers, both workflow scripts, schema validity, and both
+committed provenance proofs.
+
+- **Deterministic gates hardened; probe-confirmed fail-opens fixed, each with new selftests.**
+  `provenance.py` + `consistency.py`: the thousands-comma regex no longer merges a European
+  decimal (a token "118" verified against text saying "1,18") or CSV fields; the dash family
+  (en/em dash and friends) maps to ASCII minus before extraction so negatives keep their sign
+  (a positive token reconciled against "–0.10"); exponent matching is case-insensitive;
+  `provenance.py verify` requires the output file to resolve inside `--artifact-dir` (an
+  absolute path or ".." escape fails closed); `consistency.py check` fails closed on a vacuous
+  run (zero parsed tokens and no baseline, e.g. a typo'd top-level key); `reproduces.py` fails
+  closed on an empty baseline, honors per-number tolerance classes from the baseline/CLI side
+  only and rejects unknown class names (defense-in-depth hygiene: the same agent writes both
+  comparison files, so this is not a security boundary); `quote_gate.py` batch mode, the
+  production path, now has selftest coverage including the absence-exemption-abuse case.
+- **Act-I engine (`phase1_tribunal.js`): fail-closed aggregation.** A finding the quote-gate
+  relay drops is treated as unverified (was: silent keep of the seat's self-reported status);
+  panel ties and cant-tell-only verdicts never pass a hard gate (a 1-1 reject tie at the
+  redundant tiers used to deliver as clean); the chair now receives findings with their panel
+  verdicts plus the panel-rejected list, so `panel_summary` and `rejected_suggestions` are
+  data-backed, and the run output carries the verdicts for the session's `verification/`
+  record; the roster floors (at least one seat, three generalists, nonempty justifying quote)
+  are enforced in the inline schema; caller-staged sources survive when in-run grounding stages
+  nothing; the premortem kill-shot routing label is set by the workflow, not the agent (an
+  agent-phrased tradition string could silently empty the verbatim channel); severity revisions
+  parse the explicit `High->Medium` arrow form first.
+- **Act-II engine (`phase2_atelier.js`): three missing halts added.** A baseline run that
+  crashes now halts exactly like a diverging baseline (previously only `baseline-failed`
+  halted); a dirty reconcile (orphans, mismatches, run-mismatches, integrity flags) halts
+  before packaging, which makes the documented terminal gate real and deterministically
+  backstops any triage misclassification; Intake actually receives the finding ledger under
+  the documented args (was: a literal `(inline)` placeholder); the Scribe receives all of the
+  Runner's provenance tokens (multi-value numeric edits were unimplementable); the baseline
+  Runner gets the manuscript source to anchor "current numbers"; the disclosure audit trail
+  includes blocked edits and an honest pending-sign-off status.
+- **Stale claims reconciled to the repo's own record** (the staleness was independently found
+  by four sources): SKILL.md and the orchestration Step-6 gate text no longer say Act II is
+  "not yet field-proven end to end", which had contradicted README/LIMITATIONS since v0.3.1;
+  the never-produced "debate transcript" deliverable is renamed to what the pipeline actually
+  produces (the cross-critique crux notes); the subagent-fallback phase order now matches the
+  engine; the roster-approval pause is operational (`args.roster` documented); LIMITATIONS
+  roadmap item 2 dropped its stale Stata clause; the SKILL files tree gained LIMITATIONS.md,
+  desk_review_mode, and the flagship incentives example it had omitted.
+- **The committed R-side provenance proof verifies again, now reader-reproducibly.** git's eol
+  normalization had silently rewritten `rerun_keynumbers.json` (CRLF to LF), breaking the
+  recorded sha256. The original bytes are restored (provable: only the authentic sequence
+  reproduces the token's hash), the run-record dirs are `.gitattributes -text` protected, and
+  REPRODUCTION.md discloses the incident. The token and the verify record were never edited.
+- **Example READMEs aligned to their committed ledgers** (a records-consistency auditor caught
+  the framing prose overstating its own records): the incentives README reports the ledger's
+  23 needs-author-confirmation findings (not 3), attributes the numeric-claim quarantine to
+  REPORT.md's reopen list rather than to the panel/ledger, labels the consistency result
+  recorded-from-run, and the quote-gate bullet carries the one downgraded quote.
+- **Docs and contracts tightened throughout:** SKILL.md fully de-dashed (24 em-dashes to 0,
+  per the house human-voice standard), with a precise three-driver cost paragraph (anchored by
+  the committed 42-agent self-audit run) and a new degraded-run contract section; the README
+  positioning sentence de-garbled, the engine paragraph deduplicated and glossed for readers
+  new to Claude Code, the install block split into bash and PowerShell; Desk Review's chair
+  substitutions made explicit (`sentences_total: 0` means not run, never full coverage);
+  prompts 03/04/05/06/07/12/13/14/16 aligned with the schemas and engines that execute them,
+  including the locked rubric's `desk-reject-risk` hyphen (a deliberate maintainer alignment
+  to the schema enum); the coverage rubric gained the missing cross-field-significance
+  dimension (the third generalist seat had no dimension to certify); `stopping_rule.md` joined
+  the reading order and orchestration now owns the deepening loop for the heavy tiers.
+- **Process notes, disclosed:** the self-run was lighter than the design (a usage-limit
+  restart; six of eleven seats salvaged from journals; integrator lenses folded into the
+  chair). One external suggestion (hard-gating the advisory verification angles in Act II) was
+  considered and declined per the panel's steelman: the docs deliberately mark those angles
+  mixed, and auto-applied edits remain tracked changes awaiting the author. Roadmap item 1
+  (the measured recall/false-positive validation run) remains the most important open work.
+
 ## v0.4.0 — 2026-06-10
 Mythos-class (Claude Fable 5) support pass. Researched against primary sources and decided through
 three adversarial subagent debates (fact verification, design, pre-push stress test). No workflow

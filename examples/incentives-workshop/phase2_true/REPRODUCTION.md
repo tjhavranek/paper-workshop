@@ -45,6 +45,16 @@ data; `helpers/provenance.py verify` returns (`provenance/verify_lab.txt`):
 So this number is the output of code actually executed in this run, identified by content hash — not a
 recalled or transcribed figure.
 
+**Reader-reproducible.** The run artifact `run_results/rerun_keynumbers.json` is committed
+byte-verbatim (`.gitattributes` marks the run-record dirs `-text`), so anyone can re-run the check
+against this repo: `python helpers/provenance.py verify --token
+examples/incentives-workshop/phase2_true/provenance/token_lab.json --artifact-dir
+examples/incentives-workshop/phase2_true/run_results` → `verified: true`. (Disclosure: between
+v0.3.x and v0.4.0 git's eol normalization had silently rewritten that artifact's line ending,
+breaking the recorded hash; v0.5.0 restored the original bytes — provably, since only the
+authentic byte sequence reproduces the token's sha256 — and added the `-text` protection. The
+token and verify record were never edited.)
+
 ## What the re-run resolved (two flagged findings, decided)
 
 The Act-I verification panel had quarantined several Haiku-seat numeric claims as

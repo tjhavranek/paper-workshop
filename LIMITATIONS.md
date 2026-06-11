@@ -2,8 +2,8 @@
 
 CRUCIBLE is built by people who care about research integrity, so this is the
 account of what it does **not** yet guarantee. Several of these came from running the tool
-on its own design (see [`examples/self-audit/`](examples/self-audit/)) and from an
-independent review panel.
+on its own design (see [`examples/self-audit/`](examples/self-audit/)) and from
+adversarial cross-review during development.
 
 ## What is genuinely enforced
 - **Quote grounding** is a real, deterministic, fail-closed script (`helpers/quote_gate.py`)
@@ -25,7 +25,7 @@ independent review panel.
   that exists, treat the output as *one very thorough opinion*, not validated ground truth.
   This is the single most important piece of future work.
 - **Same-model decorrelation is a design bet, not a proof.** Commit-and-reveal isolation
-  removes inter-agent herding, and rival objective functions reduce sycophantic agreement —
+  removes inter-agent herding, and rival objective functions reduce sycophantic agreement,
   but every seat is the same model class and can share a blind spot. A fleet's agreement is
   *not* independent corroboration. The optional, off-by-default external (cross-provider)
   "what did we all miss?" leg is the intended mitigation; enable it for anything
@@ -46,25 +46,26 @@ independent review panel.
   `helpers/reproduces.py` decides "reproduces" per artifact class (float tolerance + fixed
   seeds; see its `classes` table), so the baseline gate and the package clean-room check are
   code-derived, not asserted. Act II has now been run end-to-end once on a real accepted paper
-  (`examples/incentives-workshop/phase2_true/`): the authors' own Stata and R/BMA paths were
-  re-executed, `helpers/provenance.py` tied the headline (0.0724) to a content-hashed run artifact
-  and hashed input, `helpers/consistency.py` was clean, and the manuscript was redlined against its
-  real LaTeX source — the headline reproduced. Caveats, so this is a demonstration and not
-  independent validation: one paper, from the authors' own group; both the Stata and R paths were
-  re-executed (running the authors' `incentives.do` in Stata 15.1 regenerates the R-feed intermediate
-  byte-identically to the shipped one, closing the chain), and the prose-only redline changed no
-  number because the numbers already reproduced; a single run; and environment capture is not yet
-  container-pinned. Treat Act II as *built, unit-tested, and demonstrated once* — and re-derive any
-  number yourself before trusting it.
+  (`examples/incentives-workshop/phase2_true/`). The record: both the Stata and R/BMA paths were
+  re-executed (running the authors' `incentives.do` in Stata 15.1 regenerates the R-feed
+  intermediate byte-identically to the shipped one, closing the chain raw data → Stata → R →
+  manuscript); `helpers/provenance.py` tied the headline (0.0724) to a content-hashed run artifact
+  and hashed input; `helpers/consistency.py` was clean on the run host (recorded from the run);
+  and the manuscript was redlined against its real LaTeX source — the headline reproduced.
+  Caveats, so this is a demonstration and not independent validation: one paper, from the
+  authors' own group, in a single run; the numbers already reproduced, so the redline stayed
+  prose-only and the path where a re-run value replaces a stale number was never exercised; and
+  environment capture is not yet container-pinned. Treat Act II as *built, unit-tested, and
+  demonstrated once* — and re-derive any number yourself before trusting it.
 - **A self-audit is a development pass, not independent validation.** The example in this repo
   is the tool reviewing its own design; that is a closed loop and we label it as such.
 
 ## Roadmap
 1. A measured validation run (recall + false-positive rate) on third-party papers; lead the
    README with the number.
-2. End-to-end Act-II runs on **independent third-party** papers and across the **Stata** path
-   (the interpreter path actually re-executed). The first end-to-end demonstration is done
-   (`examples/incentives-workshop/phase2_true/`); broad, independent field-proofing is the next step.
+2. End-to-end Act-II runs on **independent third-party** papers. The first end-to-end
+   demonstration is done (`examples/incentives-workshop/phase2_true/`, both the Stata and R
+   paths re-executed); broad, independent field-proofing is the next step.
 3. Default environment pinning (a container/lockfile) for the reproduction predicate.
 4. An optional **independent numerical re-derivation** pass (recompute a key result a second
    way to catch a real coding error; labeled, never auto-applied).

@@ -73,7 +73,7 @@ wasteful one-agent-per-finding-per-angle fan-out is removed.
 | `numeric-provenance` | Does every number in this edit trace to a content-hashed output of a run executed **in this session**? (Execution-Provenance Wall) | **Yes** — fail ⇒ edit blocked |
 | `consistency` | After this edit, does the value match **every** other place the same quantity appears (abstract/body/table/appendix)? | **Yes** — fail ⇒ edit blocked |
 | `fix-safety` | Does the edit target the right span and avoid introducing a new error or breaking a correct passage? | **Yes** | 
-| `integrity` | Does the edit suppress/attenuate a result, narrow a sample, drop a control/observation, weaken a caveat, swap the headline spec, or HARK? | **Yes** — any ⇒ route to author sign-off, never auto-apply |
+| `integrity` | Does the edit suppress/attenuate a result, narrow a sample, drop a control/observation, weaken a caveat, swap the headline spec, or HARK? | **Yes** — fail ⇒ the edit is **blocked** and the finding routes back for a fresh proposal (independently, any `result-suppressing`/`claim-altering` **edit class** set at triage always waits for author sign-off, verdicts or no) |
 | `human-voice` | Does the edit read as the author wrote it, not AI? (no negation-correction antithesis, no banned lexicon, no filler/over-signposting; punctuation matched to the author's baseline; verdict must quote an adjacent author sentence + a style diff) | **Yes** — fail ⇒ edit blocked |
 | `logical-validity`, `factual-literature`, `steelman-charity` | (as in Act I, re-asked against the *edited* text) | mixed |
 
@@ -82,11 +82,18 @@ wasteful one-agent-per-finding-per-angle fan-out is removed.
 hard-gate angle passes. Any `numeric`, `result-suppressing`, or `claim-altering`
 edit — even when all verifiers pass — is **proposed**, not applied, and waits for the
 author's per-item sign-off (grounding rule 14). A failing hard gate blocks the edit
-and routes the underlying finding back for a fresh proposal.
+and routes the underlying finding back for a fresh proposal. The deterministic
+reconciler backstops a triage misclassification: an edit that changed a number without
+a provenance token surfaces there as an orphan, and a dirty reconcile halts the run
+before any "final" package is assembled.
 
 ## What the panel writes
 
-Every verdict is a `verification.schema.json` object, persisted to the session under
-`verification/` (Act I) or `phase2/verification/` (Act II). These transcripts are
-part of the auditable record: the author can see exactly which angles cleared each
-comment and each change, and why anything was rejected or revised.
+Every verdict is a `verification.schema.json` object. The Act-I workflow returns each
+delivered finding with its `panel_verdicts` attached plus the `rejected_in_panel` list,
+and the orchestrator persists these to the session under `verification/` when it
+assembles the report (orchestration.md Step 5); Act II returns each edit's verdicts the
+same way (under `phase2/verification/`). The Workflow engine additionally retains every
+verifier agent's full transcript. Together these are the auditable record: the author
+can see exactly which angles cleared each comment and each change, and why anything
+was rejected or revised.

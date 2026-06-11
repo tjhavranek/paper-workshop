@@ -17,7 +17,7 @@ the subagent does not judge quote presence by eye.
 # single quote (inline, from a file, or stdin to dodge shell escaping)
 python helpers/quote_gate.py check --source-file input/paper.txt --quote "exact text"
 python helpers/quote_gate.py check --source-file input/paper.txt --quote-file q.txt
-type q.txt | python helpers/quote_gate.py check --source-file input/paper.txt --quote-stdin
+cat q.txt | python helpers/quote_gate.py check --source-file input/paper.txt --quote-stdin
 
 # batch: verify every finding's quote at once
 python helpers/quote_gate.py batch --source-file input/paper.txt --findings round1/findings.json
@@ -28,7 +28,7 @@ python helpers/quote_gate.py batch --source-file input/paper.txt --findings roun
 
 ## Match levels
 - `normalized` — matched after Unicode-NFKC + quote/dash/space canonicalization +
-  whitespace-collapse + casefold. The normal pass.
+  zero-width/soft-hyphen removal + whitespace-collapse + casefold. The normal pass.
 - `dehyphenated` — matched only after also joining `-`-at-line-break (PDF
   hyphenation). Still a pass; note it.
 - `exempt-absence` — the finding is `absence-silence` with an empty quote; not gated.

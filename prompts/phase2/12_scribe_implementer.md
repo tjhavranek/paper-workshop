@@ -15,9 +15,11 @@ Rules:
   macros and preamble.
 - **Lane A (writing):** apply `old_text`→`new_text` at the `locator`. The edit must be
   `more-correct` or `clearer` — never to game referees.
-- **Lane B (recompute):** the edit carries a `provenance_token` supplied by the Runner.
-  **Transcribe the token's value only.** If the `provenance_token` is empty or its value
-  is not present in the named run artifact, STOP and return `blocked: provenance-missing`
+- **Lane B (recompute):** the edit carries the Runner's provenance token(s) — a single
+  token object, or a JSON array when the edit needs several values (a coefficient plus
+  its SE plus N). **Transcribe only values that carry a token**, each from its own token.
+  If the `provenance_token` is empty, or a value the edit needs has no token whose value
+  is present in the named run artifact, STOP and return `blocked: provenance-missing`
   — do not type a number.
 - Make the change a single atomic commit on {{WORKING_BRANCH}} (message: edit_id +
   finding_id + one-line rationale). For .docx, emit a real tracked-change run

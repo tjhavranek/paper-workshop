@@ -20,8 +20,8 @@ correction and Bayesian model averaging.
 
 ## Headline
 
-A strong, transparent paper. The workshop's two dominant cruxes, each raised independently by **five**
-seats, are:
+A strong, transparent paper. The workshop's two dominant cruxes, each raised independently by at
+least five seats, are:
 
 1. **Scope vs. design-stage selection.** The abstract/title state a general policy claim ("rarely
    produces large performance gains") while the sample is, by the authors' own account, curated to avoid
@@ -48,9 +48,12 @@ Full reasoning in [`REPORT.md`](REPORT.md).
 
 ## By the numbers
 
-- 22 seats → **137 findings**; 131 delivered, 6 dropped by the verification panel, 3 needs-author-confirmation.
+- 22 seats → **137 findings**; 131 delivered, 6 dropped by the verification panel; 23 of the
+  delivered findings carry needs-author-confirmation status in `findings.json` (7 of those High).
 - Severity (post-calibration): **45 High / 58 Medium / 34 Low**.
-- Every non-absence quote passed a deterministic quote-gate (108 quote-matched + 28 absence-exempt).
+- The deterministic quote-gate checked every non-absence quote: 108 matched and the 1 it could
+  not verify was downgraded to needs-author-confirmation, never asserted (28 absence findings
+  are exempt by design).
 - Act II: **3 prose edits** applied as tracked changes; **0 numbers changed**.
 
 ## True Act II — the analysis was actually re-run
@@ -64,8 +67,11 @@ path** of the authors' `incentives.R` on the shipped data, and redlined the **re
   BMA heterogeneity subsample of the full 2,193-estimate dataset).
 - **The Execution-Provenance Wall verified for real:** `helpers/provenance.py` ties the value 0.0724 to
   a content-hashed run artifact + hashed input data → `verified: true`
-  ([`verify_lab.txt`](phase2_true/provenance/verify_lab.txt)); `helpers/consistency.py` confirms the
-  regenerated 0.073 / 0.03 / 0.07 run-match the manuscript.
+  ([`verify_lab.txt`](phase2_true/provenance/verify_lab.txt)), a check anyone can re-run against this
+  repo (the run artifact is committed byte-verbatim; see
+  [`REPRODUCTION.md`](phase2_true/REPRODUCTION.md)); `helpers/consistency.py` confirms the
+  regenerated 0.073 / 0.03 / 0.07 run-match the manuscript (recorded from the run; the consistency
+  output is not committed, unlike the provenance verify files).
 - **The Stata path is now re-run too (2026-06-08).** Running the authors' `incentives.do` in Stata 15.1
   on the raw `incentives.xlsx` regenerates `auxiliaries/incentives_4R.csv` **byte-for-byte identical** to
   the shipped intermediate this R pass consumed (sha256 `46df404...`), plus the full FAT-PET /
@@ -76,8 +82,10 @@ path** of the authors' `incentives.R` on the shipped data, and redlined the **re
 - **The re-run resolved two of the workshop's own High findings, in the authors' favor.** A Haiku seat
   alleged the framing inclusion probability "drops below 0.5" under the BRIC prior (F-080); the re-run
   shows it is **0.957** (robust). And the "0.07 lab+loss" was clarified as lab and loss-framing each ~0.07
-  (reproduced), not an unestimated combined cell (F-078). The panel had correctly quarantined both as
-  `needs-author-confirmation` rather than asserting them, the wall doing its job.
+  (reproduced), not an unestimated combined cell (F-078). REPORT.md's reopen list had marked the
+  garbled-table numeric claims (F-079, F-080, F-090) `needs-author-confirmation`; in the committed
+  ledger the two findings stand as delivered High findings with verified quotes, and the re-run then
+  tested their numeric sub-claims directly and decided both in the authors' favor.
 - **No number was changed** (they reproduce); the redline carries only the three prose/scope edits.
 
 ## Honest run conditions (read this)

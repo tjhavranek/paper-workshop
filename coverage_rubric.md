@@ -1,11 +1,13 @@
 # Coverage rubric
 
 The completeness audit (Act I) and the chair's `coverage_certificate` are scored against
-**this list**. For every dimension below, the synthesizer must
-mark it `covered by seat <id>` or **`NOT COVERED`** (with a one-line reason). A
-`NOT COVERED` load-bearing dimension re-opens a targeted mini-fan-out until it is
-green or is explicitly logged "reviewed, nothing found." This is what lets the
-tool claim it examined *everything*.
+**this list**. For every dimension below, the completeness auditor must
+mark it `covered by seat <id>` or **`NOT COVERED`** (with a one-line reason); the chair
+reports the result, it does not re-score it. On deepened runs, a `NOT COVERED`
+load-bearing dimension re-opens a targeted mini-fan-out until it is green or is
+explicitly logged "reviewed, nothing found" (the default single pass reports the gap
+and stops; see `helpers/stopping_rule.md`). This is what lets the tool claim it
+examined *everything*.
 
 Dimensions not applicable to a given paper type are marked `N/A (<reason>)` — but
 the Scout must have justified the N/A in the roster contract, not silently
@@ -44,6 +46,9 @@ skipped it.
     changes if it is true?
 16. **Understandability / brilliant-outsider** — is it intelligible to a strong
     scientist one field over; where does it lose them?
+17. **Cross-field significance / does it travel** — would a neighboring discipline
+    care; is there a bigger claim the authors should make or defend? (Findings from
+    this seat carry `finding_type: relevance`.)
 
 ## The sentence-coverage ledger
 Independently of the dimensions above, the Section/Sentence Map (Phase A) tiles the paper

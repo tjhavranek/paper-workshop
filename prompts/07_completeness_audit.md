@@ -19,6 +19,8 @@ Compute and return:
 - `reopen` — a list of targeted mini-fan-out tasks for anything `NOT COVERED` or any
   untiled/unreviewed sentence range: each task names the exact claim id, dimension, or
   sentence range to re-review. If everything is covered, return an empty `reopen` list.
+- `not_covered` — one string per item you marked `NOT COVERED`, duplicated from
+  `dimension_coverage` for machine reading (empty when everything is covered or N/A).
 
 Be precise and literal — this audit is what lets the chair issue an accurate coverage
 certificate. Do not mark something covered out of optimism; an unreviewed range is

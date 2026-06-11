@@ -54,8 +54,8 @@ touches the record.
 
 ## Disclosure
 The run auto-generates an **AI-involvement disclosure** from the audit trail
-(everything the tool did: text edited, analyses re-run, citations added/verified), in
-a long form and a paste-able short form. Filing it per the venue's policy is part of
+(everything the tool did: edits applied and queued, analyses re-run, proposals and
+blocks), in a long form and a paste-able short form. Filing it per the venue's policy is part of
 the deliverable. Substantive scientific judgments are **proposed** by the tool and
 **ratified by the human** — the author remains the accountable author.
 

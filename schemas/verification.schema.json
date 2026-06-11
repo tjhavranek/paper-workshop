@@ -20,7 +20,7 @@
     "verdict": {
       "type": "string",
       "enum": ["upheld", "upheld-with-revision", "rejected", "cant-tell"],
-      "description": "upheld = stands as written; upheld-with-revision = correct but the suggested_revision should be applied (e.g. severity down to Medium); rejected = should not be delivered; cant-tell = insufficient basis (does not block, but is recorded)."
+      "description": "upheld = stands as written; upheld-with-revision = correct but the suggested_revision should be applied (e.g. severity down to Medium); rejected = should not be delivered; cant-tell = insufficient basis (recorded; in Act I it does not block, but in Act II a cant-tell on a required hard-gate angle prevents auto-apply and routes the edit to author sign-off)."
     },
     "reason": { "type": "string", "description": "Grounded, specific. For a rejection, say exactly why; for a revision, exactly what." },
     "suggested_revision": { "type": ["string", "null"], "description": "The concrete change, e.g. 'severity High->Medium: result survives the robustness check in Table 6', or null." }

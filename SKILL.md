@@ -1,19 +1,19 @@
 ---
 name: paper-workshop
 description: |
-  CRUCIBLE — a Claude-only adversarial expert workshop that stress-tests a
+  CRUCIBLE: a Claude-only adversarial expert workshop that stress-tests a
   scientific paper and then, opt-in, rebuilds it. ACT I (TRIBUNAL): from the
   paper PDF (plus a few public cited works it fetches), a topic-adapted fleet of expert
-  referee subagents — every
+  referee subagents (every
   contested claim argued from at least two COMPETING intellectual traditions,
-  plus generalist seats for relevance and understandability — reviews the paper
+  plus generalist seats for relevance and understandability) reviews the paper
   to the sentence, every comment grounded in an exact quote (no fabrication, no
   confidence scores) and independently re-checked from many angles before
   delivery. ACT II (ATELIER, opt-in): with the author's source + data + code,
   it implements the agreed changes as a tracked-changes redline plus a clean
   revised version, RE-RUNS the analysis under an execution-provenance wall
   (no number enters the paper unless a logged re-run produced it), and
-  assembles a replication package — every change multi-angle-verified, nothing
+  assembles a replication package, every change multi-angle-verified, nothing
   applied without the author's sign-off on anything that touches the record.
 
   Triggers:
@@ -47,22 +47,23 @@ plain subagents otherwise, with live work (fetching cited sources, running the
 author's code) via the **Agent/Bash** tools.
 
 **Honest limits.** See [`LIMITATIONS.md`](LIMITATIONS.md): effectiveness is not measured yet
-(no recall or false-positive numbers), same-model decorrelation is a design bet, and Act II's
-rebuild is built and unit-tested but not yet field-proven end to end.
+(no recall or false-positive numbers); same-model decorrelation is a design bet, not a proof;
+and Act II is demonstrated end-to-end once on one accepted paper, not broadly validated.
 
 ## The two acts and the gate between them
 
-- **Act I — TRIBUNAL.** Input: **the paper PDF** — no data or code, and it touches none of
+- **Act I (TRIBUNAL).** Input: **the paper PDF**, no data or code, and it touches none of
   your files (it does fetch a few *public* cited works to check the paper's claims). Output: a verified,
-  prioritized finding ledger + a referee-report bundle + a debate transcript + an
-  importance memo + a completeness certificate. Read-only;
+  prioritized finding ledger + a referee-report bundle + the cross-critique crux notes
+  (where rival seats collided and what evidence would move each side) + the generalists'
+  relevance and understandability memo + a completeness certificate. Read-only;
   nothing of the author's is touched. (`workflow/phase1_tribunal.js`)
 - **[HARD GATE].** The skill **stops** and offers to implement. It never
   auto-chains into Act II.
-- **Act II — ATELIER.** Opt-in. Asks for the manuscript **source** (.tex/.docx),
+- **Act II (ATELIER).** Opt-in. Asks for the manuscript **source** (.tex/.docx),
   **data**, and **code**, then implements every safely-implementable finding as
   tracked changes, re-runs the analysis against the data, regenerates figures and
-  tables, and assembles a reproducing **replication package** — all on copies, all
+  tables, and assembles a reproducing **replication package**, all on copies, all
   author-approvable. (`workflow/phase2_atelier.js`)
 
 The two acts share one spine: the **Verified Finding Ledger**
@@ -71,13 +72,13 @@ The two acts share one spine: the **Verified Finding Ledger**
 ## What makes it trustworthy at scale (read `prompts/shared_grounding_rules.md`)
 
 The fleet is the product; the rails below are what keep a 300–600-agent run from
-laundering a fatal flaw into a confident green light. They are always on and cost
-almost nothing — never traded away for scale.
+laundering a fatal flaw into a confident green light. They are always on, cost
+almost nothing, and are never traded away for scale.
 
 - **Multi-angle independent verification before delivery.** *Nothing* reaches the
   user until several blind subagents, **each from a different angle**, have checked
   it (quote/locator, logical validity, severity calibration, decision-relevance,
-  fix-safety, charitable steelman — with factual/literature added at the deeper tiers; Act
+  fix-safety, charitable steelman; factual/literature added at the deeper tiers; Act
   II adds numeric provenance, consistency, integrity). See `helpers/verification_panel.md`.
 - **Ground, don't recall; never fabricate.** Exact quote + locator on every
   finding, verified by the deterministic `helpers/quote_gate.py` (not an LLM).
@@ -86,17 +87,23 @@ almost nothing — never traded away for scale.
 - **Decorrelate by rival objective function**, commit-and-reveal independence,
   un-deletable verbatim dissent, preserved minority report.
 - **Act II Execution-Provenance Wall:** no number enters the paper unless a real, logged
-  re-run produced it — re-hashed and value-checked by the deterministic `helpers/provenance.py`
+  re-run produced it, re-hashed and value-checked by the deterministic `helpers/provenance.py`
   + `helpers/consistency.py` (fail-closed), with `helpers/reproduces.py` deciding "reproduces"
   and `helpers/integrity_diff.py` flagging any net result-removal to author sign-off.
 
-## Modes (pick your depth — runs on any paid plan)
+## Modes (pick your depth; runs on any paid plan)
 
-Run size scales with the number of **expert seats**; the verification panel is *batched by
-angle* (cost ≈ `angles × ceil(#findings / batch) × redundancy`, not `#findings × angles`),
-and each seat returns ≤ ~8 findings. The lighter modes' cost grows with the depth you
-choose; the two heavy modes add a per-section sentence sweep, so their cost **also scales
-with paper length**.
+Three things set a run's cost. **Seats:** the mode fixes the expert-seat band (the scout
+casts within it), and seats are the dominant driver. **Findings:** each seat returns at
+most ~8 findings, and the verification panel is *batched by angle* (panel agents ≈
+`angles × ceil(#findings / batch) × redundancy`): three
+angles at Roundtable, six at Workshop, seven with two agents per angle at
+Symposium/Summit, over batches of 15–25 findings (see `helpers/verification_panel.md`).
+**Paper length:** it enters only at Symposium and Summit, which add close-reader sweeps
+over ~40-sentence blocks; the script bounds the sweep fan-out, and the lighter modes'
+cost is set by the tier whatever the paper's length. As one measured anchor, the
+committed Roundtable-mode self-audit ran 42 agents end to end
+(`examples/self-audit/run_meta.json`, 2026-06-06).
 
 | Mode | What convenes | Expert seats | ≈ agents | Best for |
 |---|---|---|---|---|
@@ -107,23 +114,22 @@ with paper length**.
 | **Summit** | every subsystem + every sentence | 60–120+ | ~300–600 | the most exhaustive pass (opt-in) |
 
 Symposium/Summit counts grow with paper length (the sentence sweeps); a very long paper can
-push Summit past 600. The seat count — the main cost driver — is cast by the scout within
+push Summit past 600. The seat count, the main cost driver, is cast by the scout within
 the target bands, so these totals are typical, not hard limits (the script bounds only the
 verification and sweep fan-out). Default is **Workshop**. **Symposium and Summit are
-best run with the Workflow engine** — the subagent fallback is practical up to Workshop;
+best run with the Workflow engine**: the subagent fallback is practical up to Workshop;
 beyond that, without workflows the orchestrator should fall back to Workshop depth **and tell
 the user**, rather than downgrading silently. (Internal
 tier keys: Roundtable=`quick`, Workshop=`thorough`, Symposium=`exhaustive`,
 Summit=`monumental`.)
 
-**Engine & plans — the workshop runs for everyone.** Subagents (the Agent tool) work on
+**Engine & plans: the workshop runs for everyone.** Subagents (the Agent tool) work on
 **every plan**, so the orchestrator can always run the phases by spawning subagents
 directly. When **dynamic workflows** are enabled (default on Max; on Pro, turn them on in
 `/config`), the skill uses `workflow/*.js` to orchestrate those same subagent phases more
 efficiently (same phases, prompts, schemas); the subagents still do the work. **Desk Review**
 needs neither a fleet nor workflows and is the safe choice on the lightest setups. See
-`helpers/orchestration.md` for how the orchestrator picks the engine. For the full fleet, prefer
-dynamic workflows (default on Max; on Pro, turn them on in `/config`) for scale and efficiency.
+`helpers/orchestration.md` for how the orchestrator picks the engine.
 Either way, the spawned agents inherit the orchestrating session's model and context (the skill
 sets no per-agent model), so dynamic workflows do not bypass the 1M-context credit caveat: a
 1M-context session may need usage credits enabled for that tier, or run the orchestrator on a
@@ -135,13 +141,14 @@ domain routing, and the model-disclosure rule.
 ## Reading order for the orchestrating Claude
 
 1. This file.
-2. `prompts/shared_grounding_rules.md` — the fifteen non-negotiables (they bind every agent).
-3. `helpers/doctor.md` — pre-flight checks (and, for Act II, sandbox/interpreter checks).
-4. `helpers/orchestration.md` — the operational checklist (how to actually run both acts).
-5. `helpers/verification_panel.md` — how the many-angle verification gate works.
-6. `rubric.md` and `coverage_rubric.md` — the locked severity + coverage standards.
+2. `prompts/shared_grounding_rules.md`: the fifteen non-negotiables (they bind every agent).
+3. `helpers/doctor.md`: pre-flight checks (and, for Act II, sandbox/interpreter checks).
+4. `helpers/orchestration.md`: the operational checklist (how to actually run both acts).
+5. `helpers/verification_panel.md`: how the many-angle verification gate works.
+6. `rubric.md`, `coverage_rubric.md`, and `helpers/stopping_rule.md`: the locked severity +
+   coverage standards, and when a deepened run is done.
 7. The `prompts/` for each phase, and `workflow/phase1_tribunal.js` / `phase2_atelier.js`, as the run proceeds.
-8. `helpers/safety_notes.md` — warn the author about anything relevant before sending data anywhere or running code.
+8. `helpers/safety_notes.md`: warn the author about anything relevant before sending data anywhere or running code.
 
 ## Safety defaults
 
@@ -154,12 +161,38 @@ domain routing, and the model-disclosure rule.
   **never raw data**, only with logged consent, and is skipped + disclosed if no
   no-train endpoint is configured.
 
+## The degraded-run contract
+
+A degraded run is labeled, never disguised (grounding rule 15). Whatever breaks, the
+deliverable states plainly what was and was not done. Specifically:
+
+- **Missing or unreadable inputs.** The pre-flight doctor (`helpers/doctor.md`) reports
+  the problem and offers the narrowed scope before anything runs. Without Python the
+  quote-gate cannot run: the doctor stops the run and says so; if the gate fails
+  mid-run, the affected findings degrade to `needs-author-confirmation`, never to a
+  silent pass.
+- **An agent dies mid-run.** The orchestrator retries once, then records the gap in
+  `meta.json` and in the report. A missing result stays missing; nothing is fabricated
+  to fill it.
+- **The Workflow engine is off.** Symposium and Summit fall back to Workshop depth and
+  the report says so. The fallback engine changes speed and scale only; every rule
+  still applies.
+- **Act II inputs are missing.** Scope narrows to what the inputs support (down to
+  edit-spec only when there is no manuscript source), and the report lists each
+  skipped item and why.
+- **The baseline does not reproduce.** Act II stops before any edit; the diverging
+  numbers and the run log are reported as the first finding.
+- **Always.** `meta.json` records every check and degradation, and the report header
+  carries the run's actual mode and the serving model, recorded at kickoff and
+  re-checked at the end (a Fable session can silently migrate to Opus 4.8; see
+  `helpers/doctor.md`).
+
 ## Session storage
 
 Each run creates `<cwd>/paper_workshop_sessions/<YYYYMMDD-HHMM-slug>/` containing
 the brief, copied inputs (`input/`), the per-phase artifacts and verifier
 transcripts (the run's primary auditable record), and the final report. Never
-modify the author's source documents — copy them into `input/` first.
+modify the author's source documents; copy them into `input/` first.
 
 ## What this skill does NOT do
 
@@ -167,7 +200,7 @@ modify the author's source documents — copy them into `input/` first.
   Python in Act I is the deterministic quote-gate (the orchestration itself runs in the
   Workflow JS).
 - No confidence scores, percentages, or venue acceptance-odds numbers anywhere.
-- No fabricated citations, numbers, quotes, data, or results — ever.
+- No fabricated citations, numbers, quotes, data, or results. Ever.
 - No silent edits: Act II emits tracked changes on copies for human acceptance.
 - No number in the revised paper that a logged re-run did not produce.
 - No automatic merge, submission, or data release.
@@ -178,13 +211,16 @@ modify the author's source documents — copy them into `input/` first.
 paper-workshop/
 ├── SKILL.md                 ← you are here
 ├── README.md                ← brand, install, the mad-research relationship
+├── LIMITATIONS.md           ← what is enforced vs not yet proven
 ├── rubric.md                ← LOCKED severity rubric (no numeric scores)
 ├── coverage_rubric.md       ← the dimensions the completeness audit certifies
 ├── schemas/                 ← finding, verification, roster_contract, synthesis, edit_spec
 ├── prompts/                 ← shared_grounding_rules + 00..07 (Act I) + phase2/10..16 (Act II)
 ├── helpers/                 ← orchestration, doctor, verification_panel, quote_gate.(py|md),
 │                              provenance.py, consistency.py, reproduces.py, integrity_diff.py,
-│                              stopping_rule, pdf_extraction, phase2_sandbox, safety_notes
+│                              stopping_rule, desk_review_mode, pdf_extraction, phase2_sandbox,
+│                              safety_notes
 ├── workflow/                ← phase1_tribunal.js, phase2_atelier.js (the Workflow scripts)
-└── examples/                ← self-audit/ (the tool run on itself)
+└── examples/                ← incentives-workshop/ (end-to-end on a real accepted paper)
+                               + self-audit/ (the tool run on its own design)
 ```

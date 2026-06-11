@@ -182,6 +182,45 @@ def cmd_selftest(args):
     expect("absent quote -> none", check("phrase that is not present at all", src) == (False, "none"))
     # determinism
     expect("normalize idempotent", normalize(normalize(src)) == normalize(src))
+    # batch mode: the production path (rule-9 absence exemption, fail-closed empty quote,
+    # dict unwrap, severity_hint annotate-never-veto, exit aggregation)
+    import contextlib
+    import io
+    import os
+    import tempfile
+    with tempfile.TemporaryDirectory() as d:
+        sp = os.path.join(d, "src.txt")
+        fp = os.path.join(d, "f.json")
+        with open(sp, "w", encoding="utf-8") as fh:
+            fh.write(src)
+        cases = {"findings": [
+            {"id": "B1", "finding_type": "claim-support", "quote": "corrected mean effect"},
+            {"id": "B2", "finding_type": "absence-silence", "quote": ""},
+            {"id": "B3", "finding_type": "claim-support", "quote": ""},
+            {"id": "B4", "finding_type": "absence-silence", "quote": "corrected mean effect"},
+            {"id": "B5", "finding_type": "claim-support", "quote": "phrase that is not present"},
+        ]}
+        with open(fp, "w", encoding="utf-8") as fh:
+            json.dump(cases, fh)
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            rc = main(["batch", "--source-file", sp, "--findings", fp])
+        rows = {r["id"]: r for r in json.loads(buf.getvalue())}
+        expect("batch: matched quote passes", rows["B1"]["matched"] is True)
+        expect("batch: absence + empty quote is exempt", rows["B2"]["match_level"] == "exempt-absence")
+        expect("batch: empty quote on non-absence fails closed",
+               rows["B3"]["matched"] is False and rows["B3"]["match_level"] == "empty-quote")
+        expect("batch: absence with a NON-empty quote is still gated (no exemption abuse)",
+               rows["B4"]["match_level"] != "exempt-absence" and rows["B4"]["matched"] is True)
+        expect("batch: unmatched quote hints downgrade, never delete",
+               rows["B5"]["severity_hint"] == "downgrade-status-to-needs-author-confirmation")
+        expect("batch: any non-exempt failure -> exit 2", rc == 2)
+        ok_only = {"findings": [{"id": "C1", "finding_type": "claim-support", "quote": "corrected mean effect"}]}
+        with open(fp, "w", encoding="utf-8") as fh:
+            json.dump(ok_only, fh)
+        with contextlib.redirect_stdout(io.StringIO()):
+            rc2 = main(["batch", "--source-file", sp, "--findings", fp])
+        expect("batch: all matched -> exit 0", rc2 == 0)
     print("selftest: " + ("OK" if ok else "FAILED"))
     return 0 if ok else 1
 

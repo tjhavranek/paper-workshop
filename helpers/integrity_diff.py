@@ -5,9 +5,10 @@ integrity_diff.py - deterministic result-suppression / net-removal detector (Act
 helpers/safety_notes.md: removing or attenuating a result, narrowing a sample, dropping a
 control/observation, or weakening a caveat is a privileged edit that must route to author
 sign-off (grounding rule 14). This script takes a structured BEFORE and AFTER snapshot of
-{coefficients, N, samples, caveats} and deterministically flags net removals/attenuations,
-so workflow/phase2_atelier.js (decideEdit) can force author_signoff_required regardless of
-any LLM verdict. It does NOT judge HARKing, spin, or semantic framing - that stays the LLM
+{coefficients, N, samples, caveats} and deterministically flags net removals/attenuations.
+Building the snapshots from the manuscripts is the calling agent's job (the Act-II
+reconciler, prompts/phase2/14), and its `integrity_flags` route each flagged edit to
+author sign-off. It does NOT judge HARKing, spin, or semantic framing - that stays the LLM
 `integrity` verification angle. It catches the mechanical, checkable removals only.
 
 Deterministic, stdlib-only (Python 3.8+), fails CLOSED: any drop/attenuation -> flagged and
@@ -77,15 +78,14 @@ def diff(before, after, attenuation_rel=0.05):
             flags.append({"kind": "unparseable", "field": "coefficients", "label": label,
                           "before": bv, "after": ac.get(label)})
 
-    # --- samples / specifications dropped ---
-    for field in ("samples",):
-        bset = {_norm_text(x): x for x in (b.get(field, []) or [])}
-        aset = {_norm_text(x) for x in (a.get(field, []) or [])}
-        for key, orig in bset.items():
-            if key not in aset:
-                flags.append({"kind": "sample-dropped", "field": field, "item": orig})
+    # --- samples / specifications dropped (membership of normalized text) ---
+    bset = {_norm_text(x): x for x in (b.get("samples", []) or [])}
+    aset = {_norm_text(x) for x in (a.get("samples", []) or [])}
+    for key, orig in bset.items():
+        if key not in aset:
+            flags.append({"kind": "sample-dropped", "field": "samples", "item": orig})
 
-    # --- caveats removed or weakened (count + membership) ---
+    # --- caveats removed (membership of normalized text) ---
     bcav = {_norm_text(x): x for x in (b.get("caveats", []) or [])}
     acav = {_norm_text(x) for x in (a.get("caveats", []) or [])}
     for key, orig in bcav.items():

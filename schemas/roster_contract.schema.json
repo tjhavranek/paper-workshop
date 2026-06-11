@@ -22,7 +22,7 @@
           "tradition": { "type": "string", "description": "School/objective-function, e.g. 'design-based causal inference' or 'find-the-fatal-flaw'." },
           "objective_function": { "type": "string", "enum": ["find-the-fatal-flaw", "find-the-strongest-defensible-version", "find-what-no-seat-staffed", "neutral-audit"] },
           "jurisdiction": { "type": "string", "description": "The narrow remit of this seat." },
-          "justifying_quote": { "type": "string", "description": "A manuscript quote that warrants this seat. Empty => auto-reject." },
+          "justifying_quote": { "type": "string", "minLength": 1, "description": "A manuscript quote that warrants this seat. Empty fails validation (auto-reject)." },
           "rival_of": { "type": ["string", "null"], "description": "seat_id of the competing-tradition pair, or null." },
           "out_of_scope": { "type": "string" },
           "owned_claim_ids": { "type": "array", "items": { "type": "string" } }

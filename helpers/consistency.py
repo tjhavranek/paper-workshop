@@ -6,12 +6,17 @@ This closes the DETERMINISTIC part of the reconciler's job (prompts/phase2/14): 
 revised manuscript text and the run provenance tokens, it checks that
   (1) run-match: every token's `value` appears as a STANDALONE numeric literal in the revised
       manuscript (0.08 does not match inside 0.083; 12 does not match inside 120);
-  (2) orphans: when a BASELINE manuscript is supplied, every number that is NEW or CHANGED
-      relative to the baseline traces to some token value (a changed number with no run
-      behind it is an orphan).
+  (2) orphans: when a BASELINE manuscript is supplied, every numeric VALUE of the revised
+      text that appears nowhere in the baseline must trace to some token value (a new
+      value with no run behind it is an orphan). This is per-VALUE, not per-occurrence:
+      an edit that changes one occurrence to a value the baseline already contains
+      elsewhere is invisible to this set-difference check. Bibliographic and structural
+      numerals (citation years, page numbers) orphan by construction when newly added;
+      the reconciler prompt routes them to author sign-off rather than re-running.
 What it deliberately does NOT claim: semantic "same quantity in the abstract vs the table
-vs the appendix" matching, which needs meaning and stays the LLM reconciler's job (the
-`mismatches` list is left for that stage; this script reports `mismatches: []` with a note).
+vs the appendix" matching, and per-occurrence change tracking - both need meaning/position
+and stay the LLM reconciler's job (the `mismatches` list is left for that stage; this
+script reports `mismatches: []` with a note).
 
 Deterministic, stdlib-only (Python 3.8+), fails CLOSED: any run-mismatch or orphan exits 2.
 
@@ -28,17 +33,30 @@ import json
 import re
 import sys
 
-# A standalone numeric literal: optional sign, either digits with optional thousands
-# commas and decimal or a leading-dot decimal, optional exponent, optional percent.
+# A standalone numeric literal: optional sign, either digits with TRUE 3-digit thousands
+# grouping ('46,118' but never '1,18') and decimal, plain digits and decimal, or a
+# leading-dot decimal; optional exponent, optional percent. The comma branch is restricted
+# to 3-digit grouping so a European decimal comma or adjacent CSV fields are read as
+# separate literals, never merged into a fabricated one. Known residual, OPEN in both
+# directions: a true 3-digit grouping that is also two CSV fields ('46,118') still reads
+# as one literal (a merged value can wrongly match; the components read absent).
+# KEEP IN SYNC with helpers/provenance.py: the wall and the reconciler must agree on what
+# counts as a number (provenance.py's selftest cross-checks the two patterns).
 _NUM_RE = re.compile(
-    r"(?<![A-Za-z0-9_.+-])[-+]?(?:\d[\d,]*(?:\.\d+)?|\.\d+)(?:[eE][-+]?\d+)?%?"
+    r"(?<![A-Za-z0-9_.+-])[-+]?(?:\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?|\.\d+)(?:[eE][-+]?\d+)?%?"
     r"(?![A-Za-z0-9_]|\.[A-Za-z0-9_])"
 )
 
+# Dash variants substituted for a minus sign by PDF/Word/LaTeX, mapped to ASCII '-'
+# BEFORE extraction so negatives keep their sign (see provenance.py for the rationale).
+_DASH_TRANS = {0x2010: "-", 0x2011: "-", 0x2012: "-", 0x2013: "-",
+               0x2014: "-", 0x2015: "-", 0x2212: "-"}
+
 
 def norm_num(s):
-    """Canonical form so '1,200' == '1200' and '.05' == '0.05'."""
+    """Canonical form so '1,200' == '1200', '.05' == '0.05', '1.2E-05' == '1.2e-05'."""
     n = (s or "").replace(",", "").replace(" ", "").strip()
+    n = n.replace("E", "e")
     if n.startswith("-."):
         return "-0" + n[1:]
     if n.startswith("+."):
@@ -50,8 +68,9 @@ def norm_num(s):
 
 def numbers_in(text):
     """The set of normalized numeric literals in a text.
-    Unicode MINUS (U+2212) is mapped to ASCII '-' first so PDF/LaTeX negatives match."""
-    raw = _NUM_RE.findall((text or "").replace("−", "-"))
+    The dash family (en/em dash, Unicode minus, ...) is mapped to ASCII '-' first so
+    PDF/LaTeX negatives keep their sign and match."""
+    raw = _NUM_RE.findall((text or "").translate(_DASH_TRANS))
     norm = [norm_num(x) for x in raw if norm_num(x) not in ("", "+", "-")]
     return set(norm)
 
@@ -72,7 +91,7 @@ def _token_list(data):
 
 def value_literals(value):
     """Normalized numeric literals inside a (possibly multi-part) token value string."""
-    return [norm_num(x) for x in _NUM_RE.findall((value or "").replace("−", "-")) if norm_num(x) not in ("", "+", "-")]
+    return [norm_num(x) for x in _NUM_RE.findall((value or "").translate(_DASH_TRANS)) if norm_num(x) not in ("", "+", "-")]
 
 
 def check(manuscript_text, tokens, baseline_text=None):
@@ -118,7 +137,17 @@ def cmd_check(args):
     with open(args.tokens, encoding="utf-8-sig") as fh:
         tokens = _token_list(json.load(fh))
     baseline = _read(args.baseline) if args.baseline else None
+    # FAIL CLOSED on a vacuous run: zero parsed tokens and no baseline means zero checks
+    # were performed (e.g. a typo'd top-level key in the tokens file), so a bare
+    # "clean: true" would be meaningless. Refuse unless explicitly allowed.
+    if not tokens and baseline is None and not args.allow_empty_tokens:
+        print(json.dumps({"error": "no tokens parsed (accepted shapes: a list, or a dict keyed "
+                                   "provenance_tokens / tokens / run_artifacts) and no --baseline: "
+                                   "nothing was checked. Pass --allow-empty-tokens to permit this.",
+                          "clean": False}, indent=2))
+        return 2
     res = check(text, tokens, baseline)
+    res["n_tokens_checked"] = len(tokens)
     print(json.dumps(res, indent=2))
     return 0 if res["clean"] else 2
 
@@ -174,6 +203,35 @@ def cmd_selftest(args):
     expect("changed number with token is not an orphan", "0.345" not in r3["orphans"])
     expect("new number without token is an orphan", "9.99" in r3["orphans"])
     expect("orphan -> not clean", r3["clean"] is False)
+
+    # comma grouping: no fabricated merges (European decimal, CSV adjacency)
+    expect("European decimal '1,18' does NOT reconcile a fabricated 118",
+           check("estimate = 1,18", [{"value": "118"}])["run_mismatches"] == ["118"])
+    expect("CSV field value reconciles next to a comma",
+           "0.03" in check("46,118,0.03", [{"value": "0.03"}])["reconciled"])
+    # dash family: sign integrity
+    expect("en-dash negative reconciles '-0.10' token",
+           "-0.10" in check("the effect is –0.10", [{"value": "-0.10"}])["reconciled"])
+    expect("positive token does NOT reconcile en-dash negative",
+           check("the effect is –0.10", [{"value": "0.10"}])["run_mismatches"] == ["0.10"])
+    # exponent case-insensitivity
+    expect("exponent case-insensitive (1.2E-05 == 1.2e-05)",
+           "1.2e-05" in check("coef = 1.2E-05", [{"value": "1.2e-05"}])["reconciled"])
+    expect("new citation year orphans by construction",
+           "2021" in check("Smith (2021) and 0.345", [{"value": "0.345"}],
+                           baseline_text="only 0.345")["orphans"])
+    # vacuous-run guard: zero parsed tokens + no baseline exits 2 unless explicitly allowed
+    import tempfile, os as _os
+    with tempfile.TemporaryDirectory() as _d:
+        mp = _os.path.join(_d, "m.txt"); tp = _os.path.join(_d, "t.json")
+        with open(mp, "w", encoding="utf-8") as fh:
+            fh.write("text with 9.99")
+        with open(tp, "w", encoding="utf-8") as fh:
+            json.dump({"provenance": [{"value": "0.345"}]}, fh)  # typo'd key -> zero tokens
+        expect("typo'd tokens key + no baseline fails closed (exit 2)",
+               main(["check", "--manuscript", mp, "--tokens", tp]) == 2)
+        expect("--allow-empty-tokens permits the vacuous case (exit 0)",
+               main(["check", "--manuscript", mp, "--tokens", tp, "--allow-empty-tokens"]) == 0)
     print("selftest: " + ("OK" if ok else "FAILED"))
     return 0 if ok else 1
 
@@ -186,6 +244,8 @@ def main(argv=None):
     c.add_argument("--manuscript", required=True)
     c.add_argument("--tokens", required=True)
     c.add_argument("--baseline", default=None, help="baseline manuscript text for orphan detection")
+    c.add_argument("--allow-empty-tokens", action="store_true",
+                   help="permit a run with zero parsed tokens and no baseline (otherwise fails closed)")
     c.set_defaults(func=cmd_check)
 
     s = sub.add_parser("selftest", help="run built-in tests")

@@ -10,8 +10,13 @@ CODE: {{CODE_DIR}}   DATA (read-only copy): {{DATA_DIR}}   RUN OUTPUT DIR: {{RUN
 Procedure:
 1. If the baseline-reproduction gate has not yet passed for this session, run the
    author's master script unchanged and confirm the current headline numbers reproduce.
-   If they do not, STOP and return `status: baseline-failed` with the diverging numbers
-   and the log — never proceed to "improve" numbers on an unreproduced baseline.
+   Anchor "current" in the manuscript source when {{FINDING_JSON}} provides one
+   (`manuscript_source`): take the paper's reported headline numbers from there, decide
+   the diff with `python {{HELPERS_DIR}}/reproduces.py compare ...` (never by eye), and
+   record exactly which numbers you anchored. If no manuscript anchor exists, say so in
+   the run record. If the numbers do not reproduce, STOP and return
+   `status: baseline-failed` with the diverging numbers and the log — never proceed to
+   "improve" numbers on an unreproduced baseline.
 2. Run the **minimal closure** needed for the target artifact (prefer `make <target>`;
    else the specific script). Execute network-off, writing only inside {{RUN_DIR}}. Set
    and record an explicit seed for any stochastic step; if none exists, ADD one (a
@@ -25,7 +30,9 @@ Procedure:
    `{ value, script, line_or_chunk, run_id, input_data_hash, output_file, output_hash }` —
    every field is REQUIRED (use `""` only when there is genuinely no input data). The value
    MUST appear in the named output artifact. **Self-verify before returning:**
-   `python {{HELPERS_DIR}}/provenance.py verify --token <token.json> --artifact-dir {{RUN_DIR}}`
+   `python {{HELPERS_DIR}}/provenance.py verify --token <token.json> --artifact-dir {{RUN_DIR}}
+   --data-file <the input data file you hashed>` (the `--data-file` flag is what actually
+   enforces `input_data_hash`; omit it only when there is genuinely no input data)
    and emit only tokens it reports `verified: true`. A token that fails the gate means the
    value is not really in the run artifact — that is a failed run, not a number to transcribe.
 

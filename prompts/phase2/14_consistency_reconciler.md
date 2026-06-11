@@ -16,7 +16,11 @@ your work inside {{RUN_DIR}}.
    `reconciled` / `run_mismatches` (token values not present verbatim in the revised text) and
    `orphans` (numbers that changed or are new vs the baseline but trace to no token). Carry
    these through verbatim — a non-empty `run_mismatches` or `orphans` means a number moved
-   with no run behind it.
+   with no run behind it. Numerals no run can produce (the year of a newly added citation, a
+   new page, section, or table number) will appear as orphans by construction: carry the
+   deterministic orphan list verbatim, annotate each such entry as
+   `nonresult-numeral: <reason>`, and route the underlying edit to author sign-off.
+   Result-bearing orphans keep blocking.
 2. **Provenance re-hash (deterministic).** For every token, run
    `python {{HELPERS_DIR}}/provenance.py verify --token <token.json> --artifact-dir <run dir>`
    and confirm `verified: true` (the value is present in its content-hashed output artifact and
@@ -34,5 +38,6 @@ your work inside {{RUN_DIR}}.
 
 Return: `reconciled`, `orphans`, `mismatches`, `run_mismatches`, and `integrity_flags`, each
 with the location(s) and values involved. Any non-empty orphans / mismatches / run_mismatches
-/ integrity_flags list blocks "final" — the underlying edits route back. Do not "fix" anything
+/ integrity_flags list blocks "final": edits behind result-bearing entries route back, and
+orphans annotated `nonresult-numeral` route to author sign-off instead. Do not "fix" anything
 yourself; you report, the tracked-change pipeline corrects.

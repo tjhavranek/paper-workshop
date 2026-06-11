@@ -4,6 +4,7 @@ export const meta = {
   phases: [
     { title: 'Cartography', detail: 'ingest the paper into an addressable substrate' },
     { title: 'Roster', detail: 'scout classifies the paper and casts the seats' },
+    { title: 'Ground', detail: 'stage load-bearing cited sources for checking against originals' },
     { title: 'Specialists', detail: 'blind, independent seats + generalists + pre-mortem' },
     { title: 'Quote-gate', detail: 'deterministic grounding of every quote' },
     { title: 'Cross-critique', detail: 'integrators consolidate under rival lenses' },
@@ -49,9 +50,11 @@ const FINDING = {
   required: ['id', 'seat_id', 'tradition', 'finding_type', 'location', 'quote', 'issue', 'why_it_matters', 'severity', 'magnitude', 'proposed_fix', 'risk_of_fix', 'verification_status'],
 }
 const FINDINGS = { type: 'object', additionalProperties: false, properties: { findings: { type: 'array', items: FINDING }, covered_ranges: { type: 'array', items: { type: 'string' } } }, required: ['findings'] }
-const SEAT = { type: 'object', additionalProperties: false, properties: { seat_id: { type: 'string' }, role_title: { type: 'string' }, tradition: { type: 'string' }, objective_function: { type: 'string', enum: ['find-the-fatal-flaw', 'find-the-strongest-defensible-version', 'find-what-no-seat-staffed', 'neutral-audit'] }, jurisdiction: { type: 'string' }, justifying_quote: { type: 'string' }, rival_of: { type: ['string', 'null'] }, out_of_scope: { type: 'string' }, owned_claim_ids: { type: 'array', items: { type: 'string' } } }, required: ['seat_id', 'role_title', 'tradition', 'objective_function', 'jurisdiction', 'justifying_quote', 'rival_of', 'out_of_scope', 'owned_claim_ids'] }
+const SEAT = { type: 'object', additionalProperties: false, properties: { seat_id: { type: 'string' }, role_title: { type: 'string' }, tradition: { type: 'string' }, objective_function: { type: 'string', enum: ['find-the-fatal-flaw', 'find-the-strongest-defensible-version', 'find-what-no-seat-staffed', 'neutral-audit'] }, jurisdiction: { type: 'string' }, justifying_quote: { type: 'string', minLength: 1 }, rival_of: { type: ['string', 'null'] }, out_of_scope: { type: 'string' }, owned_claim_ids: { type: 'array', items: { type: 'string' } } }, required: ['seat_id', 'role_title', 'tradition', 'objective_function', 'jurisdiction', 'justifying_quote', 'rival_of', 'out_of_scope', 'owned_claim_ids'] }
 const GEN = { type: 'object', additionalProperties: false, properties: { seat_id: { type: 'string' }, function: { type: 'string', enum: ['relevance', 'understandability', 'cross-field-significance'] }, rationale: { type: 'string' } }, required: ['seat_id', 'function', 'rationale'] }
-const ROSTER = { type: 'object', additionalProperties: false, properties: { paper_type: { type: 'array', items: { type: 'string' } }, precis: { type: 'string' }, central_tensions: { type: 'array', items: { type: 'string' } }, mandatory_floor: { type: 'array', items: { type: 'string' } }, seats: { type: 'array', items: SEAT }, generalist_seats: { type: 'array', items: GEN }, not_staffed: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { dimension: { type: 'string' }, why: { type: 'string' } }, required: ['dimension', 'why'] } } }, required: ['paper_type', 'precis', 'central_tensions', 'mandatory_floor', 'seats', 'generalist_seats', 'not_staffed'] }
+// structural floors mirror schemas/roster_contract.schema.json: a roster with zero seats,
+// fewer than the three generalists, or no central tension fails validation and retries.
+const ROSTER = { type: 'object', additionalProperties: false, properties: { paper_type: { type: 'array', items: { type: 'string' } }, precis: { type: 'string' }, central_tensions: { type: 'array', minItems: 1, items: { type: 'string' } }, mandatory_floor: { type: 'array', items: { type: 'string' } }, seats: { type: 'array', minItems: 1, items: SEAT }, generalist_seats: { type: 'array', minItems: 3, items: GEN }, not_staffed: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { dimension: { type: 'string' }, why: { type: 'string' } }, required: ['dimension', 'why'] } } }, required: ['paper_type', 'precis', 'central_tensions', 'mandatory_floor', 'seats', 'generalist_seats', 'not_staffed'] }
 const CARTO = { type: 'object', additionalProperties: false, properties: { paper_txt_path: { type: 'string' }, inventory_path: { type: 'string' }, sentence_map_path: { type: 'string' }, precis_path: { type: 'string' }, source_manifest_path: { type: 'string' }, n_claims: { type: 'integer' }, n_sentences: { type: 'integer' } }, required: ['paper_txt_path', 'inventory_path', 'sentence_map_path', 'precis_path', 'n_claims', 'n_sentences'] }
 const VERIF = { type: 'object', additionalProperties: false, properties: { target_id: { type: 'string' }, angle: { type: 'string' }, verdict: { type: 'string', enum: ['upheld', 'upheld-with-revision', 'rejected', 'cant-tell'] }, reason: { type: 'string' }, suggested_revision: { type: ['string', 'null'] } }, required: ['target_id', 'angle', 'verdict', 'reason', 'suggested_revision'] }
 const VERIF_BATCH = { type: 'object', additionalProperties: false, properties: { verdicts: { type: 'array', items: VERIF } }, required: ['verdicts'] }
@@ -64,7 +67,7 @@ const ANGLE_Q = {
   'quote-locator': 'Does the quote exist verbatim at the stated location? Run the deterministic quote gate via Bash and report its result.',
   'logical-validity': 'Does the criticism actually FOLLOW from the quoted text? A real quote with an invalid inference must be rejected.',
   'factual-literature': 'Is the norm/method/citation the finding appeals to actually correct, checked against staged sources (never memory)?',
-  'severity-calibration': 'Is the severity calibrated under the locked rubric — neither inflated nor deflated?',
+  'severity-calibration': 'Is the severity calibrated under the locked rubric? State a revision as Current->Target (e.g. High->Medium). Panel calibration can only LOWER a severity (most-conservative rule); flag an under-rated finding in reason text for the chair.',
   'decision-relevance': 'Would fixing this change a number or a conclusion, or only presentation? Is it non-trivial?',
   'fix-safety': 'Would the proposed fix introduce a NEW error or break a correct passage?',
   'steelman-charity': 'Try hard to DEFEND the paper. Does it already address this elsewhere, or is the criticism mistaken?',
@@ -113,7 +116,8 @@ if (A.ground !== false && carto.source_manifest_path) {
   if (gRes[0]) grounded = gRes[0].notes_written || 0
   log('Grounding: staged ' + grounded + ' cited sources' + (grounded ? ' at ' + stagedDir : ' (none reachable / skipped)'))
 }
-seatPaths.STAGED_SOURCES_DIR = grounded > 0 ? stagedDir : '(none staged)'
+// keep any caller-staged sources when in-run grounding stages nothing (do not clobber)
+seatPaths.STAGED_SOURCES_DIR = grounded > 0 ? stagedDir : (PATHS.staged_sources || '(none staged)')
 
 // ---------- PHASE D: Specialists (blind, independent) ----------
 phase('Specialists')
@@ -121,7 +125,9 @@ const seatTasks = []
 roster.seats.forEach(s => seatTasks.push(() => agent(promptRef('01_specialist_seat', { ...seatPaths, SEAT_JSON: s }), { ...GP, label: ('seat:' + s.seat_id).slice(0, 56), phase: 'Specialists', schema: FINDINGS }).then(r => tag(r, s.seat_id, s.tradition))))
 roster.generalist_seats.forEach(g => seatTasks.push(() => agent(promptRef('02_generalist_seat', { ...seatPaths, FUNCTION: g.function }), { ...GP, label: ('gen:' + g.function).slice(0, 56), phase: 'Specialists', schema: FINDINGS }).then(r => tag(r, g.seat_id, g.function + '-generalist'))))
 // desk-reject pre-mortem (verbatim, exempt from chair)
-seatTasks.push(() => agent(promptRef('03_premortem', { PAPER_TXT_PATH: carto.paper_txt_path, PRECIS_PATH: carto.precis_path, RULES_PATH: PATHS.rules || '' }), { ...GP, label: 'premortem', phase: 'Specialists', schema: FINDINGS }).then(r => tag(r, 'S-premortem', 'desk-reject-premortem')))
+// the workflow, not the agent, owns the kill-shot routing label: force-overwrite the
+// tradition/seat_id (tag() only backfills, and the schema makes the agent supply its own)
+seatTasks.push(() => agent(promptRef('03_premortem', { PAPER_TXT_PATH: carto.paper_txt_path, PRECIS_PATH: carto.precis_path, RULES_PATH: PATHS.rules || '', RUBRIC_PATH: PATHS.rubric || '' }), { ...GP, label: 'premortem', phase: 'Specialists', schema: FINDINGS }).then(r => { ((r && r.findings) || []).forEach(f => { f.tradition = 'desk-reject-premortem'; f.seat_id = 'S-premortem' }); return tag(r, 'S-premortem', 'desk-reject-premortem') }))
 // close-reader sweeps at the heavy tiers (sentence-coverage invariant)
 const sweeps = (TIER === 'exhaustive' || TIER === 'monumental') ? Math.min(40, Math.max(1, Math.ceil((carto.n_sentences || 0) / 40))) : 0
 for (let i = 0; i < sweeps; i++) {
@@ -145,10 +151,13 @@ log('Specialists: ' + findings.length + ' raw findings from ' + seatResults.leng
 // ---------- Quote-gate ----------
 phase('Quote-gate')
 if (findings.length) {
-  const gate = await agent('Write this findings JSON to a temp file and run the deterministic quote gate against the manuscript text, then return its JSON result array verbatim.\nFINDINGS: ' + JSON.stringify({ findings }) + '\nRun: python "' + (PATHS.quote_gate || '') + '" batch --source-file "' + carto.paper_txt_path + '" --findings <tempfile>\nReturn exactly the script\'s JSON output (array of {id, matched, match_level, severity_hint}).', { ...GP, label: 'quote-gate', phase: 'Quote-gate', schema: { type: 'object', additionalProperties: false, properties: { results: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { id: { type: 'string' }, matched: { type: 'boolean' }, match_level: { type: 'string' } }, required: ['id', 'matched', 'match_level'] } } }, required: ['results'] } })
+  const gate = await agent('Write this findings JSON to a temp file and run the deterministic quote gate against the manuscript text, then return its JSON result array verbatim.\nFINDINGS: ' + JSON.stringify({ findings }) + '\nRun: python "' + (PATHS.quote_gate || '') + '" batch --source-file "' + carto.paper_txt_path + '" --findings <tempfile>\nReturn exactly the script\'s JSON output (array of {id, matched, match_level, severity_hint}).', { ...GP, label: 'quote-gate', phase: 'Quote-gate', schema: { type: 'object', additionalProperties: false, properties: { results: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { id: { type: 'string' }, matched: { type: 'boolean' }, match_level: { type: 'string' }, severity_hint: { type: 'string' } }, required: ['id', 'matched', 'match_level'] } } }, required: ['results'] } })
   const byId = {}
-  ;(gate.results || []).forEach(r => { byId[r.id] = r })
-  findings.forEach(f => { const r = byId[f.id]; if (r && !r.matched && f.finding_type !== 'absence-silence') { f.verification_status = 'needs-author-confirmation' } })
+  ;((gate && gate.results) || []).forEach(r => { byId[r.id] = r })
+  // FAIL CLOSED: a finding the gate result does not cover (a dropped/truncated relay row)
+  // is treated as unverified, exactly like a non-match - never a silent keep of the seat's
+  // self-reported status (per rubric.md, status annotates; severity is untouched).
+  findings.forEach(f => { const r = byId[f.id]; if ((!r || !r.matched) && f.finding_type !== 'absence-silence') { f.verification_status = 'needs-author-confirmation' } })
   log('Quote-gate: ' + (gate.results || []).filter(r => r.matched).length + '/' + (gate.results || []).length + ' quotes verified')
 }
 
@@ -185,13 +194,19 @@ panelResults.forEach(r => (r.verdicts || []).forEach(v => { (verdictsById[v.targ
 const verified = findings.map(f => decide(f, verdictsById[f.id] || []))
 log('Verification: ' + panelTasks.length + ' batched verifier agents over ' + angles.length + ' angles x ' + batches.length + ' batches' + (REDUNDANCY > 1 ? ' x' + REDUNDANCY : ''))
 
+// Conservative tally per angle. Only EXPLICIT verdicts count as votes (cant-tell is
+// recorded, never a pass); a reject that ties the upholds wins (fail closed at even
+// redundancy); an angle with no explicit verdict at all returns 'unresolved', which
+// decide() treats exactly like a missing angle - never a clean pass.
 function majority(verdicts, angle) {
   const v = verdicts.filter(x => x.angle === angle)
   if (!v.length) return null
   const rej = v.filter(x => x.verdict === 'rejected').length
   const rev = v.filter(x => x.verdict === 'upheld-with-revision')
-  if (rej > v.length / 2) return { verdict: 'rejected', rev }
-  return { verdict: rev.length > v.length / 2 ? 'upheld-with-revision' : 'upheld', rev }
+  const up = v.filter(x => x.verdict === 'upheld').length + rev.length
+  if (rej === 0 && up === 0) return { verdict: 'unresolved', rev }
+  if (rej >= up && rej > 0) return { verdict: 'rejected', rev }
+  return { verdict: rev.length > up / 2 ? 'upheld-with-revision' : 'upheld', rev }
 }
 function decide(f, verdicts) {
   const out = { ...f }
@@ -202,26 +217,35 @@ function decide(f, verdicts) {
   // through as clean (a missing gate must never be a free pass).
   const lv = majority(verdicts, 'logical-validity')
   if (lv && lv.verdict === 'rejected') { delivered = false; reject_reason = 'logical-validity: criticism does not follow from the quote' }
-  else if (!lv && out.finding_type !== 'absence-silence') { out.verification_status = 'needs-author-confirmation' }
+  else if ((!lv || lv.verdict === 'unresolved') && out.finding_type !== 'absence-silence') { out.verification_status = 'needs-author-confirmation' }
   // steelman defense
   const sm = majority(verdicts, 'steelman-charity')
   if (delivered && sm && sm.verdict === 'rejected') { delivered = false; reject_reason = 'steelman: the paper already addresses this / the criticism is mistaken' }
   // decision-relevance triviality
   const dr = majority(verdicts, 'decision-relevance')
   if (delivered && dr && dr.verdict === 'rejected') { delivered = false; reject_reason = 'decision-relevance: trivial / not decision-relevant' }
-  // severity calibration (most conservative downward revision wins)
+  // severity calibration (most conservative downward revision wins). Prefer the explicit
+  // 'X->Y' arrow form; otherwise take the LOWEST severity mentioned (a no-arrow phrasing
+  // like 'Medium, not High' must read as Medium, never as its last token).
   const sc = majority(verdicts, 'severity-calibration')
   if (sc && sc.rev && sc.rev.length) {
     const order = { High: 3, Medium: 2, Low: 1 }
     let target = out.severity
-    sc.rev.forEach(r => { const m = (r.suggested_revision || '').match(/High|Medium|Low/g); if (m) { const last = m[m.length - 1]; if (order[last] < order[target]) target = last } })
+    sc.rev.forEach(r => {
+      const s = r.suggested_revision || ''
+      const arrow = s.match(/(High|Medium|Low)\s*(?:->|→|to)\s*(High|Medium|Low)/)
+      const m = s.match(/High|Medium|Low/g)
+      const cand = arrow ? arrow[2] : (m && m.reduce((a, b) => (order[b] < order[a] ? b : a)))
+      if (cand && order[cand] < order[target]) target = cand
+    })
     out.severity = target
   }
   // fix-safety: withhold an unsafe fix but keep the finding
   const fx = majority(verdicts, 'fix-safety')
   if (fx && fx.verdict === 'rejected') { out.risk_of_fix = 'WITHHELD by fix-safety verifier: ' + (out.risk_of_fix || 'proposed fix may introduce a new error'); out.proposed_fix = '' }
-  // quote-locator handled in quote-gate; ensure status reflects logic-check pass
-  if (delivered && out.verification_status === 'quote-verified' && lv && lv.verdict !== 'rejected') out.verification_status = 'logic-checked'
+  // quote-locator handled in quote-gate; ensure status reflects logic-check pass.
+  // Upgrade only on an EXPLICIT clean pass (an unresolved angle never upgrades).
+  if (delivered && out.verification_status === 'quote-verified' && lv && (lv.verdict === 'upheld' || lv.verdict === 'upheld-with-revision')) out.verification_status = 'logic-checked'
   return { finding: out, verdicts, delivered, reject_reason }
 }
 const deliveredFindings = verified.filter(v => v.delivered).map(v => v.finding)
@@ -229,20 +253,24 @@ const rejected = verified.filter(v => !v.delivered).map(v => ({ suggestion: v.fi
 deliveredFindings.forEach(f => { f.raised_by_n_blind_seats = counts[locKey(f)] || 1 })
 log('Verification: ' + deliveredFindings.length + ' findings cleared the panel; ' + rejected.length + ' rejected')
 
-// ---------- PHASE H: Completeness ----------
+// ---------- PHASE G: Completeness ----------
 phase('Completeness')
 const coverage = await agent(promptRef('07_completeness_audit', { CLAIM_INVENTORY_PATH: carto.inventory_path, SENTENCE_MAP_PATH: carto.sentence_map_path, COVERED_LOCATIONS_JSON: { covered_ranges: coveredRanges, finding_locations: deliveredFindings.map(f => f.location) }, COVERAGE_RUBRIC_PATH: PATHS.coverage_rubric || '' }), { ...GP, label: 'completeness', phase: 'Completeness', schema: COVERAGE })
 log('Completeness: claims ' + coverage.claims_covered + '/' + coverage.claims_total + ', sentences ' + coverage.sentences_covered + '/' + coverage.sentences_total + ', reopen=' + coverage.reopen.length)
 
-// ---------- PHASE G: Synthesis ----------
+// ---------- PHASE H: Synthesis ----------
 phase('Synthesis')
-const synthesis = await agent(promptRef('06_chair_synthesis', { VERIFIED_FINDINGS_JSON: deliveredFindings, INTEGRATION_JSON: integration, PREMORTEM_JSON: premortemFindings, COVERAGE_JSON: coverage, REGISTER, RULES_PATH: PATHS.rules || '', RUBRIC_PATH: PATHS.rubric || '' }), { ...GP, label: 'chair:synthesis', phase: 'Synthesis', schema: SYNTHESIS })
+// The chair composes from findings WITH their panel verdicts (so panel_summary and
+// rejected_suggestions are data-backed, not reconstructed), and the verdicts ship in the
+// run output so the orchestrator can persist them under verification/ (the audit record).
+const chairFindings = verified.filter(v => v.delivered).map(v => ({ ...v.finding, panel_verdicts: (v.verdicts || []).map(x => ({ angle: x.angle, verdict: x.verdict, reason: x.reason, suggested_revision: x.suggested_revision || null })) }))
+const synthesis = await agent(promptRef('06_chair_synthesis', { VERIFIED_FINDINGS_JSON: chairFindings, INTEGRATION_JSON: integration, PREMORTEM_JSON: premortemFindings, COVERAGE_JSON: coverage, REJECTED_JSON: rejected, REGISTER, RULES_PATH: PATHS.rules || '', RUBRIC_PATH: PATHS.rubric || '' }), { ...GP, label: 'chair:synthesis', phase: 'Synthesis', schema: SYNTHESIS })
 
 return {
   tier: TIER, register: REGISTER,
   roster: { paper_type: roster.paper_type, seats: roster.seats.length, generalists: roster.generalist_seats.length, central_tensions: roster.central_tensions, not_staffed: roster.not_staffed },
   counts: { raw_findings: findings.length, delivered: deliveredFindings.length, rejected: rejected.length },
-  findings: deliveredFindings,
+  findings: chairFindings,
   rejected_in_panel: rejected,
   integration,
   coverage,

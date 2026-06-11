@@ -24,9 +24,17 @@ panel to keep cost at ~1–6 agents.
    Desk Review never skips — it is the trust anchor.
 5. **Synthesis.** Call `prompts/06_chair_synthesis.md` once to produce the report (verdict,
    prioritized must-fix capped ~5–7, venue read, minority report, rejected suggestions).
+   Desk Review produces no integrators, no pre-mortem, and no completeness audit, so
+   substitute explicitly: `INTEGRATION_JSON: []`, `PREMORTEM_JSON: []` (`kill_shots` may
+   be empty), `REJECTED_JSON:` the findings the chair's inline checks dropped (below),
+   and `COVERAGE_JSON: { claims_total: <count from step 1>, claims_covered: <claims
+   touched by findings>, sentences_total: 0, sentences_covered: 0, dimension_coverage:
+   [], reopen: [], not_covered: [] }` with the report labeled "coverage audit not run
+   (Desk Review)" — `sentences_total: 0` means *not run*, never full coverage.
    There is no separate verification panel in Desk Review; instead the chair is instructed
    to apply the `logical-validity` and `steelman-charity` checks inline before it keeps a
-   finding.
+   finding, and to fill each prioritized finding's `panel_summary` with
+   "Desk Review: chair-inline logical-validity + steelman check (no panel)".
 
 ## Output
 A prioritized, grounded findings list + a one-page report. If the user then wants Act II,

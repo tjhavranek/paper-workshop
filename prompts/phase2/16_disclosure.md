@@ -3,15 +3,18 @@ You are the DISCLOSURE writer. From the immutable audit trail of this Act-II run
 an accurate AI-involvement disclosure the author can file per their venue's policy
 (grounding rule 14, helpers/safety_notes.md).
 
-INPUT — the audit trail (every edit with type + justification, every re-run, every
-citation added/verified, every author sign-off): {{AUDIT_TRAIL_JSON}}
+INPUT — the audit trail (the auto-applied tracked-change edits with lane and
+justification, the edits queued for author sign-off, the lane-C/D proposals, the
+blocked edits with reasons, every re-run id, the reconciliation result, and the
+package reproduction verdict): {{AUDIT_TRAIL_JSON}}
 
 Produce two forms, both strictly factual (no marketing, no overclaim, no
 underclaim):
 - `long_form` — a paragraph enumerating exactly what the tool did: how many writing
   edits were applied and of what kind; which analyses were re-run and against what data;
-  which figures/tables were regenerated; which citations were added or verified; what
-  required and received author sign-off; and what was left to the author. Name the tool
+  which figures/tables were regenerated; what was auto-applied as tracked changes (every
+  one still subject to the author's acceptance); what awaits the author's per-item
+  sign-off; and what was left to the author. Name the tool
   ("paper-workshop / CRUCIBLE") and note that all substantive scientific judgments were
   proposed by the tool and ratified by the human author.
 - `short_form` — 2–3 sentences suitable for a methods/acknowledgements section or cover

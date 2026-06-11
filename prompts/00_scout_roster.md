@@ -48,8 +48,9 @@ Then produce a ROSTER CONTRACT (schema: roster_contract). Requirements:
 7. **Name the 2–4 `central_tensions`** the workshop must resolve.
 
 Scale the number of specialist seats to the tier ({{TIER}}): quick 6–8, thorough
-12–18, exhaustive 25–40, monumental 60–120+ (at the largest tiers add one close-reader
-per section for the sentence-coverage sweep). These are the EXPERT seats — the rest of
+12–18, exhaustive 25–40, monumental 60–120+ (the engine adds the per-block close-reader
+sweeps automatically at those tiers; do not cast separate close-reader seats for
+coverage). These are the EXPERT seats — the rest of
 the pipeline (verification, integration) is batched and bounded, so the seat count is
 the main driver of run size; cast enough to cover the paper well, but every seat must
 earn its place with a justifying quote. Be neutral — you are casting, not yet critiquing.

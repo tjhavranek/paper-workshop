@@ -20,7 +20,8 @@ Act-II sandbox): seeds make a "stochastic" output deterministic, so prefer 'exac
 
 INPUT (baseline.json, rerun.json): a flat object mapping a label to either a number or
 {"value": number, "class": "<artifact-class>"}. A per-number "class" overrides the global
-class for that number.
+class for that number - honored from the BASELINE side (or the CLI) only, never from the
+rerun under audit, and an unknown class name fails the verdict (fail closed).
 
 USAGE
     python reproduces.py compare --baseline base.json --rerun rerun.json [--class rounded3]
@@ -59,6 +60,7 @@ def compare(baseline, rerun, tol_abs, tol_rel, default_class="exact"):
     per = []
     missing = []
     nonnumeric = []
+    unknown_class = []
     all_ok = True
     for label, bval in baseline.items():
         try:
@@ -66,8 +68,17 @@ def compare(baseline, rerun, tol_abs, tol_rel, default_class="exact"):
         except (TypeError, ValueError, KeyError):
             nonnumeric.append(label)
             continue
-        # per-number class override (from baseline or rerun)
-        cls = _cls(bval) or (_cls(rerun.get(label)) if label in rerun else None)
+        # per-number class override is honored from the BASELINE side or the CLI only:
+        # the rerun under audit must not choose its own leniency (a rerun stamping
+        # itself 'bootstrap' would wave a real drift through). An unknown class name
+        # fails the verdict rather than silently falling back.
+        cls = _cls(bval)
+        if cls is not None and cls not in CLASSES:
+            unknown_class.append(label)
+            all_ok = False
+            per.append({"label": label, "baseline": b, "rerun": None,
+                        "reproduced": False, "delta": None, "tol": None, "class": cls})
+            continue
         ta, tr = (CLASSES[cls]["tol_abs"], CLASSES[cls]["tol_rel"]) if cls in CLASSES else (tol_abs, tol_rel)
         if label not in rerun:
             missing.append(label)
@@ -89,10 +100,15 @@ def compare(baseline, rerun, tol_abs, tol_rel, default_class="exact"):
         all_ok = all_ok and rep
         per.append({"label": label, "baseline": b, "rerun": r, "reproduced": rep,
                     "delta": delta, "tol": tol, "class": cls})
-    reproduced = bool(all_ok and not missing and not nonnumeric)
+    # FAIL CLOSED on a vacuous comparison: an empty baseline means zero numbers were
+    # compared (e.g. an extractor wrote {}), so "reproduced" would be meaningless.
+    vacuous = not per
+    reproduced = bool(all_ok and not missing and not nonnumeric and not unknown_class
+                      and not vacuous)
     return {"reproduced": reproduced, "per_value": per, "missing": missing,
-            "nonnumeric": nonnumeric, "tol_abs": tol_abs, "tol_rel": tol_rel,
-            "default_class": default_class}
+            "nonnumeric": nonnumeric, "unknown_class": unknown_class,
+            "no_baseline_numbers": vacuous,
+            "tol_abs": tol_abs, "tol_rel": tol_rel, "default_class": default_class}
 
 
 def _load(path):
@@ -141,6 +157,16 @@ def cmd_selftest(args):
            compare({"a": 0.345}, {"a": 0.3452}, ta, tr)["reproduced"] is False)
     expect("nonnumeric baseline fails closed",
            compare({"a": "n/a"}, {"a": "n/a"}, ta, tr)["reproduced"] is False)
+    # tolerance class is honored from the baseline side only, never the rerun under audit
+    expect("rerun-side class is IGNORED (no self-selected leniency)",
+           compare({"a": 0.345}, {"a": {"value": 0.360, "class": "bootstrap"}}, ta, tr)["reproduced"] is False)
+    expect("baseline-side class still honored",
+           compare({"a": {"value": 0.345, "class": "bootstrap"}}, {"a": 0.360}, ta, tr)["reproduced"] is True)
+    # unknown class names fail the verdict instead of silently falling back
+    expect("unknown baseline class fails closed",
+           compare({"a": {"value": 0.345, "class": "rounded33"}}, {"a": 0.345}, ta, tr)["reproduced"] is False)
+    expect("empty baseline fails closed (vacuous comparison)",
+           compare({}, {}, ta, tr)["reproduced"] is False)
     print("selftest: " + ("OK" if ok else "FAILED"))
     return 0 if ok else 1
 

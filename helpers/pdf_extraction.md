@@ -45,4 +45,5 @@ Claude reads the PDF natively; the only artifacts to **write** are below.
 - Equations: capture as the author wrote them; a proof-checker seat reads them in
   context.
 - If the source is .tex rather than PDF, extract `paper.txt` from the compiled text
-  (or de-macro'd source) and keep page locators approximate (note this in meta.json).
+  (or de-macro'd source) and keep page locators approximate (note this in the session's
+  `meta.json` — the file orchestration.md Step 1 creates).

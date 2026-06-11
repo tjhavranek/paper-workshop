@@ -35,10 +35,10 @@ A [Claude Code](https://claude.com/claude-code) skill. Claude-only. Runs on any 
 
 Good AI paper-reviewers already exist: multi-agent review, grounded critique, and
 topic-adaptive reviewers are all prior art, and dedicated citation-checkers triangulate more
-reference databases than CRUCIBLE's web-based check does. CRUCIBLE's bet is the combination
-that two of them rarely make together — reviewers that genuinely **debate** from opposed objective
-functions, and an integrated **rebuild** that re-runs your analysis and hands back a corrected,
-reproducing manuscript.
+reference databases than CRUCIBLE's web-based check does. CRUCIBLE's bet is a pairing
+existing tools rarely offer in one run: reviewers that genuinely **debate** from opposed
+objective functions, and an integrated **rebuild** that re-runs your analysis and hands back
+a corrected, reproducing manuscript.
 
 - **The referees argue.** Every contested choice in your paper is taken up by at least two
   experts from *rival traditions* with *opposite jobs*: one tries to break it, one tries to
@@ -74,18 +74,18 @@ deterministic provenance proof. ([`examples/self-audit`](examples/self-audit) is
 
 **Honesty about limits.** See **[`LIMITATIONS.md`](LIMITATIONS.md)** for a straight account of
 what is genuinely enforced and what is not proven yet: no measured recall or false-positive
-numbers yet; same-model decorrelation is a design bet; coverage means *attention*, not
-correctness. Act II is built, unit-tested, and **now demonstrated end-to-end once** on a real
-accepted paper ([`examples/incentives-workshop`](examples/incentives-workshop): the authors' own
-Stata and R/BMA paths were both re-executed, the regenerated data intermediate is byte-identical to
-the shipped one, provenance and consistency verified, the headline reproduced), though on one paper
-from the authors' own group, so it is a demonstration and not independent validation; re-derive any
+numbers yet; same-model decorrelation is a design bet, not a proof; coverage means *attention*,
+not correctness. Act II is built, unit-tested, and **demonstrated end-to-end once** on a real
+accepted paper (see [`examples/incentives-workshop`](examples/incentives-workshop): both the
+Stata and R paths re-executed, the headline reproduced), though on one paper from the authors'
+own group, so it is a demonstration and not independent validation; re-derive any
 regenerated number yourself. We ran CRUCIBLE on its own
 design before release, and it caught real overclaims and a bug in its own quote-gate, both
-fixed; that run is in [`examples/self-audit/`](examples/self-audit/), framed as a development
-pass, not independent validation.
+fixed; a later self-audit of the shipped version is in
+[`examples/self-audit/`](examples/self-audit/), framed as a development pass, not
+independent validation.
 
-## Modes: pick your depth (Desk Review through Workshop run on any paid plan)
+## Modes: pick your depth (Desk Review through Workshop run at full depth on any paid plan)
 
 | Mode | What convenes | Experts | ≈ agents | Best for |
 |---|---|---|---|---|
@@ -101,12 +101,12 @@ pass, not independent validation.
 and the default Workshop is a few dozen — cheap enough to re-run as you revise a paper. Reserve
 Symposium/Summit for a major pre-submission pass.
 
-**Engine.** The workshop runs on subagents, which work on every plan. When dynamic workflows
-are available (on by default on Max; on Pro, switch them on in `/config`), CRUCIBLE uses them
+**Engine.** The workshop runs on subagents (helper Claude sessions your main session spawns),
+which work on every plan. When dynamic workflows are available (a Claude Code orchestration
+feature: on by default on Max; on Pro, switch them on in `/config`), CRUCIBLE uses them
 to orchestrate those same subagent phases more efficiently; if they're off, Symposium and
 Summit run at Workshop depth and CRUCIBLE tells you rather than downgrading silently. **Desk
-Review** needs neither, so it works anywhere. For the full fleet, prefer **dynamic workflows**
-(on by default on Max; on Pro, switch them on in `/config`) for scale and efficiency. CRUCIBLE
+Review** needs neither, so it works anywhere. CRUCIBLE
 runs at full power on Max, with nothing capped. Either engine's agents inherit the orchestrating
 session's model and context, so dynamic workflows do not bypass the one account caveat: a
 large-context (1M) session may need usage credits enabled for that tier, or just run the session
@@ -137,21 +137,27 @@ model tier.
 
 ```bash
 # 1. Claude Code installed; Python 3.8+ on PATH (for the deterministic quote/number checks).
-#    Windows: if `python` isn't found, the `py -3` launcher or a conda Python works too.
 # 2. Make the skills dir (it may not exist yet) and clone into it:
 mkdir -p ~/.claude/skills
 git clone https://github.com/tjhavranek/paper-workshop ~/.claude/skills/paper-workshop
-#    Windows (PowerShell):
-#      New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude\skills" | Out-Null
-#      git clone https://github.com/tjhavranek/paper-workshop "$env:USERPROFILE\.claude\skills\paper-workshop"
 # 3. Restart Claude Code, then confirm it loaded with a quick pass on any PDF:
 #      workshop my paper: some.pdf   desk review
+```
+
+Windows (PowerShell; if `python` isn't found, the `py -3` launcher or a conda Python works too):
+
+```powershell
+New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude\skills" | Out-Null
+git clone https://github.com/tjhavranek/paper-workshop "$env:USERPROFILE\.claude\skills\paper-workshop"
+# then restart Claude Code and confirm:  workshop my paper: some.pdf   desk review
 ```
 
 For the rebuild (Act II) you also need the interpreters your analysis uses (R / Python /
 Stata), `latexmk` (LaTeX) or the bundled `docx` skill (Word), and `git`.
 
 ## Use
+
+Type these into a Claude Code session (run `claude` in a terminal to open one):
 
 ```
 workshop my paper: mypaper.pdf  desk review     # the lightest pass, one expert (good first run)

@@ -59,7 +59,7 @@ and **never** keep the discovery loop alive (see `helpers/stopping_rule.md`).
 - The **validity verdict** ("is the central claim actually supported?")
   **dominates** the **venue verdict** ("would referees accept it?"). The tool
   never trades truth for acceptance odds.
-- The venue read is a **coarse three-bucket** signal — `desk-reject risk` /
+- The venue read is a **coarse three-bucket** signal — `desk-reject-risk` /
   `major-revision` / `competitive` — accompanied by the two or three specific
   objections most likely to trigger rejection, each tied to a quote, and the
   decisive swing factor. **No acceptance probability, ever.**

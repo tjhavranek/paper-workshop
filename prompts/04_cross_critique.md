@@ -26,9 +26,8 @@ Do:
 4. Name the **one missing issue** no seat raised that you, seeing everything, now
    notice.
 
-Return a structured consolidation: the clusters (with member finding ids, a merged
-issue statement, and a recommended severity that is the *most conservative* defensible
-reading), the `crux_notes`, your single `missing_issue`, and — under your lens — the
-`top_themes` with a priority (must/should/nice). Do not invent findings; you are
-organizing and pressure-testing, not generating new criticism beyond the one missing
-issue.
+Return a structured consolidation: the clusters (each with member finding ids, a merged
+issue statement, a recommended severity that is the *most conservative* defensible
+reading, and — under your lens — a priority of must/should/nice), the `crux_notes`, and
+your single `missing_issue`. Do not invent findings; you are organizing and
+pressure-testing, not generating new criticism beyond the one missing issue.

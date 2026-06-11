@@ -57,7 +57,7 @@ const ANGLE_Q = {
 
 // ---------- Intake ----------
 phase('Intake')
-const scope = await agent(promptRef('phase2/10_intake', { LEDGER_PATH: PATHS.ledger_path || '(inline)', INPUT_MANIFEST_JSON: INPUTS, RULES_PATH: PATHS.rules || '' }), { ...GP, label: 'intake', phase: 'Intake', schema: SCOPE })
+const scope = await agent(promptRef('phase2/10_intake', { LEDGER_PATH: PATHS.ledger_path || JSON.stringify(LEDGER), INPUT_MANIFEST_JSON: INPUTS, RULES_PATH: PATHS.rules || '' }), { ...GP, label: 'intake', phase: 'Intake', schema: SCOPE })
 log('Intake: ' + scope.achievable_scope.length + ' achievable, ' + scope.degraded.length + ' degraded, ' + scope.blocking_gaps.length + ' blocking')
 if (scope.blocking_gaps.length) {
   // FAIL CLOSED: surface every blocking gap for the author to fill (or to accept the
@@ -80,11 +80,13 @@ phase('Baseline')
 let baseline = { run_id: 'baseline', status: 'ok', command: '(skipped: no code/data provided)', provenance_tokens: [], log_excerpt: '' }
 let baselineRan = false
 if (INPUTS.code && INPUTS.data) {
-  baseline = await agent(promptRef('phase2/13_runner_rerun', { FINDING_JSON: { note: 'BASELINE REPRODUCTION GATE — run the master script unchanged and confirm the current headline numbers reproduce.' }, EDIT_JSON: {}, CODE_DIR: INPUTS.code, DATA_DIR: INPUTS.data, RUN_DIR: (PATHS.session || '.') + '/phase2/runs/baseline', SANDBOX_NOTES_PATH: PATHS.sandbox_notes || '', HELPERS_DIR }), { ...GP, label: 'baseline-gate', phase: 'Baseline', schema: RUNREC })
+  baseline = await agent(promptRef('phase2/13_runner_rerun', { FINDING_JSON: { note: 'BASELINE REPRODUCTION GATE — run the master script unchanged and confirm the current headline numbers reproduce. Take the paper\'s current numbers from the manuscript source below; record exactly which numbers you anchored.', manuscript_source: INPUTS.source || '(none provided — anchor on the code\'s own published-output comparison if available, and record that no manuscript anchor existed)' }, EDIT_JSON: {}, CODE_DIR: INPUTS.code, DATA_DIR: INPUTS.data, RUN_DIR: (PATHS.session || '.') + '/phase2/runs/baseline', SANDBOX_NOTES_PATH: PATHS.sandbox_notes || '', HELPERS_DIR }), { ...GP, label: 'baseline-gate', phase: 'Baseline', schema: RUNREC })
   baselineRan = true
   log('Baseline: ' + baseline.status)
-  if (baseline.status === 'baseline-failed') {
-    return { halted: 'baseline-failed', scope, baseline }
+  // FAIL CLOSED on ANY non-ok status: 'baseline-failed' (numbers diverge) and 'failed'
+  // (the run crashed) both mean there is no reproduced baseline to edit on top of.
+  if (baseline.status !== 'ok') {
+    return { halted: 'baseline-' + (baseline.status === 'baseline-failed' ? 'failed' : 'run-error'), scope, baseline }
   }
 }
 
@@ -149,14 +151,17 @@ const results = (await pipeline(
   },
   async (prev, e) => {
     if (e.lane === 'D-author-decision') return { e, run: prev.run, scribe: null }
-    const tok = (prev.run && prev.run.provenance_tokens && prev.run.provenance_tokens[0]) ? JSON.stringify(prev.run.provenance_tokens[0]) : (e.provenance_token || '')
+    // pass ALL of the Runner's tokens (a numeric edit often needs several values:
+    // coefficient + SE + N); the Scribe transcribes only token-bound values either way.
+    const toks = (prev.run && prev.run.provenance_tokens) || []
+    const tok = toks.length ? JSON.stringify(toks.length === 1 ? toks[0] : toks) : (e.provenance_token || '')
     const eWithTok = { ...e, provenance_token: tok || e.provenance_token }
     const scribe = await agent(promptRef('phase2/12_scribe_implementer', { EDIT_JSON: eWithTok, SOURCE_FILE_PATH: workDir + '/' + e.file, WORKING_BRANCH: WORK_BRANCH, RULES_PATH: PATHS.rules || '' }), { ...GP, label: ('scribe:' + e.edit_id).slice(0, 56), phase: 'Implement', schema: SCRIBE })
     return { e: eWithTok, run: prev.run, scribe }
   },
   async (prev, e) => {
     const angles = anglesForEdit(e)
-    const tgt = { id: e.edit_id, edit: prev.e, scribe_new_text: prev.scribe && prev.scribe.new_text, run_summary: prev.run ? { status: prev.run.status, tokens: (prev.run.provenance_tokens || []).length } : null }
+    const tgt = { id: e.edit_id, edit: prev.e, scribe_new_text: prev.scribe && prev.scribe.new_text, run_summary: prev.run ? { status: prev.run.status, tokens: prev.run.provenance_tokens || [] } : null }
     const res = (await parallel(angles.map(ang => () => agent(promptRef('05_verification_panel', { ANGLE: ang, ANGLE_QUESTION: ANGLE_Q[ang] || ('Judge from the ' + ang + ' angle.'), TARGETS_JSON: [tgt], PAPER_TXT_PATH: workDir + '/' + e.file, STAGED_SOURCES_DIR: PATHS.staged_sources || '(none)', QUOTE_GATE_PATH: PATHS.quote_gate || '', RULES_PATH: PATHS.rules || '', RUBRIC_PATH: PATHS.rubric || '' }), { ...GP, label: ('vfy:' + ang + ':' + e.edit_id).slice(0, 56), phase: 'Verify', schema: VERIF_BATCH })))).filter(Boolean)
     const verdicts = res.flatMap(r => r.verdicts || [])
     return decideEdit(prev.e, prev.run, prev.scribe, verdicts)
@@ -175,6 +180,21 @@ const runArtifacts = results.map(r => r.run).filter(Boolean).flatMap(r => r.prov
 const reconcile = await agent(promptRef('phase2/14_consistency_reconciler', { REVISED_SOURCE_PATH: workDir, BASELINE_SOURCE_PATH: INPUTS.source || '(none)', RUN_ARTIFACTS_JSON: runArtifacts, BASELINE_NUMBERS_JSON: baseline.provenance_tokens || [], RUN_DIR: (PATHS.session || '.') + '/phase2/runs/reconcile', HELPERS_DIR }), { ...GP, label: 'reconcile', phase: 'Reconcile', schema: RECON })
 const reconcileClean = !reconcile.orphans.length && !reconcile.mismatches.length && !reconcile.run_mismatches.length && !(reconcile.integrity_flags || []).length
 log('Reconcile: ' + (reconcileClean ? 'clean' : (reconcile.orphans.length + ' orphans, ' + reconcile.mismatches.length + ' mismatches, ' + reconcile.run_mismatches.length + ' run-mismatches, ' + (reconcile.integrity_flags || []).length + ' integrity-flags')))
+// The reconciler is a TERMINAL GATE (prompts/phase2/14): a dirty reconcile blocks "final".
+// Halt before packaging - the underlying edits route back; never assemble a "final"
+// package on top of orphans, mismatches, or integrity flags. This also deterministically
+// backstops a triage misclassification: an edit that changed a number without a token
+// surfaces here as an orphan regardless of its edit_class.
+if (!reconcileClean) {
+  return {
+    halted: 'reconcile-failed', scope, baseline_status: baseline.status, baseline_ran: baselineRan,
+    work_dir: workDir, branch: WORK_BRANCH,
+    counts: { edits: edits.length, applied: applied.length, queued_for_signoff: queued.length, proposals: proposals.length, blocked: blocked.length },
+    applied, queued_for_signoff: queued, proposals, blocked,
+    reconcile, reconcile_clean: false,
+    signoff_queue: queued.concat(proposals).map(r => ({ edit_id: r.edit.edit_id, finding_id: r.edit.finding_id, lane: r.edit.lane, edit_class: r.edit.edit_class, status: r.status })),
+  }
+}
 
 // ---------- Package ----------
 phase('Package')
@@ -182,7 +202,7 @@ const pkg = await agent(promptRef('phase2/15_repro_package', { SESSION_PATH: PAT
 
 // ---------- Disclose ----------
 phase('Disclose')
-const auditTrail = { applied: applied.map(r => ({ edit_id: r.edit.edit_id, finding_id: r.edit.finding_id, lane: r.edit.lane, justification: r.edit.justification_type })), queued: queued.map(r => r.edit.edit_id), proposals: proposals.map(r => r.edit.edit_id), reruns: results.map(r => r.run).filter(Boolean).map(r => r.run_id), reconcile, package_reproduced: pkg.reproduced }
+const auditTrail = { applied: applied.map(r => ({ edit_id: r.edit.edit_id, finding_id: r.edit.finding_id, lane: r.edit.lane, justification: r.edit.justification_type })), queued: queued.map(r => r.edit.edit_id), proposals: proposals.map(r => r.edit.edit_id), blocked: blocked.map(r => ({ edit_id: r.edit.edit_id, reason: r.reason })), signoff_status: 'pending-author-review', reruns: results.map(r => r.run).filter(Boolean).map(r => r.run_id), reconcile, package_reproduced: pkg.reproduced }
 const disclosure = await agent(promptRef('phase2/16_disclosure', { AUDIT_TRAIL_JSON: auditTrail }), { ...GP, label: 'disclosure', phase: 'Disclose', schema: DISCLOSURE })
 
 return {

@@ -5,9 +5,16 @@
 *.md text eol=lf
 *.json text eol=lf
 
+# Run-record artifacts are committed byte-verbatim: their sha256 is part of the
+# provenance proof, and eol normalization silently breaks a recorded hash (it did
+# once, for rerun_keynumbers.json; restored in v0.5.0). Never normalize these.
+examples/incentives-workshop/phase2_true/run_results/** -text
+examples/incentives-workshop/phase2_true/stata/results/** -text
+examples/incentives-workshop/phase2_true/stata/run/** -text
+
 # --- GitHub language stats ---
 # A Claude Code skill is mostly Markdown (prompts + docs), with JavaScript orchestration
-# scripts and one Python helper. Count the prompts/docs so the language bar reflects that,
+# scripts and the Python helpers. Count the prompts/docs so the language bar reflects that,
 # and keep generated example artifacts out of the stats.
 *.md linguist-detectable=true
 *.md linguist-documentation=false
