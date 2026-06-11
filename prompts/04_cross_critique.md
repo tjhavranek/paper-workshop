@@ -29,5 +29,10 @@ Do:
 Return a structured consolidation: the clusters (each with member finding ids, a merged
 issue statement, a recommended severity that is the *most conservative* defensible
 reading, and — under your lens — a priority of must/should/nice), the `crux_notes`, and
-your single `missing_issue`. Do not invent findings; you are organizing and
-pressure-testing, not generating new criticism beyond the one missing issue.
+your single `missing_issue`. A `contribution-undersell` finding is an opportunity, not
+a flaw: give it its OWN cluster — never merge it with flaw findings (merging would drag
+a real flaw's priority down or smuggle undersell substance into the must-fix list under
+another finding's id) — and cap that cluster's priority at `nice` (it routes to the
+chair's non-blocking Contribution Memo, never the must-fix list). Do not invent findings; you
+are organizing and pressure-testing, not generating new criticism beyond the one
+missing issue.

@@ -19,7 +19,21 @@ Produce an array of FINDINGS (schema: finding). For each finding:
   deterministic gate later — paraphrase will fail. For a problem the paper is SILENT
   about (a missing assumption, absent power analysis, omitted control or citation), use
   `finding_type: "absence-silence"` with an empty quote and locate it by section — these
-  are first-class and often the most severe.
+  are first-class and often the most severe. Every absence-class finding MUST carry an
+  `absence_probe`: at least 3 `terms` (words/phrases INCLUDING close paraphrases) whose
+  presence in the paper would refute the claimed absence. A deterministic gate searches
+  every term; a probe that is missing, thin, or that turns up hits degrades the finding
+  to `needs-author-confirmation` — search wide, not narrow.
+- **If the paper UNDERSELLS itself, say so.** When the paper's own verified results
+  support a materially bolder, defensible claim it never makes, file
+  `finding_type: "contribution-undersell"`: `quote` = the under-leveraged result itself
+  (the foothold — it rides the quote-gate normally), `absence_probe` = terms for the
+  bolder claim (the gate searches every term; any hit refutes the absence), `proposed_fix` =
+  the bolder claim's wording, `risk_of_fix` = how it could overreach, and
+  `verification_status` = `needs-author-confirmation` (the author is the author —
+  rule 14). These NEVER enter the must-fix list; they feed the chair's non-blocking
+  Contribution Memo. File one only when the foothold genuinely supports it — an
+  inflated undersell finding is as serious a failure as a fabricated flaw.
 - **Never fabricate.** If you cannot verify a number or a cited claim against the text
   or a staged source, set `verification_status` to `needs-author-confirmation` — never
   assert it.

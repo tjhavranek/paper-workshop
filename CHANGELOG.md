@@ -1,5 +1,90 @@
 # Changelog
 
+## v0.6.0 — 2026-06-11
+
+The contribution wing: the workshop now argues FOR the paper as rigorously as it argues
+against it, with the same fail-closed discipline. Designed through a three-layer adversarial
+process (a rival-pair debate with judge; a full mad-research cross-model audit of the design
+memo, whose six surviving criticisms reshaped the mechanics; and a Claude-only repair and
+sequencing panel). The audited design decisions: undersell suggestions must ride deterministic
+gates on BOTH halves, must be non-blocking in code rather than by instruction, and ship with
+the honest caveat that their selection remains same-model judgment with no measured
+undersell-recall yet.
+
+- **New deterministic helper: `helpers/absence_gate.py` (+ `absence_gate.md`), closing a
+  pre-existing gap.** Absence-class findings ("the paper never says X") were quote-EXEMPT and
+  rode an unverified rail since v0.1. Every such finding now carries an `absence_probe` (at
+  least 3 refuting terms including paraphrases, deduped on their normalized form so
+  near-duplicates cannot pass the floor) searched deterministically against the manuscript
+  with the quote-gate's own normalization (imported, so the two gates cannot drift) PLUS
+  deliberately looser hyphen and spacing rungs: the two gates have opposite failure
+  polarities, so where a missed match fails closed for the quote gate it would fail OPEN
+  here, and the extra rungs only ever push a finding toward "present", which degrades it.
+  Fail closed: a missing, thin, or hit-producing probe degrades the finding to
+  needs-author-confirmation; hit snippets ride along as the steelman verifier's evidence
+  trail. Certifies the SEARCH, not semantics; the semantic half stays LLM-judged and is
+  labeled as such in LIMITATIONS. 23 selftest assertions, including the
+  hyphenated-compound-split-at-a-line-break case that a quote-gate-strict ladder would
+  have false-certified.
+- **The contribution claim is now a permanently contested choice.** Every roster staffs the
+  rival pair S-contribution-maximizer (find-the-strongest-defensible-version: the boldest
+  claim the paper's OWN results support but never make) vs S-contribution-prosecutor
+  (find-the-fatal-flaw on the framing). The scout's prompt mandates the pair and the engine
+  injects it if omitted (close-reader pattern), so the floor survives a forgetful cast and a
+  caller-supplied roster alike; the injection predicate matches seat names only (not
+  jurisdictions, which mention the word "contribution" incidentally) and logs whenever it
+  fires, so a transcript shows whether the floor was scout-cast or engine-injected.
+- **New finding class `contribution-undersell`, gated twice.** Its `quote` is the
+  under-leveraged result (the foothold, through the normal quote-gate); its `absence_probe`
+  certifies the bolder claim really is absent (through the absence gate). Schema'd in
+  `schemas/finding.schema.json` and the inline workflow mirror; seat, generalist
+  (relevance + cross-field ask the undersell question), integrator (priority capped at
+  `nice`), and panel prompts (inverted decision-relevance; steelman reads the gate hits)
+  all updated.
+- **The Contribution Memo: non-blocking by code, capped at 3.** Verified undersell findings
+  reach the chair only through their own `CONTRIBUTION_JSON` channel; the canonical
+  `schemas/synthesis.schema.json` and the inline workflow mirror both gain
+  `contribution_memo` (bolder_claim / grounded_in / risk_of_overreach), and
+  `schemas/finding.schema.json` gains the engine-attached annotations the ledger actually
+  carries (`absence_gate`, `panel_verdicts`); after the chair returns, the engine strips
+  any undersell id from `prioritized_findings`, caps the memo, and forces every undersell
+  finding's verification_status to needs-author-confirmation, fail closed in code: the
+  author ratifies any bolder claim (rule 14). Keeping the memo out of the chair's verdict
+  prose is a prompt constraint (06), disclosed as such in LIMITATIONS. Report bundle
+  (orchestration Step 5) renders it as its own clearly-labeled section.
+- **Related-literature scout (Ground phase), fetch-or-drop.** A second grounding agent hunts
+  works the paper does NOT cite under an anti-popularity mandate (adjacent fields, pre-2000,
+  working-paper series, non-US journals); a work becomes a staged note only if its text was
+  actually opened in-run, and unfetchable candidates are listed as leads (resolved DOI/URL
+  only) in a file kept OUTSIDE the staged-sources tree, so seats and verifiers can never
+  read them as evidence. Fetch-or-drop is a strict scout mandate, not a deterministic
+  check (no script yet verifies a staged note against the fetched text); LIMITATIONS says
+  so plainly. Tier-scaled (0 at quick, 5 thorough, 8 exhaustive,
+  12 monumental), fail-safe like the cited-works grounding, positional result handling so a
+  failed cited-works agent cannot be misread as the scout.
+- **Docs aligned:** grounding rule 9 amended (first-class, quote-exempt, absence-gated) and
+  rule 10 clarified (the undersell foothold is NOT exempt); the quote-gate's own docstring
+  and quote_gate.md updated (absence findings now ride the sibling gate, not nothing);
+  coverage rubric dimension 1 now reads "neither overclaimed nor undersold" and names the
+  pair; SKILL.md gains "The contribution wing" section; README gains the "It also argues FOR
+  your paper" bullet; LIMITATIONS gains the enforced-side entries (absence gate, memo
+  cannot enter the must-fix list) and the not-proven entries (same-model selection, no
+  undersell-recall; scout coverage not certified, fetch-or-drop is a mandate not a check);
+  roadmap item 1 extended with the undersell-recall and
+  consensus-deference validation arms; desk-review mode wires the gate and the memo;
+  orchestration documents `paths.absence_gate` (omitted = absence findings fail closed);
+  integrators give undersell findings their own clusters so a merged cluster can neither
+  drag a real flaw down to `nice` nor smuggle undersell substance into the must-fix list.
+- **Pre-push stress test, two blind auditors (engine/code lane + prompts/docs/claims lane),
+  all findings folded in before release.** The code auditor confirmed a fail-open
+  hyphenation case inside the new gate (fixed with the looser ladder + selftests), a
+  floor-injection predicate suppressible by a substring coincidence (narrowed + logged),
+  ledger annotations missing from the published finding schema (added), and a leads file
+  readable by evidence-citing agents (moved out of the staged tree). The docs auditor
+  caught the canonical synthesis schema lagging the inline mirror (updated) and a set of
+  enforced-vs-instructed overclaims ("certifies the claim is absent", "guarantees",
+  "every run"), each rewritten to the mechanism actually shipped.
+
 ## v0.5.0 — 2026-06-11
 
 The tool run on itself, at scale: a Roundtable self-review on Claude Fable 5 (the fleet inherits

@@ -22,8 +22,21 @@ the rules at {{RULES_PATH}}.
 Produce an array of FINDINGS (schema: finding; use `finding_type` `relevance` or
 `understandability`). Ground each in a quote where you can (e.g., the sentence where
 the contribution is overstated, or where the exposition breaks); use `absence-silence`
-when the problem is something unsaid (e.g., the "so what" is never stated). A
+when the problem is something unsaid (e.g., the "so what" is never stated) — every
+absence-class finding carries an `absence_probe` of at least 3 terms (with paraphrases)
+whose presence would refute the claimed absence; a deterministic gate searches them. A
 generalist finding CAN be `High` — "even if correct, this does not matter, and the
-paper never argues otherwise" is a desk-reject-grade observation. Severity is
-tone-invariant (the register governs the chair's delivery only). Do not fabricate; speak plainly and
-from the outside.
+paper never argues otherwise" is a desk-reject-grade observation.
+
+If your function is `relevance` or `cross-field-significance`, also ASK THE UNDERSELL
+QUESTION: does the paper's own evidence support a materially bolder, defensible claim
+it never makes (a bigger audience, a stronger implication, a more general statement)?
+If yes — and only if a quoted result genuinely supports it — file ONE
+`contribution-undersell` finding: `quote` = the under-leveraged result (the foothold),
+`absence_probe` = terms for the bolder claim, `proposed_fix` = its wording,
+`risk_of_fix` = how it could overreach, `verification_status` =
+`needs-author-confirmation`. These never enter the must-fix list (they feed the
+non-blocking Contribution Memo), so file none rather than stretch.
+
+Severity is tone-invariant (the register governs the chair's delivery only). Do not
+fabricate; speak plainly and from the outside.

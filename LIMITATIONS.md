@@ -17,6 +17,19 @@ adversarial cross-review during development.
   to the chair's delivery, never to the seats or verifiers that set severity.
 - **Routing is code-enforced**: anything that changes a number, sample, claim, or result is
   queued for author sign-off; it cannot auto-apply.
+- **Absence claims now have their own deterministic gate** (`helpers/absence_gate.py`):
+  every "the paper never says X" finding carries a probe of refuting terms that the script
+  searches, fail-closed (a missing, thin, or hit-producing probe degrades the finding's
+  status). What the certificate covers is the SEARCH, not semantics: a paraphrase outside
+  the probe can still exist, and that semantic half stays LLM-judged (the steelman
+  verifier, fed the gate's hit snippets) and is labeled as such here.
+- **The Contribution Memo cannot enter the must-fix list**: on the Workflow path,
+  `contribution-undersell` findings reach the chair through their own channel, land only
+  in the capped (3) memo, are stripped from the must-fix list, and have their status
+  forced to needs-author-confirmation, all in code (in Desk Review and the subagent
+  fallback the orchestrator applies the same rules by instruction). Keeping the memo out
+  of the chair's verdict prose is a prompt constraint, not code. Each item must carry a
+  quote-gated foothold AND an absence certificate.
 
 ## What is *not* yet proven or fully enforced
 - **No measured effectiveness numbers yet.** We have not yet published a run on third-party
@@ -57,12 +70,32 @@ adversarial cross-review during development.
   prose-only and the path where a re-run value replaces a stale number was never exercised; and
   environment capture is not yet container-pinned. Treat Act II as *built, unit-tested, and
   demonstrated once* — and re-derive any number yourself before trusting it.
+- **The Contribution Memo's selection is a same-model judgment with no measured
+  undersell-recall yet.** The gates verify each memo item's anchors (the foothold quote is
+  real; no probe term for the bolder claim occurs in the paper, which certifies the
+  search, not the semantics; those stay with the steelman verifier). They cannot verify that the
+  bolder claim is RIGHT, that the best undersell candidates were found, or that the
+  ranking is not pulled toward the model's consensus priors, which is the very failure
+  mode the contribution wing exists to counter. There is no measured undersell-recall or
+  false-suggestion rate yet (see Roadmap). Treat the memo as a grounded option set the
+  author ratifies, never as a verdict on what the contribution should be.
+- **The related-literature scout widens the lens but cannot certify coverage or
+  importance, and fetch-or-drop is a mandate, not a check.** The scout is instructed,
+  strictly, to stage only works it actually opened in this run, and the leads list rests
+  on the scout's own report that a DOI/URL resolved; no script yet verifies a staged
+  note against the fetched text (that deterministic check is future work). Nor does
+  anything guarantee the scout searched the right corners: which "overlooked" works
+  surface is itself a model judgment. Leads are kept outside the staged-sources tree so
+  seats and verifiers never read them as evidence.
 - **A self-audit is a development pass, not independent validation.** The example in this repo
   is the tool reviewing its own design; that is a closed loop and we label it as such.
 
 ## Roadmap
 1. A measured validation run (recall + false-positive rate) on third-party papers; lead the
-   README with the number.
+   README with the number. Extend its design with two contribution-side arms before it
+   runs: **undersell-recall** (papers with known under-claimed contributions seeded; does
+   the memo recover them?) and **consensus-deference** (seeded flaws that contradict
+   field-standard methods; do seats defer to convention?).
 2. End-to-end Act-II runs on **independent third-party** papers. The first end-to-end
    demonstration is done (`examples/incentives-workshop/phase2_true/`, both the Stata and R
    paths re-executed); broad, independent field-proofing is the next step.

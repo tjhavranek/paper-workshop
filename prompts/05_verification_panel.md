@@ -16,7 +16,12 @@ verification; `target_id` = the target's id). How to judge, by angle:
   then map its results. A non-matched result (`none` or `empty-quote`) ⇒
   `upheld-with-revision`, suggested_revision
   "set verification_status=needs-author-confirmation" (do NOT reject; do NOT change
-  severity). `absence-silence` targets are `upheld` (exempt).
+  severity). For absence-class targets (`absence-silence`, `contribution-undersell`),
+  read the attached `absence_gate` result (certified + hits): anything but a clean
+  `absent` certificate ⇒ `upheld-with-revision`, suggested_revision
+  "set verification_status=needs-author-confirmation" (the steelman angle owns the
+  semantic call). A `contribution-undersell` target's `quote` (its foothold) is
+  still gated normally — it is NOT quote-exempt.
 - `logical-validity`: does the criticism FOLLOW from the quoted text? A real quote with
   an invalid inference ⇒ `rejected`. (Act II: judge the *edited* text per the injected
   question.)
@@ -29,12 +34,17 @@ verification; `target_id` = the target's id). How to judge, by angle:
   (most-conservative rule); if you judge a finding under-rated, say so in `reason` for
   the chair, without a revision.
 - `decision-relevance`: would fixing it change a number or a conclusion, or only
-  presentation? Trivial ⇒ `rejected` (or revise toward `nice`).
+  presentation? Trivial ⇒ `rejected` (or revise toward `nice`). For a
+  `contribution-undersell` target, the question inverts: would ADOPTING the bolder
+  claim materially change the paper's contribution? A marginal rephrasing ⇒ `rejected`.
 - `fix-safety`: would the target's proposed_fix (Act I) or the edit (Act II) introduce a
   NEW error or break a correct passage? If so ⇒ `rejected` for the fix.
 - `steelman-charity`: try hard to DEFEND the paper for each target. Already addressed
-  elsewhere, or the criticism is mistaken? ⇒ `rejected`. (Act II: defend the *original*
-  passage against the edit.)
+  elsewhere, or the criticism is mistaken? ⇒ `rejected`. For absence-class targets,
+  use the attached `absence_gate` hits as your evidence trail: if the paper already
+  says the allegedly-missing thing (or already makes the allegedly-unclaimed bolder
+  claim) — in the hit snippets or in a paraphrase the probe missed — ⇒ `rejected`.
+  (Act II: defend the *original* passage against the edit.)
 - (Act II) `numeric-provenance`: does every number trace to a content-hashed run
   artifact from THIS session? Missing token ⇒ `rejected`.
 - (Act II) `consistency`: after the edit, does the value match every other place the

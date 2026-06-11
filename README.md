@@ -54,6 +54,19 @@ a corrected, reproducing manuscript.
 - **Every comment is re-checked from many angles** by independent blind verifiers (does the
   quote exist, does the criticism actually follow, is the severity calibrated, does the
   proposed fix break something) before it ever reaches you.
+- **It also argues FOR your paper.** Every full tribunal run staffs a contribution rival
+  pair: an *overclaim prosecutor* hunting where your framing outruns the evidence, and a
+  *contribution maximizer* hunting the opposite failure, the bolder claim your own results
+  defensibly support but your paper never makes. The maximizer's candidates ride two
+  deterministic gates (the under-leveraged result must be quoted; a probe search confirms
+  no refuting phrasing of the bolder claim occurs in your text, with the semantic call left
+  to a steelman verifier) and arrive as a separate, non-blocking **Contribution
+  Memo** of at most 3 items: suggestions for you to ratify or ignore, never must-fixes. At
+  Workshop depth and above, a related-literature scout widens the lens past your own
+  bibliography, deliberately hunting overlooked work (adjacent fields, older papers,
+  working-paper series), under a strict fetch-or-drop rule: a work it could not actually
+  open is never cited as evidence (a mandate the scout follows, not a script; see
+  [`LIMITATIONS.md`](LIMITATIONS.md)).
 - **It rebuilds the paper itself.** The opt-in second act (the **ATELIER**) turns the agreed
   findings into a tracked-changes **redline** *and* a **clean revised version**, **re-runs
   your own code** to regenerate the affected numbers, tables, and figures, and assembles a
@@ -75,7 +88,8 @@ deterministic provenance proof. ([`examples/self-audit`](examples/self-audit) is
 **Honesty about limits.** See **[`LIMITATIONS.md`](LIMITATIONS.md)** for a straight account of
 what is genuinely enforced and what is not proven yet: no measured recall or false-positive
 numbers yet; same-model decorrelation is a design bet, not a proof; coverage means *attention*,
-not correctness. Act II is built, unit-tested, and **demonstrated end-to-end once** on a real
+not correctness; and the Contribution Memo is a gate-anchored option set whose selection is
+still same-model judgment, with no measured undersell-recall yet. Act II is built, unit-tested, and **demonstrated end-to-end once** on a real
 accepted paper (see [`examples/incentives-workshop`](examples/incentives-workshop): both the
 Stata and R paths re-executed, the headline reproduced), though on one paper from the authors'
 own group, so it is a demonstration and not independent validation; re-derive any

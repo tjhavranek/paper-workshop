@@ -20,8 +20,12 @@ panel to keep cost at ~1–6 agents.
    relevance / understandability / cross-field-significance (or fold into one call at the
    leanest budget).
 4. **Quote-gate (deterministic, always).** Run `helpers/quote_gate.py batch` on the
-   findings; force any unmatched quote to `needs-author-confirmation`. This is the one step
-   Desk Review never skips — it is the trust anchor.
+   findings; force any unmatched quote to `needs-author-confirmation`. If any finding is
+   absence-class (`absence-silence`, `contribution-undersell`), also run
+   `helpers/absence_gate.py batch`; anything but a clean `absent` certificate forces
+   `needs-author-confirmation`, and each result row is attached to its finding as
+   `absence_gate` so the chair's inline checks can read it. This is the one step Desk Review never skips — it is
+   the trust anchor.
 5. **Synthesis.** Call `prompts/06_chair_synthesis.md` once to produce the report (verdict,
    prioritized must-fix capped ~5–7, venue read, minority report, rejected suggestions).
    Desk Review produces no integrators, no pre-mortem, and no completeness audit, so
@@ -34,7 +38,10 @@ panel to keep cost at ~1–6 agents.
    There is no separate verification panel in Desk Review; instead the chair is instructed
    to apply the `logical-validity` and `steelman-charity` checks inline before it keeps a
    finding, and to fill each prioritized finding's `panel_summary` with
-   "Desk Review: chair-inline logical-validity + steelman check (no panel)".
+   "Desk Review: chair-inline logical-validity + steelman check (no panel)". Feed any
+   `contribution-undersell` findings to the chair ONLY via `CONTRIBUTION_JSON` (empty
+   array if none): they land in the non-blocking `contribution_memo` (cap 3), never in
+   the prioritized list.
 
 ## Output
 A prioritized, grounded findings list + a one-page report. If the user then wants Act II,

@@ -22,8 +22,11 @@ adversarial findings). The panel *audits* candidate outputs — findings and edi
   to *defend the paper* — to show the criticism is wrong because the paper already
   handles it. A finding that cannot survive a determined defense should not ship.
 - **Code where code is possible.** Several angles are backed by real deterministic,
-  fail-closed scripts the verifier runs and reports — not eyeballed judgments: `quote-locator`
-  by `helpers/quote_gate.py` (Act I); and in Act II, `numeric-provenance` by
+  fail-closed scripts — not eyeballed judgments: `quote-locator` runs
+  `helpers/quote_gate.py` and reports its result; for the quote-exempt absence classes
+  (`absence-silence`, `contribution-undersell`) the verifier READS the certificate that
+  `helpers/absence_gate.py` produced at the Phase-D barrier (attached to each finding as
+  `absence_gate`; its hit snippets feed the steelman angle); and in Act II, `numeric-provenance` by
   `helpers/provenance.py` (re-hash the output artifact + confirm the value is in it),
   `consistency` by `helpers/consistency.py` (run-match every token value + flag orphans), the
   reproduction predicate by `helpers/reproduces.py` (per-class float tolerance), and the
@@ -39,7 +42,7 @@ adversarial findings). The panel *audits* candidate outputs — findings and edi
 
 | Angle | The question it asks | Hard gate? |
 |---|---|---|
-| `quote-locator` | Does the quote exist verbatim at the stated location? (runs `quote_gate.py`) | **Enforced by the standalone Quote-gate phase, not the panel aggregator** — fail ⇒ status forced to `needs-author-confirmation`; the finding is **not** dropped; absence-silence findings are exempt |
+| `quote-locator` | Does the quote exist verbatim at the stated location? (runs `quote_gate.py`; absence-class findings are instead certified by `absence_gate.py`, the probe-term search) | **Enforced by the standalone Quote-gate phase, not the panel aggregator** — fail (unmatched quote, or anything but a clean `absent` certificate) ⇒ status forced to `needs-author-confirmation`; the finding is **not** dropped |
 | `logical-validity` | Does the criticism actually *follow* from the quoted text? (catches a real quote + an invalid inference) | **Yes** — fail ⇒ reject |
 | `factual-literature` | Is the norm/method/citation the finding appeals to actually correct? (checked against fetched sources, never memory) | No — fail ⇒ revise or reject |
 | `severity-calibration` | Is the severity calibrated under `rubric.md` — neither inflated nor deflated? | No — fail ⇒ revise severity (never silently; recorded) |
@@ -54,7 +57,10 @@ upheld `upheld-with-revision` verdicts. A failed `quote-locator` does **not** de
 the finding — it forces `verification_status = needs-author-confirmation` (per
 rubric.md, status annotates, never vetoes severity). Findings the panel rejects are
 not discarded silently — they are written to the synthesis `rejected_suggestions`
-list with the panel's reason.
+list with the panel's reason. Delivered `contribution-undersell` findings take one
+extra routing step: the engine feeds them to the chair through their own channel and
+they can only land in the non-blocking `contribution_memo` (capped at 3), never in
+the must-fix list — enforced in the Workflow script, not by instruction alone.
 
 **Batched, not per-finding — this is what keeps the run feasible.** Each angle is run by
 one blind agent (two redundant agents at the heavy tiers) that reviews the findings in

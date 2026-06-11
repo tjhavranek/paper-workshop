@@ -43,22 +43,32 @@ workflows (Step 4c).
 
 **4a — Workflow engine.** Launch `workflow/phase1_tribunal.js` with `args` = `{ pdf_path,
 tier, register, paths: { session, prompts_dir, helpers_dir, rules, rubric,
-coverage_rubric, quote_gate, brief, staged_sources } }` — pass `tier` as the internal key
-for the chosen mode. (The script parses `args` defensively whether it arrives as an object
-or a JSON string.) It runs the nine phases (A ingest/cartography → B scout/roster → C
-ground sources → D blind specialists → deterministic quote-gate → E cross-critique →
+coverage_rubric, quote_gate, absence_gate, brief, staged_sources } }` — pass `tier` as the
+internal key for the chosen mode, and `absence_gate` as the path to
+`helpers/absence_gate.py` (omit it and every absence-class finding fails closed to
+`needs-author-confirmation`). (The script parses `args` defensively whether it arrives as
+an object or a JSON string.) It runs the nine phases (A ingest/cartography → B
+scout/roster, with the contribution rival pair enforced in the floor → C ground sources,
+cited works plus the related-literature scout (fetch-or-drop, anti-popularity) → D blind
+specialists → deterministic quote-gate + absence-gate → E cross-critique →
 **F verification panel** (batched by angle) → G completeness audit → H fresh-chair
-synthesis). The default run is a single pass
+synthesis, with the non-blocking `contribution_memo` code-capped at 3). The default run is a single pass
 that **reports** coverage gaps; deepening (re-fanning the `reopen` list) is orchestrator-driven
 per `helpers/stopping_rule.md`, not baked into the script. It writes every artifact to the
 session and returns the `synthesis.schema.json` object.
 
 **4b — Subagent fallback (no Workflow).** Drive the same phases yourself, in the same
-order the Workflow runs them, with the Agent tool: cartography → Scout (`00`) → ground
-the load-bearing cited sources → fan out the seats (`01`/`02`/`03`) as parallel Agent
-calls in one message → run the deterministic quote-gate → integrate (`04`) → batch the
-verification panel (`05`) by angle → completeness (`07`) → synthesize (`06`). Same
-prompts, same schemas, same artifacts — slower, identical in substance.
+order the Workflow runs them, with the Agent tool: cartography → Scout (`00`, contribution
+rival pair always in the floor) → ground the load-bearing cited sources + the
+related-literature scout → fan out the seats (`01`/`02`/`03`) as parallel Agent
+calls in one message → run the deterministic quote-gate AND absence-gate (attach each
+absence-gate result row to its finding as `absence_gate` before the panel or chair sees
+it — the panel's quote-locator and steelman angles read that field) → integrate
+(`04`) → batch the verification panel (`05`) by angle → completeness (`07`) → synthesize
+(`06`, feeding verified `contribution-undersell` findings ONLY through
+`CONTRIBUTION_JSON`, and capping `contribution_memo` at 3 yourself — in the fallback YOU
+are the enforcement layer). Same prompts, same schemas, same artifacts — slower,
+identical in substance.
 
 **4c — Desk Review (lightest).** Skip the fleet. The orchestrator (optionally with 2–3
 sequential subagents) reads the paper, applies a handful of expert lenses + the three
@@ -75,8 +85,9 @@ quote-gate).
   as `args.roster` (and the cartography paths in `args.paths`) — the script skips its
   own Roster phase when `roster` is supplied.
 - The deterministic quote-gate (`helpers/quote_gate.py`) is run by the `quote-locator`
-  verifier via Bash at the barrier exiting Phase D and in the panel; absence-silence
-  findings are exempt.
+  verifier via Bash at the barrier exiting Phase D and in the panel; absence-class
+  findings (`absence-silence`, `contribution-undersell`) are quote-exempt but ride the
+  deterministic absence-gate (`helpers/absence_gate.py`) at the same barrier instead.
 - **Deepening loop (Symposium and Summit).** After the workflow returns, apply
   `helpers/stopping_rule.md` before assembling the report: run at least the tier's
   minimum rounds (exhaustive 2, monumental 3) by re-fanning targeted seats at the
@@ -92,9 +103,12 @@ From the returned result object (the synthesis plus `findings` — each carrying
 must-fix list (capped ~5–7, sorted by magnitude); the per-seat findings grouped by
 seat; the cross-critique consolidation (clusters and crux notes — where rival seats
 collided and what evidence would move each side); the generalists' relevance and
-understandability findings; the verbatim kill-shots and minority report; the venue
-read (3-bucket, no number); the **coverage certificate**; and the rejected-suggestions
-list. Save the bundle as `report.md`, persist the per-finding panel verdicts under
+understandability findings; the **Contribution Memo** (its own clearly-labeled
+section: at most 3 verified, non-blocking ways the paper undersells its own results,
+each with the bolder claim, its quoted foothold, and the risk of overreach — labeled
+"suggestions, author's call", never mixed into the must-fix list); the verbatim
+kill-shots and minority report; the venue read (3-bucket, no number); the **coverage
+certificate**; and the rejected-suggestions list. Save the bundle as `report.md`, persist the per-finding panel verdicts under
 `verification/` (the auditable record), and show the highlights.
 
 ## Step 6 — The GATE

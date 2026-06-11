@@ -15,7 +15,8 @@
         "claim-support", "identification", "statistical", "robustness",
         "framing-overclaim", "related-work", "citation-accuracy",
         "reproducibility", "ethics-integrity", "presentation", "clarity",
-        "relevance", "understandability", "absence-silence"
+        "relevance", "understandability", "absence-silence",
+        "contribution-undersell"
       ]
     },
     "location": {
@@ -31,7 +32,16 @@
     },
     "quote": {
       "type": "string",
-      "description": "Exact verbatim quote from the manuscript. MUST pass the deterministic quote-gate. May be empty ONLY if finding_type is 'absence-silence'."
+      "description": "Exact verbatim quote from the manuscript. MUST pass the deterministic quote-gate. May be empty ONLY if finding_type is 'absence-silence'. A 'contribution-undersell' finding MUST quote the under-leveraged result it builds from (its foothold), so it rides the quote-gate normally; its absence half rides absence_probe."
+    },
+    "absence_probe": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "REQUIRED on absence-class findings ('absence-silence' and 'contribution-undersell'): the words and close paraphrases whose presence in the manuscript would REFUTE the claimed absence, searched deterministically by helpers/absence_gate.py. Supply at least 3 terms including paraphrases; fewer fails closed (the finding degrades to needs-author-confirmation, never to a silent pass).",
+      "properties": {
+        "terms": { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+      },
+      "required": ["terms"]
     },
     "issue": { "type": "string", "description": "The problem, stated precisely and specifically to THIS paper." },
     "why_it_matters": { "type": "string" },
@@ -44,7 +54,46 @@
       "enum": ["quote-verified", "logic-checked", "citation-grounded", "needs-author-confirmation", "cant-tell"],
       "description": "Annotates the finding; NEVER vetoes its severity."
     },
-    "raised_by_n_blind_seats": { "type": "integer", "minimum": 1, "description": "Corroboration count, set during integration. Diagnostic only, never an auto-down-weighter." }
+    "raised_by_n_blind_seats": { "type": "integer", "minimum": 1, "description": "Corroboration count, set during integration. Diagnostic only, never an auto-down-weighter." },
+    "absence_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "ENGINE-ATTACHED annotation (never produced by a seat): the deterministic absence-gate certificate for absence-class findings, from helpers/absence_gate.py. The hit snippets are the steelman verifier's evidence trail.",
+      "properties": {
+        "id": { "type": "string" },
+        "certified": { "type": "string" },
+        "terms_searched": { "type": "integer" },
+        "hits": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "term": { "type": "string" },
+              "count": { "type": "integer" },
+              "snippets": { "type": "array", "items": { "type": "string" } }
+            },
+            "required": ["term", "count"]
+          }
+        }
+      },
+      "required": ["certified"]
+    },
+    "panel_verdicts": {
+      "type": "array",
+      "description": "ENGINE-ATTACHED annotation (never produced by a seat): the verification panel's per-angle verdicts, carried on every delivered finding for the session's verification/ record.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "angle": { "type": "string" },
+          "verdict": { "type": "string" },
+          "reason": { "type": "string" },
+          "suggested_revision": { "type": ["string", "null"] }
+        },
+        "required": ["angle", "verdict", "reason"]
+      }
+    }
   },
   "required": ["id", "seat_id", "tradition", "finding_type", "location", "quote", "issue", "why_it_matters", "severity", "magnitude", "proposed_fix", "risk_of_fix", "verification_status"]
 }

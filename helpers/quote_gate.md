@@ -31,7 +31,10 @@ python helpers/quote_gate.py batch --source-file input/paper.txt --findings roun
   zero-width/soft-hyphen removal + whitespace-collapse + casefold. The normal pass.
 - `dehyphenated` — matched only after also joining `-`-at-line-break (PDF
   hyphenation). Still a pass; note it.
-- `exempt-absence` — the finding is `absence-silence` with an empty quote; not gated.
+- `exempt-absence` — the finding is `absence-silence` with an empty quote; not gated
+  HERE. Since v0.6.0 it rides the deterministic `helpers/absence_gate.py` instead
+  (probe-term search, fail-closed). A `contribution-undersell` finding's foothold
+  quote is NOT exempt and is gated normally.
 - `empty-quote` — the quote normalized to nothing on a finding that is **not** `absence-silence`.
   Treated exactly like `none`: a fail, status forced to `needs-author-confirmation`.
 - `none` — **no match. Fail closed.** The finding's `verification_status` is forced to

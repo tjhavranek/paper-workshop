@@ -23,6 +23,22 @@
         "required": ["finding_id", "priority", "one_line", "panel_summary"]
       }
     },
+    "contribution_memo": {
+      "type": "array",
+      "maxItems": 3,
+      "description": "NON-BLOCKING, capped at 3. Composed ONLY from verified contribution-undersell findings (fed to the chair through their own channel); the engine strips any of their ids from prioritized_findings in code. Suggestions the author ratifies or ignores (rule 14); never raises a severity, never moves a verdict.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "finding_id": { "type": "string" },
+          "bolder_claim": { "type": "string", "description": "The claim the paper could defensibly make but never does." },
+          "grounded_in": { "type": "string", "description": "The quoted under-leveraged result (the finding's quote-gated foothold)." },
+          "risk_of_overreach": { "type": "string" }
+        },
+        "required": ["finding_id", "bolder_claim", "grounded_in", "risk_of_overreach"]
+      }
+    },
     "kill_shots": {
       "type": "array",
       "description": "VERBATIM, un-deletable. The harshest surviving objections from the fatal-flaw and pre-mortem seats, reproduced unsmoothed regardless of delivery tone.",
@@ -91,5 +107,5 @@
       "required": ["claims_total", "claims_covered", "sentences_total", "sentences_covered", "dimension_coverage", "reopen", "not_covered"]
     }
   },
-  "required": ["verdict", "top_strengths", "prioritized_findings", "kill_shots", "referee_verdicts", "venue_verdict", "validity_verdict", "minority_report", "rejected_suggestions", "coverage_certificate"]
+  "required": ["verdict", "top_strengths", "prioritized_findings", "contribution_memo", "kill_shots", "referee_verdicts", "venue_verdict", "validity_verdict", "minority_report", "rejected_suggestions", "coverage_certificate"]
 }

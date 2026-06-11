@@ -15,7 +15,10 @@ skipped it.
 
 ## Substance dimensions
 1. **Motivation & contribution** — is the stated contribution real, novel, and
-   correctly sized?
+   correctly sized (neither overclaimed nor undersold)? The contribution rival
+   pair (`S-contribution-maximizer` vs `S-contribution-prosecutor`) staffs this
+   dimension on every fleet run (the engine injects the pair if the scout omits
+   it; Desk Review folds the undersell question into its lighter passes).
 2. **Positioning in the literature** — correctly situated; no missing or
    misrepresented prior work.
 3. **Identification / causal validity** *(if any causal claim)* — does the design

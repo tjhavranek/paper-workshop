@@ -53,10 +53,14 @@ and Act II is demonstrated end-to-end once on one accepted paper, not broadly va
 ## The two acts and the gate between them
 
 - **Act I (TRIBUNAL).** Input: **the paper PDF**, no data or code, and it touches none of
-  your files (it does fetch a few *public* cited works to check the paper's claims). Output: a verified,
+  your files (it does fetch a few *public* cited works to check the paper's claims, plus a
+  handful of related works the paper does NOT cite, hunted under an anti-popularity
+  mandate and staged only if actually fetched). Output: a verified,
   prioritized finding ledger + a referee-report bundle + the cross-critique crux notes
   (where rival seats collided and what evidence would move each side) + the generalists'
-  relevance and understandability memo + a completeness certificate. Read-only;
+  relevance and understandability memo + a non-blocking **Contribution Memo** (at most 3
+  verified ways the paper undersells its own results, each grounded in a quoted foothold;
+  suggestions only, the author's call) + a completeness certificate. Read-only;
   nothing of the author's is touched. (`workflow/phase1_tribunal.js`)
 - **[HARD GATE].** The skill **stops** and offers to implement. It never
   auto-chains into Act II.
@@ -68,6 +72,40 @@ and Act II is demonstrated end-to-end once on one accepted paper, not broadly va
 
 The two acts share one spine: the **Verified Finding Ledger**
 (`schemas/finding.schema.json`). Act I produces it; Act II consumes it.
+
+## The contribution wing (sharper contribution, same rails)
+
+Most review tools only subtract: they find flaws. CRUCIBLE also asks, on every fleet
+run, whether the paper UNDERSELLS itself, and it does so without loosening a single
+rail (Desk Review folds the same undersell question into its lighter passes):
+
+- **The contribution claim is always a contested choice.** Every roster staffs the
+  rival pair `S-contribution-maximizer` (the boldest claim the paper's OWN results
+  defensibly support) vs `S-contribution-prosecutor` (where the stated contribution
+  outruns the evidence), enforced by the Workflow engine, not just the prompt (the
+  engine injects and logs any seat the scout omitted; in the subagent fallback the
+  orchestrator applies the same floor by instruction).
+- **Undersell findings ride BOTH deterministic gates.** A `contribution-undersell`
+  finding must quote the under-leveraged result (its foothold, quote-gated) AND carry
+  an absence probe whose terms the absence gate searches deterministically: a clean
+  certificate means no refuting phrasing occurs in the text, and the semantic call
+  stays with the steelman verifier. No foothold, no finding.
+- **The Contribution Memo is non-blocking by construction.** At most 3 verified items,
+  delivered in their own clearly-labeled report section; the engine strips any of them
+  from the must-fix list and forces their status to needs-author-confirmation in code.
+  They are suggestions; the author is the author.
+- **The literature lens widens, fetch-or-drop (Workshop depth and above).** A
+  related-literature scout hunts works the paper does NOT cite, deliberately preferring
+  the idiosyncratic (adjacent fields, pre-2000, working papers, non-US journals), under
+  a strict mandate (not a deterministic check; see `LIMITATIONS.md`): a work becomes
+  citable evidence only if its text was actually fetched and read in this run.
+  Unfetchable candidates are listed as leads for the author, in a file kept outside the
+  staged-sources tree so seats and verifiers never see them as evidence.
+
+Honest caveat: which undersell candidates surface, and which memo items rank highest,
+remain same-model judgments with no measured undersell-recall yet (see
+`LIMITATIONS.md`). The memo is a grounded option set, not a validated verdict on what
+your contribution should be.
 
 ## What makes it trustworthy at scale (read `prompts/shared_grounding_rules.md`)
 
@@ -83,6 +121,10 @@ almost nothing, and are never traded away for scale.
 - **Ground, don't recall; never fabricate.** Exact quote + locator on every
   finding, verified by the deterministic `helpers/quote_gate.py` (not an LLM).
   Unverifiable → `needs-author-confirmation`, never asserted.
+- **Even absence claims ride a deterministic gate.** "The paper never says X" findings
+  (and their constructive twin, "the paper never CLAIMS what its own results support")
+  carry a probe of refuting terms searched by `helpers/absence_gate.py`, fail-closed;
+  the steelman verifier adjudicates the semantic half with the gate's hit snippets.
 - **No confidence scores. Severity is tone-invariant** (`rubric.md`).
 - **Decorrelate by rival objective function**, commit-and-reveal independence,
   un-deletable verbatim dissent, preserved minority report.
@@ -217,9 +259,9 @@ paper-workshop/
 ├── schemas/                 ← finding, verification, roster_contract, synthesis, edit_spec
 ├── prompts/                 ← shared_grounding_rules + 00..07 (Act I) + phase2/10..16 (Act II)
 ├── helpers/                 ← orchestration, doctor, verification_panel, quote_gate.(py|md),
-│                              provenance.py, consistency.py, reproduces.py, integrity_diff.py,
-│                              stopping_rule, desk_review_mode, pdf_extraction, phase2_sandbox,
-│                              safety_notes
+│                              absence_gate.(py|md), provenance.py, consistency.py,
+│                              reproduces.py, integrity_diff.py, stopping_rule,
+│                              desk_review_mode, pdf_extraction, phase2_sandbox, safety_notes
 ├── workflow/                ← phase1_tribunal.js, phase2_atelier.js (the Workflow scripts)
 └── examples/                ← incentives-workshop/ (end-to-end on a real accepted paper)
                                + self-audit/ (the tool run on its own design)

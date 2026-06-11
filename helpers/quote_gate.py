@@ -8,8 +8,11 @@ It normalizes a candidate quote and the source text and checks for a 1:1
 substring match. It fails CLOSED: no match => the finding's quote is not
 verified and must be downgraded to 'needs-author-confirmation'.
 
-Findings of type 'absence-silence' carry an empty quote and are EXEMPT
-(grounding rule 9): batch mode reports them as match_level='exempt-absence'.
+Findings of type 'absence-silence' carry an empty quote and are EXEMPT from
+THIS gate (grounding rule 9): batch mode reports them as
+match_level='exempt-absence'. They are not unverified: since v0.6.0 they ride
+the deterministic helpers/absence_gate.py instead. A 'contribution-undersell'
+finding's quote (its foothold) is NOT exempt and is gated here normally.
 
 No third-party dependencies (stdlib only) so it runs anywhere Python 3.8+ is.
 

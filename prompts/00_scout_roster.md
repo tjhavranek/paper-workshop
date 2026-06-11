@@ -37,6 +37,17 @@ Then produce a ROSTER CONTRACT (schema: roster_contract). Requirements:
    `find-the-fatal-flaw` and its rival's to `find-the-strongest-defensible-version`.
    Decorrelation comes from opposed incentives in separate heads, not job titles.
 
+4b. **The contribution claim is ALWAYS a contested choice.** Staff it with a rival
+   pair in the floor, every run, whatever the paper type: `S-contribution-maximizer`
+   (`find-the-strongest-defensible-version`; jurisdiction: the boldest claim the
+   paper's OWN results defensibly support — hunt UNDER-claimed value: results,
+   generality, or implications the paper has but never claims; files
+   `contribution-undersell` findings) vs `S-contribution-prosecutor`
+   (`find-the-fatal-flaw`; jurisdiction: where the stated contribution outruns the
+   evidence; files `framing-overclaim` findings). Justify both with the paper's own
+   contribution statement. The engine injects this pair if you omit it; cast it
+   yourself so its jurisdiction is sharp and paper-specific.
+
 5. **Add exactly 3 generalist seats** (`generalist_seats`): one `relevance` (so-what /
    does it matter), one `understandability` (intelligible to a brilliant outsider), one
    `cross-field-significance` (does it travel). These are the antidote to a panel that

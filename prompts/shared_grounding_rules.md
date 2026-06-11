@@ -61,16 +61,31 @@ seems to conflict with this file, **this file wins**.
    panel's threshold. Verifiers are **blind to the proposer's rationale** and to
    each other. See `helpers/verification_panel.md`.
 
-9. **Absence / silence findings are first-class and quote-exempt.** The highest-
-   severity problems are often things the paper never says (an unstated
-   identifying assumption, a missing power analysis, an omitted robustness
-   check, a citation the author left out). These have no quote to anchor; their
-   evidence *is* the absence, located by section. They are **exempt from the
-   deterministic quote-gate** and must **never** be demoted for being
-   unquotable.
+9. **Absence / silence findings are first-class, quote-exempt, and absence-gated.**
+   The highest-severity problems are often things the paper never says (an
+   unstated identifying assumption, a missing power analysis, an omitted
+   robustness check, a citation the author left out). These have no quote to
+   anchor; their evidence *is* the absence, located by section. They are
+   **exempt from the deterministic quote-gate** and must **never** be demoted
+   for being unquotable — but they are NOT exempt from verification: every
+   absence-class finding (`absence-silence`, `contribution-undersell`) carries
+   an `absence_probe` (the terms and close paraphrases whose presence would
+   refute the claimed absence), searched deterministically by
+   `helpers/absence_gate.py`. A missing, thin, or hit-producing probe degrades
+   the finding to `needs-author-confirmation` (fail closed, annotate never
+   delete); the panel's steelman angle adjudicates the semantic half with the
+   gate's hit snippets as evidence. The gate certifies the *search*, not
+   semantics — a paraphrase outside the probe can still exist, which is why
+   the steelman layer stays on top. A `contribution-undersell` finding (the
+   paper undersells its own results) additionally quotes the under-leveraged
+   result as its foothold, so it rides BOTH deterministic gates, and it is
+   routed to the chair's non-blocking Contribution Memo, never the must-fix
+   list (rule 14: the author ratifies any bolder claim).
 
-10. **Quote + locate is verified by code, not vibes.** Every non-absence quote
-    must pass the deterministic `helpers/quote_gate.py` (whitespace/dash/quote/
+10. **Quote + locate is verified by code, not vibes.** Every quote — including a
+    `contribution-undersell` finding's foothold; only an `absence-silence`
+    finding's empty quote is exempt — must pass the deterministic
+    `helpers/quote_gate.py` (whitespace/dash/quote/
     case-normalized 1:1 substring match against the source) before it enters
     cross-critique, synthesis, or any edit. An LLM verifier shares the
     hallucination it is checking, so this gate is a **script**, fail-closed.

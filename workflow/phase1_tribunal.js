@@ -40,7 +40,8 @@ const FINDING = {
   type: 'object', additionalProperties: false,
   properties: {
     id: { type: 'string' }, seat_id: { type: 'string' }, tradition: { type: 'string' },
-    finding_type: { type: 'string', enum: ['claim-support', 'identification', 'statistical', 'robustness', 'framing-overclaim', 'related-work', 'citation-accuracy', 'reproducibility', 'ethics-integrity', 'presentation', 'clarity', 'relevance', 'understandability', 'absence-silence'] },
+    finding_type: { type: 'string', enum: ['claim-support', 'identification', 'statistical', 'robustness', 'framing-overclaim', 'related-work', 'citation-accuracy', 'reproducibility', 'ethics-integrity', 'presentation', 'clarity', 'relevance', 'understandability', 'absence-silence', 'contribution-undersell'] },
+    absence_probe: { type: 'object', additionalProperties: false, properties: { terms: { type: 'array', items: { type: 'string' }, minItems: 1 } }, required: ['terms'] },
     location: LOC, quote: { type: 'string' }, issue: { type: 'string' }, why_it_matters: { type: 'string' },
     severity: { type: 'string', enum: ['High', 'Medium', 'Low'] },
     magnitude: { type: 'string', enum: ['moves-a-number', 'moves-a-conclusion', 'presentation-only'] },
@@ -60,7 +61,7 @@ const VERIF = { type: 'object', additionalProperties: false, properties: { targe
 const VERIF_BATCH = { type: 'object', additionalProperties: false, properties: { verdicts: { type: 'array', items: VERIF } }, required: ['verdicts'] }
 const INTEGRATION = { type: 'object', additionalProperties: false, properties: { lens: { type: 'string' }, clusters: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { theme: { type: 'string' }, finding_ids: { type: 'array', items: { type: 'string' } }, merged_issue: { type: 'string' }, recommended_severity: { type: 'string', enum: ['High', 'Medium', 'Low'] }, priority: { type: 'string', enum: ['must', 'should', 'nice'] } }, required: ['theme', 'finding_ids', 'merged_issue', 'recommended_severity', 'priority'] } }, crux_notes: { type: 'array', items: { type: 'string' } }, missing_issue: { type: 'string' } }, required: ['lens', 'clusters', 'crux_notes', 'missing_issue'] }
 const COVERAGE = { type: 'object', additionalProperties: false, properties: { claims_total: { type: 'integer' }, claims_covered: { type: 'integer' }, sentences_total: { type: 'integer' }, sentences_covered: { type: 'integer' }, dimension_coverage: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { dimension: { type: 'string' }, status: { type: 'string' } }, required: ['dimension', 'status'] } }, reopen: { type: 'array', items: { type: 'string' } }, not_covered: { type: 'array', items: { type: 'string' } } }, required: ['claims_total', 'claims_covered', 'sentences_total', 'sentences_covered', 'dimension_coverage', 'reopen', 'not_covered'] }
-const SYNTHESIS = { type: 'object', additionalProperties: false, properties: { verdict: { type: 'string' }, top_strengths: { type: 'array', items: { type: 'string' } }, prioritized_findings: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { finding_id: { type: 'string' }, priority: { type: 'string', enum: ['must', 'should', 'nice'] }, one_line: { type: 'string' }, panel_summary: { type: 'string' } }, required: ['finding_id', 'priority', 'one_line', 'panel_summary'] } }, kill_shots: { type: 'array', items: { type: 'string' } }, referee_verdicts: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { seat_id: { type: 'string' }, verdict: { type: 'string' } }, required: ['seat_id', 'verdict'] } }, venue_verdict: { type: 'object', additionalProperties: false, properties: { bucket: { type: 'string', enum: ['desk-reject-risk', 'major-revision', 'competitive'] }, objections: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { objection: { type: 'string' }, quote: { type: 'string' } }, required: ['objection', 'quote'] } }, swing_factor: { type: 'string' } }, required: ['bucket', 'objections', 'swing_factor'] }, validity_verdict: { type: 'string' }, minority_report: { type: 'string' }, rejected_suggestions: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { suggestion: { type: 'string' }, why_rejected: { type: 'string' } }, required: ['suggestion', 'why_rejected'] } }, coverage_certificate: COVERAGE }, required: ['verdict', 'top_strengths', 'prioritized_findings', 'kill_shots', 'referee_verdicts', 'venue_verdict', 'validity_verdict', 'minority_report', 'rejected_suggestions', 'coverage_certificate'] }
+const SYNTHESIS = { type: 'object', additionalProperties: false, properties: { verdict: { type: 'string' }, top_strengths: { type: 'array', items: { type: 'string' } }, prioritized_findings: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { finding_id: { type: 'string' }, priority: { type: 'string', enum: ['must', 'should', 'nice'] }, one_line: { type: 'string' }, panel_summary: { type: 'string' } }, required: ['finding_id', 'priority', 'one_line', 'panel_summary'] } }, contribution_memo: { type: 'array', maxItems: 3, items: { type: 'object', additionalProperties: false, properties: { finding_id: { type: 'string' }, bolder_claim: { type: 'string' }, grounded_in: { type: 'string' }, risk_of_overreach: { type: 'string' } }, required: ['finding_id', 'bolder_claim', 'grounded_in', 'risk_of_overreach'] } }, kill_shots: { type: 'array', items: { type: 'string' } }, referee_verdicts: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { seat_id: { type: 'string' }, verdict: { type: 'string' } }, required: ['seat_id', 'verdict'] } }, venue_verdict: { type: 'object', additionalProperties: false, properties: { bucket: { type: 'string', enum: ['desk-reject-risk', 'major-revision', 'competitive'] }, objections: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { objection: { type: 'string' }, quote: { type: 'string' } }, required: ['objection', 'quote'] } }, swing_factor: { type: 'string' } }, required: ['bucket', 'objections', 'swing_factor'] }, validity_verdict: { type: 'string' }, minority_report: { type: 'string' }, rejected_suggestions: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { suggestion: { type: 'string' }, why_rejected: { type: 'string' } }, required: ['suggestion', 'why_rejected'] } }, coverage_certificate: COVERAGE }, required: ['verdict', 'top_strengths', 'prioritized_findings', 'contribution_memo', 'kill_shots', 'referee_verdicts', 'venue_verdict', 'validity_verdict', 'minority_report', 'rejected_suggestions', 'coverage_certificate'] }
 
 // ---------- verification angles ----------
 const ANGLE_Q = {
@@ -101,6 +102,20 @@ if (A.roster) {
   roster = await agent(promptRef('00_scout_roster', { BRIEF_PATH: PATHS.brief || '', PAPER_TXT_PATH: carto.paper_txt_path, INVENTORY_PATH: carto.inventory_path, PRECIS_PATH: carto.precis_path, TIER }), { ...GP, label: 'scout:roster', phase: 'Roster', schema: ROSTER })
   log('Roster: ' + roster.paper_type.join('+') + ' — ' + roster.seats.length + ' seats + ' + roster.generalist_seats.length + ' generalists')
 }
+// Contribution floor, enforced in code on the Workflow path (the scout's prompt also
+// mandates it; the subagent fallback's orchestrator enforces it by hand): the paper's
+// central contribution claim is ALWAYS a contested choice, staffed by a rival pair. If the
+// scout (or a caller-supplied roster) omitted either seat, inject it deterministically,
+// mirroring the close-reader pattern (a placeholder justifying_quote is legal for
+// engine-injected floor seats; scout-cast seats still require a real quote). The match is
+// deliberately NARROW (seat_id + role_title, not jurisdiction: jurisdictions mention the
+// word "contribution" incidentally) so a coincidence cannot silently suppress the floor;
+// the worst case of a too-narrow match is one redundant seat, never a missing one.
+const seatName = s => s.seat_id + ' ' + s.role_title
+const hasMaximizer = roster.seats.some(s => s.objective_function === 'find-the-strongest-defensible-version' && (/contribution/i.test(seatName(s)) || /undersell|underclaim|bolder/i.test(s.jurisdiction)))
+const hasProsecutor = roster.seats.some(s => s.objective_function === 'find-the-fatal-flaw' && /contribution|overclaim/i.test(seatName(s)))
+if (!hasMaximizer) { roster.seats.push({ seat_id: 'S-contribution-maximizer', role_title: 'Contribution maximizer', tradition: 'strongest-defensible-contribution', objective_function: 'find-the-strongest-defensible-version', jurisdiction: 'the paper\'s central contribution claim: the boldest claim its OWN results defensibly support, hunting under-claimed value (results, generality, implications the paper has but never claims); file contribution-undersell findings', justifying_quote: '(contribution floor)', rival_of: 'S-contribution-prosecutor', out_of_scope: 'methods auditing owned by other seats', owned_claim_ids: [] }); log('Roster floor: injected S-contribution-maximizer (cast had no contribution-maximizer seat)') }
+if (!hasProsecutor) { roster.seats.push({ seat_id: 'S-contribution-prosecutor', role_title: 'Overclaim prosecutor', tradition: 'contribution-overclaim prosecution', objective_function: 'find-the-fatal-flaw', jurisdiction: 'the paper\'s central contribution claim: where the stated contribution outruns the evidence (framing-overclaim findings)', justifying_quote: '(contribution floor)', rival_of: 'S-contribution-maximizer', out_of_scope: 'methods auditing owned by other seats', owned_claim_ids: [] }); log('Roster floor: injected S-contribution-prosecutor (cast had no overclaim-prosecutor seat)') }
 
 // ---------- PHASE C: Ground load-bearing cited sources (fail-safe; uses web) ----------
 // Fetch the most decision-critical cited works so specialists/verifiers can check the
@@ -112,9 +127,17 @@ let grounded = 0
 const stagedDir = (PATHS.session || '.') + '/staged_sources'
 if (A.ground !== false && carto.source_manifest_path) {
   const nSrc = TIER === 'monumental' ? 12 : TIER === 'exhaustive' ? 8 : TIER === 'quick' ? 3 : 5
-  const gRes = (await parallel([() => agent('Ground the most load-bearing cited works so reviewers can check this paper\'s claims about the literature against the ORIGINALS, not memory.\nRead the source manifest at ' + carto.source_manifest_path + ' . For up to ' + nSrc + ' of the MOST decision-critical cited works, use WebSearch/WebFetch to locate the actual source. For each, write a short note to ' + stagedDir + '/<slug>.md capturing (a) the citation, (b) what THIS paper claims it shows (from the manifest), and (c) what the source ACTUALLY says about that claim, with a verbatim quote where obtainable, or "could not verify (not reachable)" otherwise. Create the directory first. SAFETY: search ONLY for the cited work using its public bibliographic details (authors, title, year); do NOT transmit this paper\'s own unpublished results, numbers, or wording to any search. NEVER fabricate what a source says. Return the count of notes written and any claim where the paper appears to MISSTATE its source.', { ...GP, label: 'ground-sources', phase: 'Ground', schema: { type: 'object', additionalProperties: false, properties: { notes_written: { type: 'integer' }, possible_misstatements: { type: 'array', items: { type: 'string' } } }, required: ['notes_written'] } })])).filter(Boolean)
-  if (gRes[0]) grounded = gRes[0].notes_written || 0
-  log('Grounding: staged ' + grounded + ' cited sources' + (grounded ? ' at ' + stagedDir : ' (none reachable / skipped)'))
+  // The related-literature scout hunts works the paper does NOT cite. Anti-popularity by
+  // mandate (the consensus citations are the related-work expert's home turf already), and
+  // fetch-or-drop by rule: a work it could not actually open never becomes citable evidence.
+  const nRel = TIER === 'monumental' ? 12 : TIER === 'exhaustive' ? 8 : TIER === 'quick' ? 0 : 5
+  const groundTasks = [() => agent('Ground the most load-bearing cited works so reviewers can check this paper\'s claims about the literature against the ORIGINALS, not memory.\nRead the source manifest at ' + carto.source_manifest_path + ' . For up to ' + nSrc + ' of the MOST decision-critical cited works, use WebSearch/WebFetch to locate the actual source. For each, write a short note to ' + stagedDir + '/<slug>.md capturing (a) the citation, (b) what THIS paper claims it shows (from the manifest), and (c) what the source ACTUALLY says about that claim, with a verbatim quote where obtainable, or "could not verify (not reachable)" otherwise. Create the directory first. SAFETY: search ONLY for the cited work using its public bibliographic details (authors, title, year); do NOT transmit this paper\'s own unpublished results, numbers, or wording to any search. NEVER fabricate what a source says. Return the count of notes written and any claim where the paper appears to MISSTATE its source.', { ...GP, label: 'ground-sources', phase: 'Ground', schema: { type: 'object', additionalProperties: false, properties: { notes_written: { type: 'integer' }, possible_misstatements: { type: 'array', items: { type: 'string' } } }, required: ['notes_written'] } })]
+  if (nRel > 0) groundTasks.push(() => agent('Scout RELATED literature this paper does NOT cite, hunting the idiosyncratic and the overlooked: read the precis at ' + carto.precis_path + ' and the manifest at ' + carto.source_manifest_path + ' (to know what IS cited), then use WebSearch/WebFetch to find up to ' + nRel + ' relevant works the paper never cites. ANTI-POPULARITY MANDATE: deliberately prefer adjacent fields, older work (pre-2000), working-paper series, and non-US journals; a top-cited mainstream hit the related-work expert would already know earns its place only if it is directly load-bearing. FETCH-OR-DROP RULE (strict): a work becomes a staged note ONLY if you actually OPENED its text (full text or a substantial accessible portion) in this run; for each such work write ' + stagedDir + '/related/<slug>.md with (a) the full citation and the URL/DOI you fetched, (b) why it matters to THIS paper (one paragraph), and (c) what it actually says, with at least one verbatim quote. A work you could NOT open may be listed in ' + ((PATHS.session || '.') + '/related_leads.md') + ' (title, venue, DOI/URL, one-line reason) ONLY if its DOI or URL resolved during your search; that file lives OUTSIDE the staged-sources tree on purpose (leads were not read, so seats and verifiers must never see them as evidence) and is surfaced to the author in the report bundle only. Create directories first. SAFETY: search ONLY with public topic keywords and bibliographic details; do NOT transmit this paper\'s own unpublished results, numbers, or wording to any search. NEVER fabricate what a source says. Return counts.', { ...GP, label: 'ground-related', phase: 'Ground', schema: { type: 'object', additionalProperties: false, properties: { notes_written: { type: 'integer' }, leads_listed: { type: 'integer' } }, required: ['notes_written'] } }))
+  const gRes = await parallel(groundTasks) // positional: [cited, related?]; a failed thunk is null
+  const citedGrounded = gRes[0] ? (gRes[0].notes_written || 0) : 0
+  const relGrounded = (groundTasks.length > 1 && gRes[1]) ? (gRes[1].notes_written || 0) : 0
+  grounded = citedGrounded + relGrounded
+  log('Grounding: staged ' + grounded + ' sources (' + citedGrounded + ' cited + ' + relGrounded + ' related/uncited)' + (grounded ? ' at ' + stagedDir : ' (none reachable / skipped)'))
 }
 // keep any caller-staged sources when in-run grounding stages nothing (do not clobber)
 seatPaths.STAGED_SOURCES_DIR = grounded > 0 ? stagedDir : (PATHS.staged_sources || '(none staged)')
@@ -151,7 +174,7 @@ log('Specialists: ' + findings.length + ' raw findings from ' + seatResults.leng
 // ---------- Quote-gate ----------
 phase('Quote-gate')
 if (findings.length) {
-  const gate = await agent('Write this findings JSON to a temp file and run the deterministic quote gate against the manuscript text, then return its JSON result array verbatim.\nFINDINGS: ' + JSON.stringify({ findings }) + '\nRun: python "' + (PATHS.quote_gate || '') + '" batch --source-file "' + carto.paper_txt_path + '" --findings <tempfile>\nReturn exactly the script\'s JSON output (array of {id, matched, match_level, severity_hint}).', { ...GP, label: 'quote-gate', phase: 'Quote-gate', schema: { type: 'object', additionalProperties: false, properties: { results: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { id: { type: 'string' }, matched: { type: 'boolean' }, match_level: { type: 'string' }, severity_hint: { type: 'string' } }, required: ['id', 'matched', 'match_level'] } } }, required: ['results'] } })
+  const gate = await agent('Write this findings JSON to a temp file and run the deterministic quote gate against the manuscript text, then return its JSON result array verbatim.\nFINDINGS: ' + JSON.stringify({ findings }) + '\nRun: python "' + (PATHS.quote_gate || '') + '" batch --source-file "' + carto.paper_txt_path + '" --findings <tempfile>\nNOTE: the script exits 2 whenever any finding fails to match; that exit code is expected output, not an error. Do not retry; return its JSON verbatim.\nReturn exactly the script\'s JSON output (array of {id, matched, match_level, severity_hint}).', { ...GP, label: 'quote-gate', phase: 'Quote-gate', schema: { type: 'object', additionalProperties: false, properties: { results: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { id: { type: 'string' }, matched: { type: 'boolean' }, match_level: { type: 'string' }, severity_hint: { type: 'string' } }, required: ['id', 'matched', 'match_level'] } } }, required: ['results'] } })
   const byId = {}
   ;((gate && gate.results) || []).forEach(r => { byId[r.id] = r })
   // FAIL CLOSED: a finding the gate result does not cover (a dropped/truncated relay row)
@@ -159,6 +182,32 @@ if (findings.length) {
   // self-reported status (per rubric.md, status annotates; severity is untouched).
   findings.forEach(f => { const r = byId[f.id]; if ((!r || !r.matched) && f.finding_type !== 'absence-silence') { f.verification_status = 'needs-author-confirmation' } })
   log('Quote-gate: ' + (gate.results || []).filter(r => r.matched).length + '/' + (gate.results || []).length + ' quotes verified')
+}
+// Absence gate: the deterministic rail for the quote-EXEMPT finding classes. Every
+// absence-class finding ('absence-silence' and 'contribution-undersell') carries an
+// absence_probe; helpers/absence_gate.py searches every probe term against the manuscript.
+// FAIL CLOSED, annotate-never-delete: anything but a clean 'absent' certificate (present,
+// thin-probe, no-probe, or a dropped relay row) degrades the finding's status to
+// needs-author-confirmation; the gate result rides on the finding so the panel's steelman
+// angle can adjudicate the semantic half with the hit snippets as evidence.
+const absenceClass = f => f.finding_type === 'absence-silence' || f.finding_type === 'contribution-undersell'
+const absenceFindings = findings.filter(absenceClass)
+if (absenceFindings.length && PATHS.absence_gate) {
+  const agate = await agent('Write this findings JSON to a temp file and run the deterministic absence gate against the manuscript text, then return its JSON result array verbatim.\nFINDINGS: ' + JSON.stringify({ findings: absenceFindings }) + '\nRun: python "' + PATHS.absence_gate + '" batch --source-file "' + carto.paper_txt_path + '" --findings <tempfile>\nNOTE: the script exits 2 whenever any finding is not certified absent; that exit code is expected output, not an error. Do not retry; return its JSON verbatim.\nReturn exactly the script\'s JSON output (array of {id, certified, terms_searched, hits}).', { ...GP, label: 'absence-gate', phase: 'Quote-gate', schema: { type: 'object', additionalProperties: false, properties: { results: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { id: { type: 'string' }, certified: { type: 'string' }, terms_searched: { type: 'integer' }, hits: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { term: { type: 'string' }, count: { type: 'integer' }, snippets: { type: 'array', items: { type: 'string' } } }, required: ['term', 'count'] } } }, required: ['id', 'certified'] } } }, required: ['results'] } })
+  const aById = {}
+  ;((agate && agate.results) || []).forEach(r => { aById[r.id] = r })
+  let absent = 0
+  absenceFindings.forEach(f => {
+    const r = aById[f.id]
+    f.absence_gate = r || { id: f.id, certified: 'no-result', terms_searched: 0, hits: [] }
+    if (r && r.certified === 'absent') absent++
+    else f.verification_status = 'needs-author-confirmation'
+  })
+  log('Absence-gate: ' + absent + '/' + absenceFindings.length + ' absence-class findings certified absent')
+} else if (absenceFindings.length) {
+  // no gate path supplied: fail closed for the whole class, never a silent pass
+  absenceFindings.forEach(f => { f.verification_status = 'needs-author-confirmation' })
+  log('Absence-gate: SKIPPED (no PATHS.absence_gate) — ' + absenceFindings.length + ' absence-class findings degraded to needs-author-confirmation')
 }
 
 // ---------- PHASE E: Cross-critique ----------
@@ -263,14 +312,30 @@ phase('Synthesis')
 // The chair composes from findings WITH their panel verdicts (so panel_summary and
 // rejected_suggestions are data-backed, not reconstructed), and the verdicts ship in the
 // run output so the orchestrator can persist them under verification/ (the audit record).
-const chairFindings = verified.filter(v => v.delivered).map(v => ({ ...v.finding, panel_verdicts: (v.verdicts || []).map(x => ({ angle: x.angle, verdict: x.verdict, reason: x.reason, suggested_revision: x.suggested_revision || null })) }))
-const synthesis = await agent(promptRef('06_chair_synthesis', { VERIFIED_FINDINGS_JSON: chairFindings, INTEGRATION_JSON: integration, PREMORTEM_JSON: premortemFindings, COVERAGE_JSON: coverage, REJECTED_JSON: rejected, REGISTER, RULES_PATH: PATHS.rules || '', RUBRIC_PATH: PATHS.rubric || '' }), { ...GP, label: 'chair:synthesis', phase: 'Synthesis', schema: SYNTHESIS })
+const allDelivered = verified.filter(v => v.delivered).map(v => ({ ...v.finding, panel_verdicts: (v.verdicts || []).map(x => ({ angle: x.angle, verdict: x.verdict, reason: x.reason, suggested_revision: x.suggested_revision || null })) }))
+// Contribution-undersell findings are NON-BLOCKING by construction: they reach the chair
+// through their own channel (never the main verified-findings input), feed ONLY the capped
+// contribution_memo, and can never enter the must-fix list (the strip below is code; keeping
+// them out of the verdict prose is the chair's instruction in 06). Their status is forced to
+// needs-author-confirmation in code: the author ratifies any bolder claim (rule 14).
+const contributionFindings = allDelivered.filter(f => f.finding_type === 'contribution-undersell')
+contributionFindings.forEach(f => { f.verification_status = 'needs-author-confirmation' })
+const chairFindings = allDelivered.filter(f => f.finding_type !== 'contribution-undersell')
+const synthesis = await agent(promptRef('06_chair_synthesis', { VERIFIED_FINDINGS_JSON: chairFindings, CONTRIBUTION_JSON: contributionFindings, INTEGRATION_JSON: integration, PREMORTEM_JSON: premortemFindings, COVERAGE_JSON: coverage, REJECTED_JSON: rejected, REGISTER, RULES_PATH: PATHS.rules || '', RUBRIC_PATH: PATHS.rubric || '' }), { ...GP, label: 'chair:synthesis', phase: 'Synthesis', schema: SYNTHESIS })
+// Enforce the non-blocking contract in code, not trust: an undersell id can never appear in
+// prioritized_findings, and the memo holds at most 3 items, each tracing to a DELIVERED
+// undersell finding (anything else is dropped, fail closed).
+const undersellIds = new Set(contributionFindings.map(f => f.id))
+synthesis.prioritized_findings = (synthesis.prioritized_findings || []).filter(p => !undersellIds.has(p.finding_id))
+synthesis.contribution_memo = (synthesis.contribution_memo || []).filter(m => undersellIds.has(m.finding_id)).slice(0, 3)
+log('Synthesis: ' + synthesis.prioritized_findings.length + ' prioritized findings + ' + synthesis.contribution_memo.length + ' contribution-memo items (non-blocking)')
 
 return {
   tier: TIER, register: REGISTER,
   roster: { paper_type: roster.paper_type, seats: roster.seats.length, generalists: roster.generalist_seats.length, central_tensions: roster.central_tensions, not_staffed: roster.not_staffed },
   counts: { raw_findings: findings.length, delivered: deliveredFindings.length, rejected: rejected.length },
   findings: chairFindings,
+  contribution_findings: contributionFindings,
   rejected_in_panel: rejected,
   integration,
   coverage,
