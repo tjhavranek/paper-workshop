@@ -66,11 +66,30 @@ the must-fix list — enforced in the Workflow script, not by instruction alone.
 one blind agent (two redundant agents at the heavy tiers) that reviews the findings in
 **batches** and returns a verdict *per finding*. So the panel costs
 `angles × ceil(#findings / batch) × redundancy` agents — **never `#findings × angles`**,
-which would explode with paper length. `quick` runs three angles (logical-validity,
+which would explode with paper length. The batch size defaults to 25 (20 at `exhaustive`,
+where the doubled redundancy already doubles each batch's reads; `args.batch` overrides,
+clamped at 30 against attention dilution — field-validated at 25 on a real thorough run).
+`quick` runs three angles (logical-validity,
 fix-safety, steelman-charity); `thorough` runs six; `exhaustive`/`monumental` run all
 seven with two redundant agents per angle (majority within an angle). The angle's
 independence is preserved (one agent owns one angle, blind to the others); only the
-wasteful one-agent-per-finding-per-angle fan-out is removed.
+wasteful one-agent-per-finding-per-angle fan-out is removed. The same shape applies in
+Act II since v0.7.0: edit verification is batched by angle ACROSS edits
+(`args.verify_batch`, default 12), never fanned out per edit.
+
+**The span-diet (experimental, opt-in inside the economy register only).** With
+`span_diet: true`, the local-judgment angles (logical-validity, severity-calibration,
+decision-relevance, fix-safety, factual-literature) read a per-batch EXCERPT file (each
+finding's quote plus its surrounding context, copied verbatim by a slicer agent) and the
+neutral precis instead of re-reading the full manuscript — the largest single input
+saving on a long paper. The rails do not move: `quote-locator` still runs the
+deterministic gate against the FULL paper.txt (the script reads the file, never the
+agent), and `steelman-charity` ALWAYS receives the full manuscript in every mode, because
+its question — does the paper already address this elsewhere? — is unanswerable from an
+excerpt. A diet verifier that cannot adjudicate confidently from its excerpt is
+instructed to return `cant-tell`, which the aggregator treats as fail-closed (never a
+pass); a missing excerpt file falls back to the full text for that batch. Unvalidated so
+far (no measured recall delta); that is why it is opt-in and labeled, not a default.
 
 ## Act II — angles applied to every edit (in addition to the Act-I angles on the originating finding)
 

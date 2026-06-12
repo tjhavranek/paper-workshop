@@ -122,12 +122,14 @@ to orchestrate those same subagent phases more efficiently; if they're off, Symp
 Summit run at Workshop depth and CRUCIBLE tells you rather than downgrading silently. **Desk
 Review** needs neither, so it works anywhere. CRUCIBLE
 runs at full power on Max, with nothing capped. Either engine's agents inherit the orchestrating
-session's model and context, so dynamic workflows do not bypass the one account caveat: a
+session's model and context by default (the opt-in economy register below is the one
+exception), so dynamic workflows do not bypass the one account caveat: a
 large-context (1M) session may need usage credits enabled for that tier, or just run the session
 on a standard-context model (`/model sonnet`), which keeps the methodology identical. Neither
 weakens the tool (see [`helpers/doctor.md`](helpers/doctor.md)).
 
-**Running on Claude Fable 5 (mythos-class).** That same inheritance means starting the session on
+**Running on Claude Fable 5 (mythos-class).** In the default mode, that same inheritance means
+starting the session on
 Claude Fable 5 (Anthropic's mythos-class tier, the class above Opus) lifts every seat, verifier,
 and chair to that capability with no configuration: select it with `/model best` in Claude Code
 v2.1.170 or later, which picks Fable where your plan has it and the latest Opus where it does not.
@@ -146,6 +148,22 @@ defense only, not training) and zero-data-retention is not available, which matt
 unpublished manuscripts (see [`helpers/safety_notes.md`](helpers/safety_notes.md)). It is priced at
 twice Opus. The workshop runs unchanged on Opus and Sonnet; the methodology does not depend on the
 model tier.
+
+**Running on a usage-constrained plan: the economy register.** A default Workshop run inherits
+the session model into every agent, and on Fable that can exhaust a usage-capped plan's window
+before the run finishes — a locked-out run delivers zero findings. Saying "economy" casts the
+fleet in two tiers instead: judgment layers (seats, generalists, premortem, integrators, the
+verification panel, Act II's runner/triage/reconciler/package) at the Opus floor, mechanical
+phases (cartography, grounding, gate relays, completeness, Act II intake/staging/disclosure)
+on Sonnet, with the scout, the chair, and Act II's scribes always at the session model. Every
+deterministic rail is unchanged, the cast is recorded in `meta.json` and stated in the report
+header, and an unavailable model falls back to inheritance with the fallback logged. The
+measured anchor so far: one real Workshop-band field run at this cast recorded its 37-agent
+tribunal workflow at 3.70M subagent tokens in 55 minutes (Act I totaled 39 agents and
+delivered a 60-finding verified ledger, 11 High) — well
+inside a Max-plan window. That is one run's evidence, not blind validation; see
+[`LIMITATIONS.md`](LIMITATIONS.md). The pre-flight (`helpers/doctor.md`) shows a cost preview
+and offers economy before any Workshop-or-larger launch, so the choice is informed either way.
 
 ## Install
 

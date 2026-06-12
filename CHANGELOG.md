@@ -1,5 +1,83 @@
 # Changelog
 
+## v0.7.0 — 2026-06-12
+
+The economy register: the workshop now fits a usage-capped plan without trading away a single
+rail. Motivated by a real failure (a default all-Fable Workshop exhausted a Max-20 window in
+about two hours, mid-run) and two owner field patches that fixed it ad hoc; designed through a
+three-position adversarial debate (token-economy engineer / quality guardian / maintainer,
+brief-seeded, chair hunches withheld) with a fresh-context judge, whose minority report (the
+engineer's case for flipping the default and for a Sonnet panel) is preserved in the project
+records for re-adjudication once blind-validation data exists.
+
+- **The `economy` register (opt-in, always disclosed; the default is unchanged session-model
+  inheritance).** `economy: true` casts the fleet in two tiers: judgment layers (specialist
+  seats, generalists, premortem, cross-critique integrators, the verification panel, and Act
+  II's runner, triage, reconciler, package) at the Opus floor, never below; mechanical phases
+  (cartography, grounding, gate relays, completeness, Act II intake/staging/disclosure) on
+  Sonnet; the scout, the chair, and Act II's scribes ALWAYS at the session model (both field
+  runs independently kept them there under explicit cost pressure). Every deterministic rail is
+  identical in both modes. Field anchor (one run, disclosed as such): Act I at this cast = 39
+  agents in total, its 37-agent tribunal workflow recorded at 3.70M subagent tokens in 55
+  minutes, 60 delivered findings (11 High), full claim and
+  sentence coverage.
+- **Fail-safe casting, in code.** A spawn that returns nothing under a model override (a
+  terminal API death, or a user skip — the engine cannot distinguish the two, so a skipped
+  cast agent is re-run once at the session model and logged) retries once WITHOUT
+  the override and logs the fallback (`casting.degraded_casting`) — a plan missing a mapped
+  tier completes the run instead of crashing. The applied cast never silently upgrades. A raw
+  `models` role→map remains as a power-user escape hatch; such runs are labeled `custom` and
+  documented as unvalidated.
+- **Casting disclosure is part of the record.** Both workflows return a machine-readable
+  `casting` object (mode, role→model map, degraded fallbacks, caps, batch sizes) that the
+  orchestrator persists to `meta.json`; whenever the mode is not `inherit`, the report header
+  states the role-class cast in one sentence, and the brand sentence ("a Fable session runs
+  every seat at that level") is now explicitly conditional on the default mode (SKILL.md,
+  README, doctor.md, orchestration.md all updated). The doctor's end-of-run re-check now also
+  covers the effective casting of inherited roles after a mid-run model migration.
+- **The doctor now actively offers economy.** Pre-flight pairs the existing agent-count cost
+  preview with a one-line economy offer before any Workshop-or-larger launch on a
+  usage-capped Fable session — a locked-out run delivers zero findings, so the lockout becomes
+  an informed choice rather than a surprise. Plus an availability note for mapped tiers and a
+  notation-heavy-paper heuristic (keep cartography at the session model when extraction
+  fidelity is load-bearing, since the quote gate matches against paper.txt).
+- **Structural defaults tightened inside already-published claims (both modes).** The
+  verification batch defaults to 25 (20 at exhaustive; `args.batch` clamped at 30) — the
+  documented 15–25 range's upper end, field-validated; each seat now carries a standing
+  findings-budget note making the long-published "at most ~8 findings" real (8 seats / 6
+  generalists; 5/4 under economy; premortem and close-readers exempt); under economy the scout
+  casts the lower Workshop band (8–12 specialists) with rival pairs and the engine-injected
+  contribution floor never trimmed.
+- **Act II restructured (every mode): Runners parallel, Scribes sequential, verification
+  batched by angle across edits.** The original per-edit pipeline ran scribes concurrently
+  against ONE working copy on ONE git branch — a real race on the file and the commit
+  history, caught and fixed in the owner's field patch and now the engine default — and
+  fanned verifiers out per edit (edits × angles agents). Verification now costs
+  angles × ceil(edits/`verify_batch`) with identical fail-closed `decideEdit()` gating;
+  scribes apply edits in ordered batches (`scribe_batch`, default 5), one commit per edit.
+- **Span-diet (experimental, opt-in inside economy only).** `span_diet: true` lets the
+  local-judgment panel angles read per-batch verbatim excerpts (quote + surrounding context,
+  staged by a slicer agent) plus the precis instead of re-reading the full manuscript;
+  quote-locator's deterministic gate still runs against the FULL paper.txt, steelman-charity
+  keeps the full manuscript in every mode, a diet verifier that cannot adjudicate returns
+  cant-tell (fail-closed), and a missing excerpt falls back to the full text. Unvalidated, so
+  off by default and listed as a validation arm in LIMITATIONS.
+- **Budget-target integration.** A harness token target (a "+500k"-style budget) auto-enables
+  economy plus a small deterministic ladder — tighten the findings caps, raise the batch
+  toward the clamp — with every action logged to `budget_actions`; the ladder never
+  model-downgrades judgment layers below the economy floor. `economy: false` opts out.
+- **Gate relays stop reading the manuscript.** Both relay prompts now state what was always
+  the design: the Python gate reads the source file from disk; the agent passes paths and
+  returns the script's JSON verbatim. Pure waste removal, no rail change.
+- **Supersedes the v0.4.0 deliberate non-change on per-agent model casting** (recorded below,
+  kept intact). Its premise is stale: the per-agent `model` option is now documented public
+  API on both the Agent tool and the Workflow engine's `agent()` call. The other half of that
+  v0.4.0 caveat still stands and is restated in LIMITATIONS: no cross-tier quality or
+  decorrelation benefit is measured yet, which is why economy is opt-in, the deeper cuts
+  (Sonnet panel, Sonnet generalists, Haiku relays, span-diet, economy-as-default) are named
+  validation arms rather than defaults, and the blind-validation harness remains the
+  project's top queued item.
+
 ## v0.6.0 — 2026-06-11
 
 The contribution wing: the workshop now argues FOR the paper as rigorously as it argues

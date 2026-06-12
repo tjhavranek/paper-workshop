@@ -87,6 +87,18 @@ adversarial cross-review during development.
   anything guarantee the scout searched the right corners: which "overlooked" works
   surface is itself a model judgment. Leads are kept outside the staged-sources tree so
   seats and verifiers never read them as evidence.
+- **The economy register is field-tested once, not blind-validated.** The economy casting map
+  (judgment layers at the Opus floor, mechanical phases on Sonnet, scout/chair/scribes at the
+  session model) matches one real Workshop-band run that delivered a strong verified ledger
+  (60 findings, 11 High, full claim and sentence coverage); that run's record shows 3.70M
+  subagent tokens and 55 minutes for its 37-agent tribunal workflow, 39 Act I agents in
+  total. That is evidence of plan survival with output strength preserved on ONE paper — not
+  measured recall/false-positive parity with the full-power default. Open validation arms, none
+  of which becomes a default or is documented safe before its arm passes: a Sonnet verification
+  panel (full and per-angle variants), Sonnet generalists, Haiku gate relays (a deterministic
+  row-parity check), the panel span-diet (excerpts instead of the full manuscript for the
+  local-judgment angles), and flipping economy to the default. Custom `models` maps beyond the
+  shipped economy cast are entirely unvalidated and run labeled `custom`.
 - **A self-audit is a development pass, not independent validation.** The example in this repo
   is the tool reviewing its own design; that is a closed loop and we label it as such.
 
@@ -95,7 +107,9 @@ adversarial cross-review during development.
    README with the number. Extend its design with two contribution-side arms before it
    runs: **undersell-recall** (papers with known under-claimed contributions seeded; does
    the memo recover them?) and **consensus-deference** (seeded flaws that contradict
-   field-standard methods; do seats defer to convention?).
+   field-standard methods; do seats defer to convention?). Add the casting arms listed
+   above (economy vs full power, Sonnet panel, Sonnet generalists, Haiku relays,
+   span-diet) to the same harness.
 2. End-to-end Act-II runs on **independent third-party** papers. The first end-to-end
    demonstration is done (`examples/incentives-workshop/phase2_true/`, both the Stata and R
    paths re-executed); broad, independent field-proofing is the next step.

@@ -22,6 +22,44 @@ const TIER = A.tier || 'thorough'
 const REGISTER = A.register || 'supportive'
 const PROMPTS_DIR = PATHS.prompts_dir || ''
 
+// ---------- casting (economy register; the default is session-model inheritance) ----------
+// Default behavior is unchanged: no opts.model is set anywhere, so every agent inherits the
+// session model. `economy: true` (or a user token target via the harness `budget` global)
+// loads the field-validated casting map: judgment layers (seats, generalists, premortem,
+// integrators, verification panel) at the Opus floor, mechanical phases (cartography,
+// grounding, gate relays, completeness) at Sonnet; the scout and the chair ALWAYS inherit
+// the session model (deliberately absent from the map). `models` overrides per role
+// (custom casting; an unvalidated map is the caller's responsibility and is labeled
+// `custom` in the run record). Fail-safe: a spawn that returns nothing under a model
+// override (a terminal API death OR a user skip; the engine cannot tell them apart) is
+// retried once WITHOUT the override and the fallback is logged to `degraded_casting`, so a
+// plan missing a mapped tier completes the run instead of crashing at spawn.
+const BUDGETED = typeof budget !== 'undefined' && budget && budget.total != null
+const ECON = A.economy === true || (BUDGETED && A.economy !== false)
+const ECONOMY_MAP = { carto: 'sonnet', ground: 'sonnet', gate: 'sonnet', completeness: 'sonnet', slice: 'sonnet', seat: 'opus', generalist: 'opus', premortem: 'opus', integrate: 'opus', verify: 'opus' }
+const MODELS = A.models || (ECON ? ECONOMY_MAP : {})
+const CASTING_MODE = A.models ? 'custom' : (ECON ? 'economy' : 'inherit')
+const DEGRADED = []
+const BUDGET_ACTIONS = []
+const M = k => (MODELS[k] ? { model: MODELS[k] } : {})
+async function cast(role, prompt, opts) {
+  const m = M(role)
+  let r = await agent(prompt, { ...opts, ...m })
+  if (r === null && m.model) {
+    DEGRADED.push({ role, label: opts.label || role, tried: m.model, fell_back_to: 'inherit' })
+    r = await agent(prompt, opts)
+  }
+  return r
+}
+// Findings caps: a standing budget note appended to the seat prompts (a soft instruction,
+// never a hard truncation; the premortem and the close-reader coverage sweeps are exempt).
+// 8/6 makes the long-published "at most ~8 findings" claim real; 5/4 are the
+// field-validated economy values.
+let SEAT_CAP = A.max_seat_findings || (ECON ? 5 : 8)
+let GEN_CAP = A.max_generalist_findings || (ECON ? 4 : 6)
+const capNote = n => '\nFINDINGS BUDGET (from the orchestrator, binding): return AT MOST ' + n + ' findings, your most decision-relevant ones. Prefer one High that moves a conclusion over several Lows.'
+const SPAN_DIET = ECON && A.span_diet === true // experimental, opt-in; see helpers/verification_panel.md
+
 // Each seat/verifier reads its OWN prompt template from the installed skill and applies
 // the given substitutions to that file's {{TOKEN}} placeholders. Keeps args tiny and makes
 // the skill self-contained (it loads its own prompts from disk; nothing is inlined).
@@ -87,7 +125,7 @@ if (PATHS.paper_txt_path) {
   carto = { paper_txt_path: PATHS.paper_txt_path, inventory_path: PATHS.inventory_path, sentence_map_path: PATHS.sentence_map_path, precis_path: PATHS.precis_path, source_manifest_path: PATHS.source_manifest_path || '', n_claims: A.n_claims || 0, n_sentences: A.n_sentences || 0 }
   log('Cartography: using pre-staged substrate at ' + carto.paper_txt_path)
 } else {
-  carto = await agent('Read the paper at ' + A.pdf_path + ' (PDF or text). Following the method in ' + PATHS.helpers_dir + '/pdf_extraction.md, write into ' + PATHS.session + '/cartography: paper.txt (verbatim full text — do NOT paraphrase; the quote-gate matches against it), claim_inventory.json, sentence_map.json (disjoint, gapless sentence ranges with ids), precis.md (neutral, no praise/critique), source_manifest.json. Return the paths and counts.', { ...GP, label: 'cartography', phase: 'Cartography', schema: CARTO })
+  carto = await cast('carto', 'Read the paper at ' + A.pdf_path + ' (PDF or text). Following the method in ' + PATHS.helpers_dir + '/pdf_extraction.md, write into ' + PATHS.session + '/cartography: paper.txt (verbatim full text — do NOT paraphrase; the quote-gate matches against it), claim_inventory.json, sentence_map.json (disjoint, gapless sentence ranges with ids), precis.md (neutral, no praise/critique), source_manifest.json. Return the paths and counts.', { ...GP, label: 'cartography', phase: 'Cartography', schema: CARTO })
   log('Cartography: ' + carto.n_claims + ' claims, ' + carto.n_sentences + ' sentences')
 }
 const seatPaths = { PAPER_TXT_PATH: carto.paper_txt_path, INVENTORY_PATH: carto.inventory_path, PRECIS_PATH: carto.precis_path, RULES_PATH: PATHS.rules || '', RUBRIC_PATH: PATHS.rubric || '', STAGED_SOURCES_DIR: PATHS.staged_sources || '(none)', QUOTE_GATE_PATH: PATHS.quote_gate || '' }
@@ -99,7 +137,10 @@ if (A.roster) {
   roster = A.roster
   log('Roster: using author-approved roster (' + roster.seats.length + ' seats + ' + roster.generalist_seats.length + ' generalists)')
 } else {
-  roster = await agent(promptRef('00_scout_roster', { BRIEF_PATH: PATHS.brief || '', PAPER_TXT_PATH: carto.paper_txt_path, INVENTORY_PATH: carto.inventory_path, PRECIS_PATH: carto.precis_path, TIER }), { ...GP, label: 'scout:roster', phase: 'Roster', schema: ROSTER })
+  // The economy register casts the lower Workshop band; rival pairs are never reduced to a
+  // single seat and the contribution floor below still injects regardless of the trim.
+  const econBand = (ECON && TIER === 'thorough') ? '\nECONOMY REGISTER (from the orchestrator, binding): cast 8-12 specialist seats (the lower Workshop band). Never reduce a rival pair to a single seat; the contribution pair stays; list anything you could not staff in not_staffed.' : ''
+  roster = await cast('scout', promptRef('00_scout_roster', { BRIEF_PATH: PATHS.brief || '', PAPER_TXT_PATH: carto.paper_txt_path, INVENTORY_PATH: carto.inventory_path, PRECIS_PATH: carto.precis_path, TIER }) + econBand, { ...GP, label: 'scout:roster', phase: 'Roster', schema: ROSTER })
   log('Roster: ' + roster.paper_type.join('+') + ' — ' + roster.seats.length + ' seats + ' + roster.generalist_seats.length + ' generalists')
 }
 // Contribution floor, enforced in code on the Workflow path (the scout's prompt also
@@ -131,8 +172,8 @@ if (A.ground !== false && carto.source_manifest_path) {
   // mandate (the consensus citations are the related-work expert's home turf already), and
   // fetch-or-drop by rule: a work it could not actually open never becomes citable evidence.
   const nRel = TIER === 'monumental' ? 12 : TIER === 'exhaustive' ? 8 : TIER === 'quick' ? 0 : 5
-  const groundTasks = [() => agent('Ground the most load-bearing cited works so reviewers can check this paper\'s claims about the literature against the ORIGINALS, not memory.\nRead the source manifest at ' + carto.source_manifest_path + ' . For up to ' + nSrc + ' of the MOST decision-critical cited works, use WebSearch/WebFetch to locate the actual source. For each, write a short note to ' + stagedDir + '/<slug>.md capturing (a) the citation, (b) what THIS paper claims it shows (from the manifest), and (c) what the source ACTUALLY says about that claim, with a verbatim quote where obtainable, or "could not verify (not reachable)" otherwise. Create the directory first. SAFETY: search ONLY for the cited work using its public bibliographic details (authors, title, year); do NOT transmit this paper\'s own unpublished results, numbers, or wording to any search. NEVER fabricate what a source says. Return the count of notes written and any claim where the paper appears to MISSTATE its source.', { ...GP, label: 'ground-sources', phase: 'Ground', schema: { type: 'object', additionalProperties: false, properties: { notes_written: { type: 'integer' }, possible_misstatements: { type: 'array', items: { type: 'string' } } }, required: ['notes_written'] } })]
-  if (nRel > 0) groundTasks.push(() => agent('Scout RELATED literature this paper does NOT cite, hunting the idiosyncratic and the overlooked: read the precis at ' + carto.precis_path + ' and the manifest at ' + carto.source_manifest_path + ' (to know what IS cited), then use WebSearch/WebFetch to find up to ' + nRel + ' relevant works the paper never cites. ANTI-POPULARITY MANDATE: deliberately prefer adjacent fields, older work (pre-2000), working-paper series, and non-US journals; a top-cited mainstream hit the related-work expert would already know earns its place only if it is directly load-bearing. FETCH-OR-DROP RULE (strict): a work becomes a staged note ONLY if you actually OPENED its text (full text or a substantial accessible portion) in this run; for each such work write ' + stagedDir + '/related/<slug>.md with (a) the full citation and the URL/DOI you fetched, (b) why it matters to THIS paper (one paragraph), and (c) what it actually says, with at least one verbatim quote. A work you could NOT open may be listed in ' + ((PATHS.session || '.') + '/related_leads.md') + ' (title, venue, DOI/URL, one-line reason) ONLY if its DOI or URL resolved during your search; that file lives OUTSIDE the staged-sources tree on purpose (leads were not read, so seats and verifiers must never see them as evidence) and is surfaced to the author in the report bundle only. Create directories first. SAFETY: search ONLY with public topic keywords and bibliographic details; do NOT transmit this paper\'s own unpublished results, numbers, or wording to any search. NEVER fabricate what a source says. Return counts.', { ...GP, label: 'ground-related', phase: 'Ground', schema: { type: 'object', additionalProperties: false, properties: { notes_written: { type: 'integer' }, leads_listed: { type: 'integer' } }, required: ['notes_written'] } }))
+  const groundTasks = [() => cast('ground', 'Ground the most load-bearing cited works so reviewers can check this paper\'s claims about the literature against the ORIGINALS, not memory.\nRead the source manifest at ' + carto.source_manifest_path + ' . For up to ' + nSrc + ' of the MOST decision-critical cited works, use WebSearch/WebFetch to locate the actual source. For each, write a short note to ' + stagedDir + '/<slug>.md capturing (a) the citation, (b) what THIS paper claims it shows (from the manifest), and (c) what the source ACTUALLY says about that claim, with a verbatim quote where obtainable, or "could not verify (not reachable)" otherwise. Create the directory first. SAFETY: search ONLY for the cited work using its public bibliographic details (authors, title, year); do NOT transmit this paper\'s own unpublished results, numbers, or wording to any search. NEVER fabricate what a source says. Return the count of notes written and any claim where the paper appears to MISSTATE its source.', { ...GP, label: 'ground-sources', phase: 'Ground', schema: { type: 'object', additionalProperties: false, properties: { notes_written: { type: 'integer' }, possible_misstatements: { type: 'array', items: { type: 'string' } } }, required: ['notes_written'] } })]
+  if (nRel > 0) groundTasks.push(() => cast('ground', 'Scout RELATED literature this paper does NOT cite, hunting the idiosyncratic and the overlooked: read the precis at ' + carto.precis_path + ' and the manifest at ' + carto.source_manifest_path + ' (to know what IS cited), then use WebSearch/WebFetch to find up to ' + nRel + ' relevant works the paper never cites. ANTI-POPULARITY MANDATE: deliberately prefer adjacent fields, older work (pre-2000), working-paper series, and non-US journals; a top-cited mainstream hit the related-work expert would already know earns its place only if it is directly load-bearing. FETCH-OR-DROP RULE (strict): a work becomes a staged note ONLY if you actually OPENED its text (full text or a substantial accessible portion) in this run; for each such work write ' + stagedDir + '/related/<slug>.md with (a) the full citation and the URL/DOI you fetched, (b) why it matters to THIS paper (one paragraph), and (c) what it actually says, with at least one verbatim quote. A work you could NOT open may be listed in ' + ((PATHS.session || '.') + '/related_leads.md') + ' (title, venue, DOI/URL, one-line reason) ONLY if its DOI or URL resolved during your search; that file lives OUTSIDE the staged-sources tree on purpose (leads were not read, so seats and verifiers must never see them as evidence) and is surfaced to the author in the report bundle only. Create directories first. SAFETY: search ONLY with public topic keywords and bibliographic details; do NOT transmit this paper\'s own unpublished results, numbers, or wording to any search. NEVER fabricate what a source says. Return counts.', { ...GP, label: 'ground-related', phase: 'Ground', schema: { type: 'object', additionalProperties: false, properties: { notes_written: { type: 'integer' }, leads_listed: { type: 'integer' } }, required: ['notes_written'] } }))
   const gRes = await parallel(groundTasks) // positional: [cited, related?]; a failed thunk is null
   const citedGrounded = gRes[0] ? (gRes[0].notes_written || 0) : 0
   const relGrounded = (groundTasks.length > 1 && gRes[1]) ? (gRes[1].notes_written || 0) : 0
@@ -144,18 +185,24 @@ seatPaths.STAGED_SOURCES_DIR = grounded > 0 ? stagedDir : (PATHS.staged_sources 
 
 // ---------- PHASE D: Specialists (blind, independent) ----------
 phase('Specialists')
+// budget checkpoint (heuristic threshold): with a user token target running low before the
+// fleet launches, tighten the findings caps one notch and log it — never silently.
+if (BUDGETED && budget.remaining() < 1500000) {
+  SEAT_CAP = Math.min(SEAT_CAP, 4); GEN_CAP = Math.min(GEN_CAP, 3)
+  BUDGET_ACTIONS.push('findings caps tightened to ' + SEAT_CAP + '/' + GEN_CAP + ' (' + Math.round(budget.remaining() / 1000) + 'k tokens remaining before Specialists)')
+}
 const seatTasks = []
-roster.seats.forEach(s => seatTasks.push(() => agent(promptRef('01_specialist_seat', { ...seatPaths, SEAT_JSON: s }), { ...GP, label: ('seat:' + s.seat_id).slice(0, 56), phase: 'Specialists', schema: FINDINGS }).then(r => tag(r, s.seat_id, s.tradition))))
-roster.generalist_seats.forEach(g => seatTasks.push(() => agent(promptRef('02_generalist_seat', { ...seatPaths, FUNCTION: g.function }), { ...GP, label: ('gen:' + g.function).slice(0, 56), phase: 'Specialists', schema: FINDINGS }).then(r => tag(r, g.seat_id, g.function + '-generalist'))))
+roster.seats.forEach(s => seatTasks.push(() => cast('seat', promptRef('01_specialist_seat', { ...seatPaths, SEAT_JSON: s }) + capNote(SEAT_CAP), { ...GP, label: ('seat:' + s.seat_id).slice(0, 56), phase: 'Specialists', schema: FINDINGS }).then(r => tag(r, s.seat_id, s.tradition))))
+roster.generalist_seats.forEach(g => seatTasks.push(() => cast('generalist', promptRef('02_generalist_seat', { ...seatPaths, FUNCTION: g.function }) + capNote(GEN_CAP), { ...GP, label: ('gen:' + g.function).slice(0, 56), phase: 'Specialists', schema: FINDINGS }).then(r => tag(r, g.seat_id, g.function + '-generalist'))))
 // desk-reject pre-mortem (verbatim, exempt from chair)
 // the workflow, not the agent, owns the kill-shot routing label: force-overwrite the
 // tradition/seat_id (tag() only backfills, and the schema makes the agent supply its own)
-seatTasks.push(() => agent(promptRef('03_premortem', { PAPER_TXT_PATH: carto.paper_txt_path, PRECIS_PATH: carto.precis_path, RULES_PATH: PATHS.rules || '', RUBRIC_PATH: PATHS.rubric || '' }), { ...GP, label: 'premortem', phase: 'Specialists', schema: FINDINGS }).then(r => { ((r && r.findings) || []).forEach(f => { f.tradition = 'desk-reject-premortem'; f.seat_id = 'S-premortem' }); return tag(r, 'S-premortem', 'desk-reject-premortem') }))
+seatTasks.push(() => cast('premortem', promptRef('03_premortem', { PAPER_TXT_PATH: carto.paper_txt_path, PRECIS_PATH: carto.precis_path, RULES_PATH: PATHS.rules || '', RUBRIC_PATH: PATHS.rubric || '' }), { ...GP, label: 'premortem', phase: 'Specialists', schema: FINDINGS }).then(r => { ((r && r.findings) || []).forEach(f => { f.tradition = 'desk-reject-premortem'; f.seat_id = 'S-premortem' }); return tag(r, 'S-premortem', 'desk-reject-premortem') }))
 // close-reader sweeps at the heavy tiers (sentence-coverage invariant)
 const sweeps = (TIER === 'exhaustive' || TIER === 'monumental') ? Math.min(40, Math.max(1, Math.ceil((carto.n_sentences || 0) / 40))) : 0
 for (let i = 0; i < sweeps; i++) {
   const seat = { seat_id: 'S-closeread-' + i, role_title: 'Close reader', tradition: 'line-by-line close reading', objective_function: 'neutral-audit', jurisdiction: 'sentence ranges block ' + i + ' (read sentence_map.json, review ranges [' + (i * 40) + ',' + ((i + 1) * 40) + ') and return covered_ranges)', justifying_quote: '(coverage sweep)', rival_of: null, out_of_scope: 'other blocks', owned_claim_ids: [] }
-  seatTasks.push(() => agent(promptRef('01_specialist_seat', { ...seatPaths, SEAT_JSON: { ...seat, sentence_map_path: carto.sentence_map_path } }) + '\nALSO: read the sentence map at ' + carto.sentence_map_path + ' and return covered_ranges = the list of sentence-range ids you reviewed.', { ...GP, label: 'closeread:' + i, phase: 'Specialists', schema: FINDINGS }).then(r => tag(r, seat.seat_id, seat.tradition)))
+  seatTasks.push(() => cast('seat', promptRef('01_specialist_seat', { ...seatPaths, SEAT_JSON: { ...seat, sentence_map_path: carto.sentence_map_path } }) + '\nALSO: read the sentence map at ' + carto.sentence_map_path + ' and return covered_ranges = the list of sentence-range ids you reviewed.', { ...GP, label: 'closeread:' + i, phase: 'Specialists', schema: FINDINGS }).then(r => tag(r, seat.seat_id, seat.tradition)))
 }
 function tag(r, seatId, tradition) {
   const fs = (r && r.findings) || []
@@ -174,7 +221,7 @@ log('Specialists: ' + findings.length + ' raw findings from ' + seatResults.leng
 // ---------- Quote-gate ----------
 phase('Quote-gate')
 if (findings.length) {
-  const gate = await agent('Write this findings JSON to a temp file and run the deterministic quote gate against the manuscript text, then return its JSON result array verbatim.\nFINDINGS: ' + JSON.stringify({ findings }) + '\nRun: python "' + (PATHS.quote_gate || '') + '" batch --source-file "' + carto.paper_txt_path + '" --findings <tempfile>\nNOTE: the script exits 2 whenever any finding fails to match; that exit code is expected output, not an error. Do not retry; return its JSON verbatim.\nReturn exactly the script\'s JSON output (array of {id, matched, match_level, severity_hint}).', { ...GP, label: 'quote-gate', phase: 'Quote-gate', schema: { type: 'object', additionalProperties: false, properties: { results: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { id: { type: 'string' }, matched: { type: 'boolean' }, match_level: { type: 'string' }, severity_hint: { type: 'string' } }, required: ['id', 'matched', 'match_level'] } } }, required: ['results'] } })
+  const gate = await cast('gate', 'Write this findings JSON to a temp file and run the deterministic quote gate against the manuscript text, then return its JSON result array verbatim.\nFINDINGS: ' + JSON.stringify({ findings }) + '\nRun: python "' + (PATHS.quote_gate || '') + '" batch --source-file "' + carto.paper_txt_path + '" --findings <tempfile>\nNOTE: the script exits 2 whenever any finding fails to match; that exit code is expected output, not an error. Do not retry; return its JSON verbatim.\nDo NOT read the manuscript file into your context: the script reads it from disk; you only pass its path.\nReturn exactly the script\'s JSON output (array of {id, matched, match_level, severity_hint}).', { ...GP, label: 'quote-gate', phase: 'Quote-gate', schema: { type: 'object', additionalProperties: false, properties: { results: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { id: { type: 'string' }, matched: { type: 'boolean' }, match_level: { type: 'string' }, severity_hint: { type: 'string' } }, required: ['id', 'matched', 'match_level'] } } }, required: ['results'] } })
   const byId = {}
   ;((gate && gate.results) || []).forEach(r => { byId[r.id] = r })
   // FAIL CLOSED: a finding the gate result does not cover (a dropped/truncated relay row)
@@ -193,7 +240,7 @@ if (findings.length) {
 const absenceClass = f => f.finding_type === 'absence-silence' || f.finding_type === 'contribution-undersell'
 const absenceFindings = findings.filter(absenceClass)
 if (absenceFindings.length && PATHS.absence_gate) {
-  const agate = await agent('Write this findings JSON to a temp file and run the deterministic absence gate against the manuscript text, then return its JSON result array verbatim.\nFINDINGS: ' + JSON.stringify({ findings: absenceFindings }) + '\nRun: python "' + PATHS.absence_gate + '" batch --source-file "' + carto.paper_txt_path + '" --findings <tempfile>\nNOTE: the script exits 2 whenever any finding is not certified absent; that exit code is expected output, not an error. Do not retry; return its JSON verbatim.\nReturn exactly the script\'s JSON output (array of {id, certified, terms_searched, hits}).', { ...GP, label: 'absence-gate', phase: 'Quote-gate', schema: { type: 'object', additionalProperties: false, properties: { results: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { id: { type: 'string' }, certified: { type: 'string' }, terms_searched: { type: 'integer' }, hits: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { term: { type: 'string' }, count: { type: 'integer' }, snippets: { type: 'array', items: { type: 'string' } } }, required: ['term', 'count'] } } }, required: ['id', 'certified'] } } }, required: ['results'] } })
+  const agate = await cast('gate', 'Write this findings JSON to a temp file and run the deterministic absence gate against the manuscript text, then return its JSON result array verbatim.\nFINDINGS: ' + JSON.stringify({ findings: absenceFindings }) + '\nRun: python "' + PATHS.absence_gate + '" batch --source-file "' + carto.paper_txt_path + '" --findings <tempfile>\nNOTE: the script exits 2 whenever any finding is not certified absent; that exit code is expected output, not an error. Do not retry; return its JSON verbatim.\nDo NOT read the manuscript file into your context: the script reads it from disk; you only pass its path.\nReturn exactly the script\'s JSON output (array of {id, certified, terms_searched, hits}).', { ...GP, label: 'absence-gate', phase: 'Quote-gate', schema: { type: 'object', additionalProperties: false, properties: { results: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { id: { type: 'string' }, certified: { type: 'string' }, terms_searched: { type: 'integer' }, hits: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { term: { type: 'string' }, count: { type: 'integer' }, snippets: { type: 'array', items: { type: 'string' } } }, required: ['term', 'count'] } } }, required: ['id', 'certified'] } } }, required: ['results'] } })
   const aById = {}
   ;((agate && agate.results) || []).forEach(r => { aById[r.id] = r })
   let absent = 0
@@ -213,7 +260,7 @@ if (absenceFindings.length && PATHS.absence_gate) {
 // ---------- PHASE E: Cross-critique ----------
 phase('Cross-critique')
 const LENSES = ['value-maximizer', 'risk-minimizer', 'coherence']
-const integration = (await parallel(LENSES.map(L => () => agent(promptRef('04_cross_critique', { ALL_FINDINGS_JSON: findings, LENS: L, RULES_PATH: PATHS.rules || '' }), { ...GP, label: 'integrate:' + L, phase: 'Cross-critique', schema: INTEGRATION })))).filter(Boolean)
+const integration = (await parallel(LENSES.map(L => () => cast('integrate', promptRef('04_cross_critique', { ALL_FINDINGS_JSON: findings, LENS: L, RULES_PATH: PATHS.rules || '' }), { ...GP, label: 'integrate:' + L, phase: 'Cross-critique', schema: INTEGRATION })))).filter(Boolean)
 // corroboration diagnostic: how many DISTINCT seats independently raised a finding in the
 // same (section, finding-type) bucket — a proxy for cross-seat corroboration (not a raw count).
 const locKey = f => (f.location.section || '') + '|' + f.finding_type
@@ -228,14 +275,38 @@ Object.keys(seatSets).forEach(k => { counts[k] = seatSets[k].size })
 // angle/batch, never per-finding-per-angle), but agent count stays feasible.
 phase('Verification')
 const angles = anglesFor(TIER)
-const BATCH = (TIER === 'monumental' ? 25 : TIER === 'exhaustive' ? 20 : 15)
+// batch default 25 (20 at exhaustive, where REDUNDANCY=2 doubles each batch's reads),
+// clamped at 30 against attention dilution; field-validated at 25 on a thorough run.
+let BATCH = Math.min(30, A.batch || (TIER === 'exhaustive' ? 20 : 25))
+if (BUDGETED && budget.remaining() < 600000 && BATCH < 30) {
+  BATCH = 30
+  BUDGET_ACTIONS.push('verification batch raised to 30 (' + Math.round(budget.remaining() / 1000) + 'k tokens remaining before Verification)')
+}
 const batches = []
 for (let i = 0; i < findings.length; i += BATCH) batches.push(findings.slice(i, i + BATCH))
+// Span-diet (experimental, opt-in inside economy): the local-judgment angles read a
+// per-batch excerpt (each finding's quote plus its surrounding context) and the precis
+// instead of re-reading the full manuscript. quote-locator keeps the full path (the
+// deterministic gate reads the file itself, never the agent); steelman-charity ALWAYS
+// keeps the full text — its question is whether the paper addresses the point elsewhere.
+// Fail-safe: a missing excerpt file falls back to the full text for that batch.
+const DIET_ANGLES = new Set(['logical-validity', 'severity-calibration', 'decision-relevance', 'fix-safety', 'factual-literature'])
+const excerptByBatch = {}
+if (SPAN_DIET && batches.length) {
+  const excerptDir = (PATHS.session || '.') + '/verification'
+  const sl = await cast('slice', 'Build per-batch excerpt files for the verification panel. Read the manuscript at ' + carto.paper_txt_path + ' . For EACH batch below, write ' + excerptDir + '/excerpts_b<batch>.md containing, for every finding in that batch: its id, its quote VERBATIM, and the surrounding context (the full paragraph it sits in, or two sentences either side). Copy the manuscript text exactly: never paraphrase, never comment. Create the directory first. BATCHES (batch index -> findings):\n' + JSON.stringify(batches.map((b, i) => ({ batch: i, findings: b.map(f => ({ id: f.id, quote: f.quote, location: f.location })) }))) + '\nReturn the files written.', { ...GP, label: 'span-slicer', phase: 'Verification', schema: { type: 'object', additionalProperties: false, properties: { files: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { batch: { type: 'integer' }, path: { type: 'string' } }, required: ['batch', 'path'] } } }, required: ['files'] } })
+  ;((sl && sl.files) || []).forEach(f => { excerptByBatch[f.batch] = f.path })
+  log('Span-diet: ' + Object.keys(excerptByBatch).length + '/' + batches.length + ' excerpt files staged (missing batches fall back to the full text)')
+}
 const panelTasks = []
 angles.forEach(ang => batches.forEach((b, bi) => {
-  for (let k = 0; k < REDUNDANCY; k++) panelTasks.push(() =>
-    agent(promptRef('05_verification_panel', { ANGLE: ang, ANGLE_QUESTION: ANGLE_Q[ang], TARGETS_JSON: b, PAPER_TXT_PATH: carto.paper_txt_path, STAGED_SOURCES_DIR: seatPaths.STAGED_SOURCES_DIR, QUOTE_GATE_PATH: PATHS.quote_gate || '', RULES_PATH: PATHS.rules || '', RUBRIC_PATH: PATHS.rubric || '' }),
-      { ...GP, label: ('vfy:' + ang + ':b' + bi + (REDUNDANCY > 1 ? ':r' + k : '')).slice(0, 56), phase: 'Verification', schema: VERIF_BATCH }))
+  for (let k = 0; k < REDUNDANCY; k++) panelTasks.push(() => {
+    const dietPath = DIET_ANGLES.has(ang) ? excerptByBatch[bi] : null
+    const vars = { ANGLE: ang, ANGLE_QUESTION: ANGLE_Q[ang], TARGETS_JSON: b, PAPER_TXT_PATH: dietPath || carto.paper_txt_path, STAGED_SOURCES_DIR: seatPaths.STAGED_SOURCES_DIR, QUOTE_GATE_PATH: PATHS.quote_gate || '', RULES_PATH: PATHS.rules || '', RUBRIC_PATH: PATHS.rubric || '' }
+    if (dietPath) { vars.PRECIS_PATH = carto.precis_path; vars.CONTEXT_NOTE = 'span-diet batch: PAPER_TXT_PATH points to a per-batch EXCERPT (each finding\'s quote plus surrounding context), not the full manuscript; the precis at PRECIS_PATH gives global context. If the excerpt cannot support a confident verdict, return cant-tell; never guess.' }
+    return cast('verify', promptRef('05_verification_panel', vars),
+      { ...GP, label: ('vfy:' + ang + ':b' + bi + (REDUNDANCY > 1 ? ':r' + k : '')).slice(0, 56), phase: 'Verification', schema: VERIF_BATCH })
+  })
 }))
 const panelResults = (await parallel(panelTasks)).filter(Boolean)
 const verdictsById = {}
@@ -304,7 +375,7 @@ log('Verification: ' + deliveredFindings.length + ' findings cleared the panel; 
 
 // ---------- PHASE G: Completeness ----------
 phase('Completeness')
-const coverage = await agent(promptRef('07_completeness_audit', { CLAIM_INVENTORY_PATH: carto.inventory_path, SENTENCE_MAP_PATH: carto.sentence_map_path, COVERED_LOCATIONS_JSON: { covered_ranges: coveredRanges, finding_locations: deliveredFindings.map(f => f.location) }, COVERAGE_RUBRIC_PATH: PATHS.coverage_rubric || '' }), { ...GP, label: 'completeness', phase: 'Completeness', schema: COVERAGE })
+const coverage = await cast('completeness', promptRef('07_completeness_audit', { CLAIM_INVENTORY_PATH: carto.inventory_path, SENTENCE_MAP_PATH: carto.sentence_map_path, COVERED_LOCATIONS_JSON: { covered_ranges: coveredRanges, finding_locations: deliveredFindings.map(f => f.location) }, COVERAGE_RUBRIC_PATH: PATHS.coverage_rubric || '' }), { ...GP, label: 'completeness', phase: 'Completeness', schema: COVERAGE })
 log('Completeness: claims ' + coverage.claims_covered + '/' + coverage.claims_total + ', sentences ' + coverage.sentences_covered + '/' + coverage.sentences_total + ', reopen=' + coverage.reopen.length)
 
 // ---------- PHASE H: Synthesis ----------
@@ -321,7 +392,7 @@ const allDelivered = verified.filter(v => v.delivered).map(v => ({ ...v.finding,
 const contributionFindings = allDelivered.filter(f => f.finding_type === 'contribution-undersell')
 contributionFindings.forEach(f => { f.verification_status = 'needs-author-confirmation' })
 const chairFindings = allDelivered.filter(f => f.finding_type !== 'contribution-undersell')
-const synthesis = await agent(promptRef('06_chair_synthesis', { VERIFIED_FINDINGS_JSON: chairFindings, CONTRIBUTION_JSON: contributionFindings, INTEGRATION_JSON: integration, PREMORTEM_JSON: premortemFindings, COVERAGE_JSON: coverage, REJECTED_JSON: rejected, REGISTER, RULES_PATH: PATHS.rules || '', RUBRIC_PATH: PATHS.rubric || '' }), { ...GP, label: 'chair:synthesis', phase: 'Synthesis', schema: SYNTHESIS })
+const synthesis = await cast('chair', promptRef('06_chair_synthesis', { VERIFIED_FINDINGS_JSON: chairFindings, CONTRIBUTION_JSON: contributionFindings, INTEGRATION_JSON: integration, PREMORTEM_JSON: premortemFindings, COVERAGE_JSON: coverage, REJECTED_JSON: rejected, REGISTER, RULES_PATH: PATHS.rules || '', RUBRIC_PATH: PATHS.rubric || '' }), { ...GP, label: 'chair:synthesis', phase: 'Synthesis', schema: SYNTHESIS })
 // Enforce the non-blocking contract in code, not trust: an undersell id can never appear in
 // prioritized_findings, and the memo holds at most 3 items, each tracing to a DELIVERED
 // undersell finding (anything else is dropped, fail closed).
@@ -332,6 +403,10 @@ log('Synthesis: ' + synthesis.prioritized_findings.length + ' prioritized findin
 
 return {
   tier: TIER, register: REGISTER,
+  // The casting record: the orchestrator persists this to meta.json and, whenever mode is
+  // not 'inherit', states the role-class cast in the report header (grounding rule 15).
+  casting: { mode: CASTING_MODE, role_models: MODELS, degraded_casting: DEGRADED, span_diet: SPAN_DIET, seat_cap: SEAT_CAP, generalist_cap: GEN_CAP, verification_batch: BATCH },
+  budget_actions: BUDGET_ACTIONS,
   roster: { paper_type: roster.paper_type, seats: roster.seats.length, generalists: roster.generalist_seats.length, central_tensions: roster.central_tensions, not_staffed: roster.not_staffed },
   counts: { raw_findings: findings.length, delivered: deliveredFindings.length, rejected: rejected.length },
   findings: chairFindings,

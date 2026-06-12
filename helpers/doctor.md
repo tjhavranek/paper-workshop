@@ -24,8 +24,9 @@ rather than failing silently.
   inherits the orchestrating session's model, so the session model **is** the workshop's capability.
   Recommend `/model best` (Claude Code v2.1.170+), which selects Claude Fable 5 (mythos-class)
   where the plan has it and the latest Opus otherwise; the skill works unchanged on any model.
-  `/model` on the session is the supported way to choose the fleet's model; the skill deliberately
-  sets no per-agent model. Cost note (as of June 2026): Fable 5's 1M context carries no long-context
+  `/model` on the session is the supported way to choose the fleet's model; by default the skill
+  sets no per-agent model (the opt-in economy register below is the one exception). Cost note (as
+  of June 2026): Fable 5's 1M context carries no long-context
   premium, but its base rate is twice Opus 4.8's, so warn before the heavy tiers. **Record the
   session model in `meta.json` at kickoff, re-check it at the end of the run, and carry both in the
   report header.** On Fable 5, a safety-classifier hit silently drops the session back to Opus 4.8
@@ -49,10 +50,29 @@ rather than failing silently.
   also hit transient rate limits that clear on their own; higher-tier plans (e.g. Max) have more
   headroom. A spawn that fails at the start of a run is almost always one of these settings; a
   subagent that fails mid-run, after others succeeded, is worth reporting.
-- **Mode sanity & cost preview.** Before launching, tell the user the chosen mode's ≈agent
-  count so a weekly-limit-aware user can decide: Desk Review ~1–6, Roundtable ~20–30, Workshop
-  ~45–65, Symposium ~90–250, Summit ~300–600 (the last two also grow with paper length). Warn
-  that **Summit** may run for an extended time, and **confirm before launching Summit**.
+- **Mode sanity & cost preview, with the economy offer.** Before launching, tell the user the
+  chosen mode's ≈agent count so a weekly-limit-aware user can decide: Desk Review ~1–6,
+  Roundtable ~20–30, Workshop ~45–65, Symposium ~90–250, Summit ~300–600 (the last two also grow
+  with paper length). Warn that **Summit** may run for an extended time, and **confirm before
+  launching Summit**. On a usage-capped plan with the session on Fable, ALWAYS pair the preview
+  with the economy offer before any Workshop-or-larger launch — a default all-Fable Workshop has
+  locked users out of a Max-plan window mid-run, and a locked-out run delivers zero findings.
+  One line suffices: "Workshop at the session model is the full-power default and can spend a
+  large share of your plan window; the economy register (judgment seats at the Opus floor,
+  mechanical phases on Sonnet, scout/chair/scribes unchanged, every rail identical, fully
+  disclosed) measured 3.70M subagent tokens / 55 minutes for its tribunal workflow on its one
+  field run. Economy or full
+  power?" Never enable economy silently; never skip the offer where the lockout risk is real.
+- **Economy register pre-flight (only when economy or a custom `models` map is on).** Confirm
+  which model tiers the plan actually serves (a quick probe: spawn one trivial subagent per
+  mapped tier, or check plan documentation); a mapped-but-unavailable model falls back to
+  inheritance at spawn time and is logged in the run's `casting.degraded_casting` — expect and
+  disclose that, do not treat it as a failure. For notation-, math-, or table-dense papers keep
+  CARTOGRAPHY at the session model even under economy (pass a `models` override without the
+  `carto` entry): paper.txt is what the deterministic quote gate matches against, so extraction
+  fidelity is load-bearing. Record the casting object (mode, role→model map, degraded fallbacks,
+  caps, batch) in `meta.json` at kickoff; whenever the mode is not `inherit`, the report header
+  must state the role-class cast in one sentence (grounding rule 15).
 
 ## Act II (only if the user opts in)
 - **Manuscript source** present (.tex + `\input` children, or .docx). This is the
@@ -79,4 +99,7 @@ rather than failing silently.
   and never send raw data.
 
 Record every check result in `meta.json`, including the session model at kickoff (and re-check
-it at the end of the run; see the session-model bullet above).
+it at the end of the run; see the session-model bullet above). On a cast run, the end-of-run
+re-check also covers the EFFECTIVE casting: a mid-run session-model migration (the Fable
+classifier fallback) changes what the inherited roles (scout, chair, scribes) actually ran on,
+and the record must say so.

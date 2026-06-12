@@ -37,8 +37,9 @@ efficiently, spawns its own agents, and is how the tool reaches full scale (defa
 Pro, enable it in `/config`). If the Workflow tool is off, say so and **recommend enabling it**
 (especially for Symposium/Summit) before falling back to the **same phases via the Agent tool**
 (Step 4b); the fallback works on every plan. Both engines' agents inherit the orchestrating
-session's model and context (the skill sets no per-agent model), so the 1M-context credit caveat
-is engine-independent (see `helpers/doctor.md`). **Desk Review** uses neither a fleet nor
+session's model and context by default (no per-agent model is set unless the user opted into
+the economy register or a custom `models` map; see `helpers/doctor.md`), so the 1M-context
+credit caveat is engine-independent. **Desk Review** uses neither a fleet nor
 workflows (Step 4c).
 
 **4a — Workflow engine.** Launch `workflow/phase1_tribunal.js` with `args` = `{ pdf_path,
@@ -47,7 +48,15 @@ coverage_rubric, quote_gate, absence_gate, brief, staged_sources } }` — pass `
 internal key for the chosen mode, and `absence_gate` as the path to
 `helpers/absence_gate.py` (omit it and every absence-class finding fails closed to
 `needs-author-confirmation`). (The script parses `args` defensively whether it arrives as
-an object or a JSON string.) It runs the nine phases (A ingest/cartography → B
+an object or a JSON string.) Optional knobs: `economy: true` (the disclosed economy
+register; a harness token budget auto-enables it; `economy: false` opts out under a
+budget), `span_diet: true` (experimental, economy-only; see
+`helpers/verification_panel.md`), `batch` (verification batch size, clamped to 30),
+`max_seat_findings` / `max_generalist_findings` (cap-note overrides), and `models` (a raw
+role→model map; custom casts are unvalidated and the run is labeled `custom`). The run
+result includes `casting` and `budget_actions`: persist both into `meta.json`, and
+whenever `casting.mode` is not `inherit`, state the role-class cast in one report-header
+sentence (grounding rule 15). It runs the nine phases (A ingest/cartography → B
 scout/roster, with the contribution rival pair enforced in the floor → C ground sources,
 cited works plus the related-literature scout (fetch-or-drop, anti-popularity) → D blind
 specialists → deterministic quote-gate + absence-gate → E cross-critique →
@@ -68,7 +77,12 @@ it — the panel's quote-locator and steelman angles read that field) → integr
 (`06`, feeding verified `contribution-undersell` findings ONLY through
 `CONTRIBUTION_JSON`, and capping `contribution_memo` at 3 yourself — in the fallback YOU
 are the enforcement layer). Same prompts, same schemas, same artifacts — slower,
-identical in substance.
+identical in substance. The economy register carries over: the Agent tool documents the
+same per-agent `model` option, so apply the identical role→model map when spawning
+(judgment roles at the Opus floor, mechanical roles on Sonnet, scout/chair inherited),
+record the identical `casting` object in `meta.json`, and where a role cannot be pinned
+let it inherit and log it under `degraded_casting` — the disclosure contract is
+engine-independent.
 
 **4c — Desk Review (lightest).** Skip the fleet. The orchestrator (optionally with 2–3
 sequential subagents) reads the paper, applies a handful of expert lenses + the three
@@ -108,7 +122,11 @@ section: at most 3 verified, non-blocking ways the paper undersells its own resu
 each with the bolder claim, its quoted foothold, and the risk of overreach — labeled
 "suggestions, author's call", never mixed into the must-fix list); the verbatim
 kill-shots and minority report; the venue read (3-bucket, no number); the **coverage
-certificate**; and the rejected-suggestions list. Save the bundle as `report.md`, persist the per-finding panel verdicts under
+certificate**; and the rejected-suggestions list. The report header carries the run's mode,
+the serving model (kickoff and end), and, whenever `casting.mode` is not `inherit`, one
+sentence stating the role-class cast (for example: "seats and verifiers ran at the Opus
+floor, mechanical phases on Sonnet, scout and chair at the session model — the disclosed
+economy register"). Save the bundle as `report.md`, persist the per-finding panel verdicts under
 `verification/` (the auditable record), and show the highlights.
 
 ## Step 6 — The GATE
@@ -138,7 +156,11 @@ Never auto-start Act II.
 3. Launch `workflow/phase2_atelier.js` with `args` = `{ ledger, inputs, paths: { session,
    prompts_dir, helpers_dir, rules, rubric, quote_gate, sandbox_notes } }` — `helpers_dir`
    lets the Runner / reconciler / package agents call the deterministic checkers
-   (`provenance.py`, `consistency.py`, `reproduces.py`, `integrity_diff.py`). It triages each
+   (`provenance.py`, `consistency.py`, `reproduces.py`, `integrity_diff.py`). The same
+   optional knobs apply: `economy: true` (runner/triage/reconciler/package/panel at the
+   Opus floor, intake/staging/disclosure on Sonnet, scribes ALWAYS at the session model),
+   `models`, `scribe_batch` (default 5), `verify_batch` (default 12, clamped to 30); the
+   result's `casting` object is persisted and disclosed exactly as in Act I. It triages each
    finding into lanes A/B/C/D, drafts edits (`edit_spec.schema.json`), **stages a git working
    copy on branch `paper-workshop/phase2`** (the author's original is never touched), runs the
    Runner/Scribe split under the Execution-Provenance Wall, rebuilds, regenerates artifacts,

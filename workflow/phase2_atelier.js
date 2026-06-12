@@ -22,6 +22,33 @@ const LEDGER = A.ledger || []        // the verified findings the author elected
 const PROMPTS_DIR = PATHS.prompts_dir || ''
 const HELPERS_DIR = PATHS.helpers_dir || ''   // deterministic Act-II checkers live here (provenance/consistency/reproduces/integrity_diff.py)
 const GP = { agentType: 'general-purpose' }
+
+// ---------- casting (economy register; the default is session-model inheritance) ----------
+// Same contract as Act I (see phase1_tribunal.js). Act II's economy is deliberately more
+// conservative because it touches the record: the runner, triage, reconciler, package, and
+// the verification panel pin at the Opus floor, never below; the SCRIBES always inherit the
+// session model (author-facing prose under the provenance wall); only intake, staging, and
+// the disclosure generator drop to Sonnet. The Execution-Provenance Wall is model-independent
+// and identical in every mode.
+const BUDGETED = typeof budget !== 'undefined' && budget && budget.total != null
+const ECON = A.economy === true || (BUDGETED && A.economy !== false)
+const ECONOMY_MAP = { intake: 'sonnet', stage: 'sonnet', disclosure: 'sonnet', triage: 'opus', runner: 'opus', verify: 'opus', reconcile: 'opus', package: 'opus' }
+const MODELS = A.models || (ECON ? ECONOMY_MAP : {})
+const CASTING_MODE = A.models ? 'custom' : (ECON ? 'economy' : 'inherit')
+const DEGRADED = []
+const M = k => (MODELS[k] ? { model: MODELS[k] } : {})
+async function cast(role, prompt, opts) {
+  const m = M(role)
+  let r = await agent(prompt, { ...opts, ...m })
+  if (r === null && m.model) {
+    DEGRADED.push({ role, label: opts.label || role, tried: m.model, fell_back_to: 'inherit' })
+    r = await agent(prompt, opts)
+  }
+  return r
+}
+const CASTING = () => ({ mode: CASTING_MODE, role_models: MODELS, degraded_casting: DEGRADED, scribe_batch: SCRIBE_BATCH, verify_batch: VBATCH })
+const SCRIBE_BATCH = A.scribe_batch || 5
+const VBATCH = Math.min(30, A.verify_batch || 12)
 // Each agent reads its own prompt template from the installed skill and applies the
 // substitutions; keeps args tiny and the skill self-contained. phase2 prompts are under
 // the 'phase2/' subdir; the shared verifier is '05_verification_panel'.
@@ -38,7 +65,8 @@ const SCOPE = { type: 'object', additionalProperties: false, properties: { achie
 const EDIT = { type: 'object', additionalProperties: false, properties: { edit_id: { type: 'string' }, finding_id: { type: 'string' }, lane: { type: 'string', enum: ['A-writing', 'B-recompute', 'C-new-analysis', 'D-author-decision'] }, file: { type: 'string' }, locator: { type: 'string' }, old_text: { type: ['string', 'null'] }, new_text: { type: ['string', 'null'] }, depends_on_run: { type: ['string', 'null'] }, provenance_token: { type: ['string', 'null'] }, justification_type: { type: 'string', enum: ['more-correct', 'clearer'] }, edit_class: { type: 'string', enum: ['presentation', 'additive-verified', 'numeric', 'result-suppressing', 'claim-altering'] }, author_signoff_required: { type: 'boolean' }, reverify_angles: { type: 'array', items: { type: 'string' } } }, required: ['edit_id', 'finding_id', 'lane', 'file', 'locator', 'old_text', 'new_text', 'depends_on_run', 'provenance_token', 'justification_type', 'edit_class', 'author_signoff_required', 'reverify_angles'] }
 const EDIT_SPEC = { type: 'object', additionalProperties: false, properties: { edits: { type: 'array', items: EDIT } }, required: ['edits'] }
 const RUNREC = { type: 'object', additionalProperties: false, properties: { run_id: { type: 'string' }, status: { type: 'string', enum: ['ok', 'failed', 'baseline-failed'] }, command: { type: 'string' }, provenance_tokens: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { value: { type: 'string' }, script: { type: 'string' }, line_or_chunk: { type: 'string' }, run_id: { type: 'string' }, input_data_hash: { type: 'string' }, output_file: { type: 'string' }, output_hash: { type: 'string' } }, required: ['value', 'script', 'line_or_chunk', 'run_id', 'input_data_hash', 'output_file', 'output_hash'] } }, log_excerpt: { type: 'string' } }, required: ['run_id', 'status', 'command', 'provenance_tokens', 'log_excerpt'] }
-const SCRIBE = { type: 'object', additionalProperties: false, properties: { status: { type: 'string' }, diff: { type: 'string' }, commit: { type: 'string' }, new_text: { type: 'string' } }, required: ['status', 'diff', 'commit', 'new_text'] }
+const SCRIBE_RESULT = { type: 'object', additionalProperties: false, properties: { edit_id: { type: 'string' }, status: { type: 'string' }, diff: { type: 'string' }, commit: { type: 'string' }, new_text: { type: 'string' } }, required: ['edit_id', 'status', 'diff', 'commit', 'new_text'] }
+const SCRIBE_BATCH_SCHEMA = { type: 'object', additionalProperties: false, properties: { results: { type: 'array', items: SCRIBE_RESULT } }, required: ['results'] }
 const VERIF = { type: 'object', additionalProperties: false, properties: { target_id: { type: 'string' }, angle: { type: 'string' }, verdict: { type: 'string', enum: ['upheld', 'upheld-with-revision', 'rejected', 'cant-tell'] }, reason: { type: 'string' }, suggested_revision: { type: ['string', 'null'] } }, required: ['target_id', 'angle', 'verdict', 'reason', 'suggested_revision'] }
 const VERIF_BATCH = { type: 'object', additionalProperties: false, properties: { verdicts: { type: 'array', items: VERIF } }, required: ['verdicts'] }
 const RECON = { type: 'object', additionalProperties: false, properties: { reconciled: { type: 'array', items: { type: 'string' } }, orphans: { type: 'array', items: { type: 'string' } }, mismatches: { type: 'array', items: { type: 'string' } }, run_mismatches: { type: 'array', items: { type: 'string' } }, integrity_flags: { type: 'array', items: { type: 'string' } } }, required: ['reconciled', 'orphans', 'mismatches', 'run_mismatches', 'integrity_flags'] }
@@ -57,17 +85,17 @@ const ANGLE_Q = {
 
 // ---------- Intake ----------
 phase('Intake')
-const scope = await agent(promptRef('phase2/10_intake', { LEDGER_PATH: PATHS.ledger_path || JSON.stringify(LEDGER), INPUT_MANIFEST_JSON: INPUTS, RULES_PATH: PATHS.rules || '' }), { ...GP, label: 'intake', phase: 'Intake', schema: SCOPE })
+const scope = await cast('intake', promptRef('phase2/10_intake', { LEDGER_PATH: PATHS.ledger_path || JSON.stringify(LEDGER), INPUT_MANIFEST_JSON: INPUTS, RULES_PATH: PATHS.rules || '' }), { ...GP, label: 'intake', phase: 'Intake', schema: SCOPE })
 log('Intake: ' + scope.achievable_scope.length + ' achievable, ' + scope.degraded.length + ' degraded, ' + scope.blocking_gaps.length + ' blocking')
 if (scope.blocking_gaps.length) {
   // FAIL CLOSED: surface every blocking gap for the author to fill (or to accept the
   // degraded scope) BEFORE any edit — never proceed silently just because some source exists.
-  return { halted: 'blocking_gaps', scope }
+  return { halted: 'blocking_gaps', scope, casting: CASTING() }
 }
 
 // ---------- Triage ----------
 phase('Triage')
-const spec = await agent(promptRef('phase2/11_triage', { LEDGER_PATH: PATHS.ledger_path || JSON.stringify(LEDGER), INPUT_MANIFEST_JSON: INPUTS, RULES_PATH: PATHS.rules || '' }), { ...GP, label: 'triage', phase: 'Triage', schema: EDIT_SPEC })
+const spec = await cast('triage', promptRef('phase2/11_triage', { LEDGER_PATH: PATHS.ledger_path || JSON.stringify(LEDGER), INPUT_MANIFEST_JSON: INPUTS, RULES_PATH: PATHS.rules || '' }), { ...GP, label: 'triage', phase: 'Triage', schema: EDIT_SPEC })
 const edits = spec.edits || []
 log('Triage: ' + edits.length + ' edits (' + edits.filter(e => e.lane === 'A-writing').length + ' writing, ' + edits.filter(e => e.lane === 'B-recompute').length + ' recompute, ' + edits.filter(e => e.lane === 'C-new-analysis').length + ' new-analysis, ' + edits.filter(e => e.lane === 'D-author-decision').length + ' author-decision)')
 
@@ -80,13 +108,13 @@ phase('Baseline')
 let baseline = { run_id: 'baseline', status: 'ok', command: '(skipped: no code/data provided)', provenance_tokens: [], log_excerpt: '' }
 let baselineRan = false
 if (INPUTS.code && INPUTS.data) {
-  baseline = await agent(promptRef('phase2/13_runner_rerun', { FINDING_JSON: { note: 'BASELINE REPRODUCTION GATE — run the master script unchanged and confirm the current headline numbers reproduce. Take the paper\'s current numbers from the manuscript source below; record exactly which numbers you anchored.', manuscript_source: INPUTS.source || '(none provided — anchor on the code\'s own published-output comparison if available, and record that no manuscript anchor existed)' }, EDIT_JSON: {}, CODE_DIR: INPUTS.code, DATA_DIR: INPUTS.data, RUN_DIR: (PATHS.session || '.') + '/phase2/runs/baseline', SANDBOX_NOTES_PATH: PATHS.sandbox_notes || '', HELPERS_DIR }), { ...GP, label: 'baseline-gate', phase: 'Baseline', schema: RUNREC })
+  baseline = await cast('runner', promptRef('phase2/13_runner_rerun', { FINDING_JSON: { note: 'BASELINE REPRODUCTION GATE — run the master script unchanged and confirm the current headline numbers reproduce. Take the paper\'s current numbers from the manuscript source below; record exactly which numbers you anchored.', manuscript_source: INPUTS.source || '(none provided — anchor on the code\'s own published-output comparison if available, and record that no manuscript anchor existed)' }, EDIT_JSON: {}, CODE_DIR: INPUTS.code, DATA_DIR: INPUTS.data, RUN_DIR: (PATHS.session || '.') + '/phase2/runs/baseline', SANDBOX_NOTES_PATH: PATHS.sandbox_notes || '', HELPERS_DIR }), { ...GP, label: 'baseline-gate', phase: 'Baseline', schema: RUNREC })
   baselineRan = true
   log('Baseline: ' + baseline.status)
   // FAIL CLOSED on ANY non-ok status: 'baseline-failed' (numbers diverge) and 'failed'
   // (the run crashed) both mean there is no reproduced baseline to edit on top of.
   if (baseline.status !== 'ok') {
-    return { halted: 'baseline-' + (baseline.status === 'baseline-failed' ? 'failed' : 'run-error'), scope, baseline }
+    return { halted: 'baseline-' + (baseline.status === 'baseline-failed' ? 'failed' : 'run-error'), scope, baseline, casting: CASTING() }
   }
 }
 
@@ -98,7 +126,7 @@ phase('Stage')
 const WORK_BRANCH = 'paper-workshop/phase2'
 let workDir = INPUTS.source || ''
 if (INPUTS.source) {
-  const staged = await agent(
+  const staged = await cast('stage',
     'Create the Act-II working copy the Scribe will edit — NEVER touch the author\'s original. Using Bash:\n' +
     '1) mkdir -p "' + (PATHS.session || '.') + '/phase2/work"\n' +
     '2) copy the ENTIRE manuscript source tree from "' + INPUTS.source + '" into that work dir, preserving the \\input/child-file structure (use cp -a / robocopy / xcopy as the OS requires).\n' +
@@ -109,7 +137,13 @@ if (INPUTS.source) {
   log('Stage: working copy at ' + workDir + ' (branch ' + (staged.branch || WORK_BRANCH) + ', git ' + (staged.git_ok ? 'ok' : 'unavailable') + ')')
 }
 
-// ---------- Implement + Verify (pipeline per edit) ----------
+// ---------- Implement (Runners parallel, Scribes sequential) + Verify (batched by angle) ----------
+// Structural defaults since v0.7.0, in EVERY mode (field-proven on a real Act II run):
+// the Runners fan out in parallel (they write only into per-edit run dirs, never the
+// manuscript); the Scribes run SEQUENTIALLY in batches, because the edits typically target
+// one main.tex on one git branch and per-edit parallel scribes would race on the file and
+// the commit history; the verification panel is batched BY ANGLE ACROSS edits (panel cost =
+// angles x ceil(edits/batch), not edits x angles), with identical decideEdit() gating.
 phase('Implement')
 function anglesForEdit(e) {
   const set = new Set(['fix-safety', 'logical-validity', 'steelman-charity'])
@@ -139,45 +173,72 @@ function decideEdit(e, run, scribe, verdicts) {
 }
 function wrap(e, run, scribe, verdicts) { return { edit: e, run, scribe, verdicts } }
 
-const results = (await pipeline(
-  edits,
-  async (e) => {
-    // lane D never runs code or edits; lane C drafts+runs but proposal-only downstream
-    let run = null
-    if (e.lane === 'B-recompute' || e.lane === 'C-new-analysis') {
-      run = await agent(promptRef('phase2/13_runner_rerun', { FINDING_JSON: { finding_id: e.finding_id }, EDIT_JSON: e, CODE_DIR: INPUTS.code || '(none)', DATA_DIR: INPUTS.data || '(none)', RUN_DIR: (PATHS.session || '.') + '/phase2/runs/' + e.edit_id, SANDBOX_NOTES_PATH: PATHS.sandbox_notes || '', HELPERS_DIR }), { ...GP, label: ('run:' + e.edit_id).slice(0, 56), phase: 'Implement', schema: RUNREC })
-    }
-    return { e, run }
-  },
-  async (prev, e) => {
-    if (e.lane === 'D-author-decision') return { e, run: prev.run, scribe: null }
-    // pass ALL of the Runner's tokens (a numeric edit often needs several values:
-    // coefficient + SE + N); the Scribe transcribes only token-bound values either way.
-    const toks = (prev.run && prev.run.provenance_tokens) || []
-    const tok = toks.length ? JSON.stringify(toks.length === 1 ? toks[0] : toks) : (e.provenance_token || '')
-    const eWithTok = { ...e, provenance_token: tok || e.provenance_token }
-    const scribe = await agent(promptRef('phase2/12_scribe_implementer', { EDIT_JSON: eWithTok, SOURCE_FILE_PATH: workDir + '/' + e.file, WORKING_BRANCH: WORK_BRANCH, RULES_PATH: PATHS.rules || '' }), { ...GP, label: ('scribe:' + e.edit_id).slice(0, 56), phase: 'Implement', schema: SCRIBE })
-    return { e: eWithTok, run: prev.run, scribe }
-  },
-  async (prev, e) => {
-    const angles = anglesForEdit(e)
-    const tgt = { id: e.edit_id, edit: prev.e, scribe_new_text: prev.scribe && prev.scribe.new_text, run_summary: prev.run ? { status: prev.run.status, tokens: prev.run.provenance_tokens || [] } : null }
-    const res = (await parallel(angles.map(ang => () => agent(promptRef('05_verification_panel', { ANGLE: ang, ANGLE_QUESTION: ANGLE_Q[ang] || ('Judge from the ' + ang + ' angle.'), TARGETS_JSON: [tgt], PAPER_TXT_PATH: workDir + '/' + e.file, STAGED_SOURCES_DIR: PATHS.staged_sources || '(none)', QUOTE_GATE_PATH: PATHS.quote_gate || '', RULES_PATH: PATHS.rules || '', RUBRIC_PATH: PATHS.rubric || '' }), { ...GP, label: ('vfy:' + ang + ':' + e.edit_id).slice(0, 56), phase: 'Verify', schema: VERIF_BATCH })))).filter(Boolean)
-    const verdicts = res.flatMap(r => r.verdicts || [])
-    return decideEdit(prev.e, prev.run, prev.scribe, verdicts)
+// 1) Runners, in parallel: lane B re-runs and lane C drafted analyses write only into
+// per-edit run dirs, never the manuscript. Lane D never runs code or edits.
+const runById = {}
+const runLaneEdits = edits.filter(e => e.lane === 'B-recompute' || e.lane === 'C-new-analysis')
+const runResults = (await parallel(runLaneEdits.map(e => () =>
+  cast('runner', promptRef('phase2/13_runner_rerun', { FINDING_JSON: { finding_id: e.finding_id }, EDIT_JSON: e, CODE_DIR: INPUTS.code || '(none)', DATA_DIR: INPUTS.data || '(none)', RUN_DIR: (PATHS.session || '.') + '/phase2/runs/' + e.edit_id, SANDBOX_NOTES_PATH: PATHS.sandbox_notes || '', HELPERS_DIR }), { ...GP, label: ('run:' + e.edit_id).slice(0, 56), phase: 'Implement', schema: RUNREC })
+    .then(r => ({ id: e.edit_id, run: r }))
+))).filter(Boolean)
+runResults.forEach(r => { runById[r.id] = r.run })
+
+// 2) Scribes, SEQUENTIAL batches on the one working copy. Pass ALL of the Runner's tokens
+// (a numeric edit often needs several values: coefficient + SE + N); the Scribe
+// transcribes only token-bound values either way.
+const editWithTok = e => {
+  const toks = (runById[e.edit_id] && runById[e.edit_id].provenance_tokens) || []
+  const tok = toks.length ? JSON.stringify(toks.length === 1 ? toks[0] : toks) : (e.provenance_token || '')
+  return { ...e, provenance_token: tok || e.provenance_token }
+}
+const scribeEdits = edits.filter(e => e.lane !== 'D-author-decision').map(editWithTok)
+const dEdits = edits.filter(e => e.lane === 'D-author-decision')
+const scribeById = {}
+for (let i = 0; i < scribeEdits.length; i += SCRIBE_BATCH) {
+  const b = scribeEdits.slice(i, i + SCRIBE_BATCH)
+  const sb = await cast('scribe',
+    promptRef('phase2/12_scribe_implementer', { EDIT_JSON: '(BATCH MODE — see EDITS_BATCH_JSON appended below; apply the full prompt procedure to EACH edit, in order)', SOURCE_FILE_PATH: workDir + '  (each edit names its own file; resolve as <this work dir>/<edit.file>)', WORKING_BRANCH: WORK_BRANCH, RULES_PATH: PATHS.rules || '' }) +
+    '\nBATCH MODE (orchestrator instruction): you are implementing ' + b.length + ' edits in ONE session, IN ORDER, on the SAME working copy. For EACH edit follow the prompt file\'s procedure completely (locate the exact span, apply, one git commit per edit, capture the per-edit unified diff). If one edit\'s old_text cannot be located, mark THAT edit blocked-span-not-found and continue with the rest.\nEDITS_BATCH_JSON:\n' + JSON.stringify(b, null, 2) +
+    '\nReturn {results:[{edit_id, status, diff, commit, new_text}]} with one entry PER edit via StructuredOutput.',
+    { ...GP, label: 'scribe:batch' + Math.floor(i / SCRIBE_BATCH), phase: 'Implement', schema: SCRIBE_BATCH_SCHEMA })
+  ;((sb && sb.results) || []).forEach(r => { scribeById[r.edit_id] = r })
+}
+// A scribe row the batch agent dropped or mis-keyed fails CLOSED downstream (the verifiers
+// see null text and the edit routes to sign-off, and a dirty tree is caught by the
+// Reconcile terminal gate), but the gap must be visible, never silent:
+if (Object.keys(scribeById).length < scribeEdits.length) log('WARNING: ' + (scribeEdits.length - Object.keys(scribeById).length) + ' scribe result row(s) missing or mis-keyed; the affected edits route to author sign-off (fail closed), check the working-copy git log against the change map')
+log('Implement: ' + runResults.length + ' re-runs, ' + Object.keys(scribeById).length + '/' + scribeEdits.length + ' edits scribed (' + dEdits.length + ' author-decision proposals not scribed)')
+
+// 3) Verify, batched by angle across edits. decideEdit() gating is unchanged: a missing or
+// cant-tell hard-gate verdict still routes the edit to sign-off, never auto-apply.
+phase('Verify')
+const allEdits = edits.map(e => (e.lane === 'D-author-decision' ? e : (scribeEdits.find(t => t.edit_id === e.edit_id) || e)))
+const tgtFor = e => ({ id: e.edit_id, edit: e, scribe_new_text: (scribeById[e.edit_id] && scribeById[e.edit_id].new_text) || null, run_summary: runById[e.edit_id] ? { status: runById[e.edit_id].status, tokens: runById[e.edit_id].provenance_tokens || [] } : null })
+const angleTargets = {}
+allEdits.forEach(e => anglesForEdit(e).forEach(a => { (angleTargets[a] = angleTargets[a] || []).push(tgtFor(e)) }))
+const vTasks = []
+Object.keys(angleTargets).forEach(ang => {
+  const ts = angleTargets[ang]
+  for (let i = 0; i < ts.length; i += VBATCH) {
+    const b = ts.slice(i, i + VBATCH)
+    vTasks.push(() => cast('verify', promptRef('05_verification_panel', { ANGLE: ang, ANGLE_QUESTION: ANGLE_Q[ang] || ('Judge from the ' + ang + ' angle.'), TARGETS_JSON: b, PAPER_TXT_PATH: workDir + '  (the working copy; each target\'s edit.file names the file to read)', STAGED_SOURCES_DIR: PATHS.staged_sources || '(none)', QUOTE_GATE_PATH: PATHS.quote_gate || '', RULES_PATH: PATHS.rules || '', RUBRIC_PATH: PATHS.rubric || '' }), { ...GP, label: ('vfy:' + ang + ':b' + Math.floor(i / VBATCH)).slice(0, 56), phase: 'Verify', schema: VERIF_BATCH }))
   }
-)).filter(Boolean)
+})
+const vRes = (await parallel(vTasks)).filter(Boolean)
+const vById = {}
+vRes.forEach(r => (r.verdicts || []).forEach(v => { (vById[v.target_id] = vById[v.target_id] || []).push(v) }))
+const results = allEdits.map(e => decideEdit(e, runById[e.edit_id] || null, scribeById[e.edit_id] || null, vById[e.edit_id] || []))
 
 const applied = results.filter(r => r.status === 'applied')
 const queued = results.filter(r => r.status === 'queued-for-signoff')
 const proposals = results.filter(r => r.status === 'proposal')
 const blocked = results.filter(r => r.status === 'blocked')
-log('Implement: ' + applied.length + ' auto-applied, ' + queued.length + ' queued for sign-off, ' + proposals.length + ' proposals, ' + blocked.length + ' blocked')
+log('Verify: ' + vTasks.length + ' batched verifier agents; ' + applied.length + ' auto-applied, ' + queued.length + ' queued for sign-off, ' + proposals.length + ' proposals, ' + blocked.length + ' blocked')
 
 // ---------- Reconcile ----------
 phase('Reconcile')
 const runArtifacts = results.map(r => r.run).filter(Boolean).flatMap(r => r.provenance_tokens || [])
-const reconcile = await agent(promptRef('phase2/14_consistency_reconciler', { REVISED_SOURCE_PATH: workDir, BASELINE_SOURCE_PATH: INPUTS.source || '(none)', RUN_ARTIFACTS_JSON: runArtifacts, BASELINE_NUMBERS_JSON: baseline.provenance_tokens || [], RUN_DIR: (PATHS.session || '.') + '/phase2/runs/reconcile', HELPERS_DIR }), { ...GP, label: 'reconcile', phase: 'Reconcile', schema: RECON })
+const reconcile = await cast('reconcile', promptRef('phase2/14_consistency_reconciler', { REVISED_SOURCE_PATH: workDir, BASELINE_SOURCE_PATH: INPUTS.source || '(none)', RUN_ARTIFACTS_JSON: runArtifacts, BASELINE_NUMBERS_JSON: baseline.provenance_tokens || [], RUN_DIR: (PATHS.session || '.') + '/phase2/runs/reconcile', HELPERS_DIR }), { ...GP, label: 'reconcile', phase: 'Reconcile', schema: RECON })
 const reconcileClean = !reconcile.orphans.length && !reconcile.mismatches.length && !reconcile.run_mismatches.length && !(reconcile.integrity_flags || []).length
 log('Reconcile: ' + (reconcileClean ? 'clean' : (reconcile.orphans.length + ' orphans, ' + reconcile.mismatches.length + ' mismatches, ' + reconcile.run_mismatches.length + ' run-mismatches, ' + (reconcile.integrity_flags || []).length + ' integrity-flags')))
 // The reconciler is a TERMINAL GATE (prompts/phase2/14): a dirty reconcile blocks "final".
@@ -188,6 +249,7 @@ log('Reconcile: ' + (reconcileClean ? 'clean' : (reconcile.orphans.length + ' or
 if (!reconcileClean) {
   return {
     halted: 'reconcile-failed', scope, baseline_status: baseline.status, baseline_ran: baselineRan,
+    casting: CASTING(),
     work_dir: workDir, branch: WORK_BRANCH,
     counts: { edits: edits.length, applied: applied.length, queued_for_signoff: queued.length, proposals: proposals.length, blocked: blocked.length },
     applied, queued_for_signoff: queued, proposals, blocked,
@@ -198,15 +260,16 @@ if (!reconcileClean) {
 
 // ---------- Package ----------
 phase('Package')
-const pkg = await agent(promptRef('phase2/15_repro_package', { SESSION_PATH: PATHS.session || '.', INPUT_MANIFEST_JSON: INPUTS, RUN_RECORDS_JSON: results.map(r => r.run).filter(Boolean), REVISED_SOURCE_PATH: workDir, BASELINE_RAN: baselineRan, PACKAGE_DIR: (PATHS.session || '.') + '/phase2/replication_package', SANDBOX_NOTES_PATH: PATHS.sandbox_notes || '', HELPERS_DIR }), { ...GP, label: 'repro-package', phase: 'Package', schema: PACKAGE })
+const pkg = await cast('package', promptRef('phase2/15_repro_package', { SESSION_PATH: PATHS.session || '.', INPUT_MANIFEST_JSON: INPUTS, RUN_RECORDS_JSON: results.map(r => r.run).filter(Boolean), REVISED_SOURCE_PATH: workDir, BASELINE_RAN: baselineRan, PACKAGE_DIR: (PATHS.session || '.') + '/phase2/replication_package', SANDBOX_NOTES_PATH: PATHS.sandbox_notes || '', HELPERS_DIR }), { ...GP, label: 'repro-package', phase: 'Package', schema: PACKAGE })
 
 // ---------- Disclose ----------
 phase('Disclose')
 const auditTrail = { applied: applied.map(r => ({ edit_id: r.edit.edit_id, finding_id: r.edit.finding_id, lane: r.edit.lane, justification: r.edit.justification_type })), queued: queued.map(r => r.edit.edit_id), proposals: proposals.map(r => r.edit.edit_id), blocked: blocked.map(r => ({ edit_id: r.edit.edit_id, reason: r.reason })), signoff_status: 'pending-author-review', reruns: results.map(r => r.run).filter(Boolean).map(r => r.run_id), reconcile, package_reproduced: pkg.reproduced }
-const disclosure = await agent(promptRef('phase2/16_disclosure', { AUDIT_TRAIL_JSON: auditTrail }), { ...GP, label: 'disclosure', phase: 'Disclose', schema: DISCLOSURE })
+const disclosure = await cast('disclosure', promptRef('phase2/16_disclosure', { AUDIT_TRAIL_JSON: auditTrail }), { ...GP, label: 'disclosure', phase: 'Disclose', schema: DISCLOSURE })
 
 return {
   scope, baseline_status: baseline.status, baseline_ran: baselineRan, work_dir: workDir, branch: WORK_BRANCH,
+  casting: CASTING(),
   counts: { edits: edits.length, applied: applied.length, queued_for_signoff: queued.length, proposals: proposals.length, blocked: blocked.length },
   applied, queued_for_signoff: queued, proposals, blocked,
   reconcile, reconcile_clean: reconcileClean,

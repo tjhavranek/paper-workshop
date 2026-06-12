@@ -137,10 +137,12 @@ almost nothing, and are never traded away for scale.
 
 Three things set a run's cost. **Seats:** the mode fixes the expert-seat band (the scout
 casts within it), and seats are the dominant driver. **Findings:** each seat returns at
-most ~8 findings, and the verification panel is *batched by angle* (panel agents ≈
+most 8 findings (a standing budget note in the seat prompt; 5 under the economy register
+below), and the verification panel is *batched by angle* (panel agents ≈
 `angles × ceil(#findings / batch) × redundancy`): three
 angles at Roundtable, six at Workshop, seven with two agents per angle at
-Symposium/Summit, over batches of 15–25 findings (see `helpers/verification_panel.md`).
+Symposium/Summit, over batches of 20–30 findings, default 25 (see
+`helpers/verification_panel.md`).
 **Paper length:** it enters only at Symposium and Summit, which add close-reader sweeps
 over ~40-sentence blocks; the script bounds the sweep fan-out, and the lighter modes'
 cost is set by the tier whatever the paper's length. As one measured anchor, the
@@ -172,13 +174,33 @@ directly. When **dynamic workflows** are enabled (default on Max; on Pro, turn t
 efficiently (same phases, prompts, schemas); the subagents still do the work. **Desk Review**
 needs neither a fleet nor workflows and is the safe choice on the lightest setups. See
 `helpers/orchestration.md` for how the orchestrator picks the engine.
-Either way, the spawned agents inherit the orchestrating session's model and context (the skill
-sets no per-agent model), so dynamic workflows do not bypass the 1M-context credit caveat: a
-1M-context session may need usage credits enabled for that tier, or run the orchestrator on a
-standard-context model. The same inheritance means the session model sets the workshop's
-capability: a session on Claude Fable 5 (Anthropic's mythos-class tier) runs every seat, verifier,
-and chair at that level. `helpers/doctor.md` covers this pre-flight, the Fable safety-classifier
+Either way, the spawned agents inherit the orchestrating session's model and context by default
+(no per-agent model is set unless you opt into the economy register below), so dynamic
+workflows do not bypass the 1M-context credit caveat: a 1M-context session may need usage
+credits enabled for that tier, or run the orchestrator on a standard-context model. In the
+default mode that inheritance means the session model sets the workshop's capability: a
+session on Claude Fable 5 (Anthropic's mythos-class tier) runs every seat, verifier, and
+chair at that level. `helpers/doctor.md` covers this pre-flight, the Fable safety-classifier
 domain routing, and the model-disclosure rule.
+
+**The economy register (opt-in, always disclosed).** A default all-Fable Workshop can
+exhaust a usage-capped plan's window mid-run, and a locked-out run delivers nothing. Say
+"economy" (the orchestrator passes `economy: true` to the engine) and the fleet is cast in
+two tiers: the judgment layers (specialist seats, generalists, premortem, cross-critique
+integrators, the verification panel, and Act II's runner, triage, reconciler, and package)
+run at the Opus floor and never below it; the mechanical phases (cartography, source
+grounding, gate relays, completeness, Act II intake/staging/disclosure) run on Sonnet; the
+scout, the chair, and Act II's scribes always stay at the session model. Every
+deterministic rail (quote gate, absence gate, fail-closed panel aggregation, the
+Execution-Provenance Wall) is identical in both modes. The cast is recorded in `meta.json`
+and stated in the report header; a mapped model the plan does not serve falls back to
+inheritance and is logged, never crashed on. Honest status: the economy cast matches one
+real field run (Act I: 39 agents in total, its 37-agent tribunal workflow recorded at
+3.70M subagent tokens in 55 minutes, delivering a 60-finding verified
+ledger), which is evidence it preserves output strength, not blind validation (see
+`LIMITATIONS.md`). A user token target (a "+500k"-style budget) auto-enables economy plus
+small logged structural adjustments; deeper cuts (a Sonnet panel, Haiku relays, economy as
+the default) are named validation arms, not options.
 
 ## Reading order for the orchestrating Claude
 
