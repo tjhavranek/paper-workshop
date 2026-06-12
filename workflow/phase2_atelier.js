@@ -36,7 +36,22 @@ const ECONOMY_MAP = { intake: 'sonnet', stage: 'sonnet', disclosure: 'sonnet', t
 const MODELS = A.models || (ECON ? ECONOMY_MAP : {})
 const CASTING_MODE = A.models ? 'custom' : (ECON ? 'economy' : 'inherit')
 const DEGRADED = []
-const M = k => (MODELS[k] ? { model: MODELS[k] } : {})
+// Never-upgrade clamp, identical to Act I: a mapped model ranked above the
+// orchestrator-passed `session_model` inherits instead, logged; absent session_model
+// means no clamp (the doctor flags economy as not recommended on sub-Opus sessions).
+const TIER_RANK = { haiku: 1, sonnet: 2, opus: 3, fable: 4 }
+// accepts a bare tier ('fable') or a full model id ('claude-fable-5[1m]')
+const SM_TIER = (String(A.session_model || '').toLowerCase().match(/fable|opus|sonnet|haiku/) || [])[0]
+const SESSION_RANK = TIER_RANK[SM_TIER] || 0
+const M = k => {
+  const m = MODELS[k]
+  if (!m) return {}
+  if (SESSION_RANK && TIER_RANK[m] && TIER_RANK[m] > SESSION_RANK) {
+    if (!DEGRADED.some(d => d.role === k && d.reason === 'above-session-tier')) DEGRADED.push({ role: k, tried: m, fell_back_to: 'inherit', reason: 'above-session-tier' })
+    return {}
+  }
+  return { model: m }
+}
 async function cast(role, prompt, opts) {
   const m = M(role)
   let r = await agent(prompt, { ...opts, ...m })
@@ -46,7 +61,7 @@ async function cast(role, prompt, opts) {
   }
   return r
 }
-const CASTING = () => ({ mode: CASTING_MODE, role_models: MODELS, degraded_casting: DEGRADED, scribe_batch: SCRIBE_BATCH, verify_batch: VBATCH })
+const CASTING = () => ({ mode: CASTING_MODE, session_model: A.session_model || 'not-passed', role_models: MODELS, degraded_casting: DEGRADED, scribe_batch: SCRIBE_BATCH, verify_batch: VBATCH })
 const SCRIBE_BATCH = A.scribe_batch || 5
 const VBATCH = Math.min(30, A.verify_batch || 12)
 // Each agent reads its own prompt template from the installed skill and applies the

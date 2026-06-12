@@ -50,10 +50,14 @@ internal key for the chosen mode, and `absence_gate` as the path to
 `needs-author-confirmation`). (The script parses `args` defensively whether it arrives as
 an object or a JSON string.) Optional knobs: `economy: true` (the disclosed economy
 register; a harness token budget auto-enables it; `economy: false` opts out under a
-budget), `span_diet: true` (experimental, economy-only; see
+budget), `session_model` (the session model recorded at kickoff — REQUIRED whenever
+economy or `models` is on: it arms the engine's never-upgrade clamp), `span_diet: true`
+(experimental, economy-only; see
 `helpers/verification_panel.md`), `batch` (verification batch size, clamped to 30),
 `max_seat_findings` / `max_generalist_findings` (cap-note overrides), and `models` (a raw
-role→model map; custom casts are unvalidated and the run is labeled `custom`). The run
+role→model map; custom casts are unvalidated and the run is labeled `custom`). On a Fable
+session, do not launch Workshop-or-larger until `meta.json` records the economy offer and
+the user's answer (`economy_offered`; see `helpers/doctor.md`). The run
 result includes `casting` and `budget_actions`: persist both into `meta.json`, and
 whenever `casting.mode` is not `inherit`, state the role-class cast in one report-header
 sentence (grounding rule 15). It runs the nine phases (A ingest/cartography → B
@@ -164,7 +168,8 @@ Never auto-start Act II.
    (`provenance.py`, `consistency.py`, `reproduces.py`, `integrity_diff.py`). The same
    optional knobs apply: `economy: true` (runner/triage/reconciler/package/panel at the
    Opus floor, intake/staging/disclosure on Sonnet, scribes ALWAYS at the session model),
-   `models`, `scribe_batch` (default 5), `verify_batch` (default 12, clamped to 30); the
+   `session_model` (arms the never-upgrade clamp, as in Act I), `models`, `scribe_batch`
+   (default 5), `verify_batch` (default 12, clamped to 30); the
    result's `casting` object is persisted and disclosed exactly as in Act I. It triages each
    finding into lanes A/B/C/D, drafts edits (`edit_spec.schema.json`), **stages a git working
    copy on branch `paper-workshop/phase2`** (the author's original is never touched), runs the

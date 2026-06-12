@@ -41,7 +41,25 @@ const MODELS = A.models || (ECON ? ECONOMY_MAP : {})
 const CASTING_MODE = A.models ? 'custom' : (ECON ? 'economy' : 'inherit')
 const DEGRADED = []
 const BUDGET_ACTIONS = []
-const M = k => (MODELS[k] ? { model: MODELS[k] } : {})
+// Never-upgrade clamp: the cast may only move DOWN from the session model. The script
+// cannot detect the session model itself, so the orchestrator passes it as
+// `session_model` (orchestration.md mandates this whenever casting is on); a mapped
+// model ranked above it is dropped to inheritance and logged. Unknown/absent
+// session_model means no clamp (the map is applied as given, and the doctor flags that
+// economy is not recommended on a sub-Opus session).
+const TIER_RANK = { haiku: 1, sonnet: 2, opus: 3, fable: 4 }
+// accepts a bare tier ('fable') or a full model id ('claude-fable-5[1m]')
+const SM_TIER = (String(A.session_model || '').toLowerCase().match(/fable|opus|sonnet|haiku/) || [])[0]
+const SESSION_RANK = TIER_RANK[SM_TIER] || 0
+const M = k => {
+  const m = MODELS[k]
+  if (!m) return {}
+  if (SESSION_RANK && TIER_RANK[m] && TIER_RANK[m] > SESSION_RANK) {
+    if (!DEGRADED.some(d => d.role === k && d.reason === 'above-session-tier')) DEGRADED.push({ role: k, tried: m, fell_back_to: 'inherit', reason: 'above-session-tier' })
+    return {}
+  }
+  return { model: m }
+}
 async function cast(role, prompt, opts) {
   const m = M(role)
   let r = await agent(prompt, { ...opts, ...m })
@@ -424,7 +442,7 @@ return {
   tier: TIER, register: REGISTER,
   // The casting record: the orchestrator persists this to meta.json and, whenever mode is
   // not 'inherit', states the role-class cast in the report header (grounding rule 15).
-  casting: { mode: CASTING_MODE, role_models: MODELS, degraded_casting: DEGRADED, span_diet: SPAN_DIET, seat_cap: SEAT_CAP, generalist_cap: GEN_CAP, verification_batch: BATCH },
+  casting: { mode: CASTING_MODE, session_model: A.session_model || 'not-passed', role_models: MODELS, degraded_casting: DEGRADED, span_diet: SPAN_DIET, seat_cap: SEAT_CAP, generalist_cap: GEN_CAP, verification_batch: BATCH },
   budget_actions: BUDGET_ACTIONS,
   // best-effort chair-written copies of the heavy arrays below; verify on disk before
   // relying on them — this returned object stays the source of truth either way

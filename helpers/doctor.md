@@ -62,12 +62,25 @@ rather than failing silently.
   mechanical phases on Sonnet, scout/chair/scribes unchanged, every rail identical, fully
   disclosed) measured 3.70M subagent tokens / 55 minutes for its tribunal workflow on its one
   field run. Economy or full
-  power?" Never enable economy silently; never skip the offer where the lockout risk is real.
+  power?" **On a Fable session, present economy as the RECOMMENDED, pre-selected choice**
+  (full power then requires the user's explicit "yes, spend it") — on Fable the lockout
+  failure is documented and its cost is total (zero findings), so the default answer must
+  be the safe one while the contract stays opt-in. On an Opus session present the choices
+  neutrally (economy saves little there); on a Sonnet session do NOT recommend economy (it
+  cannot help and, unclamped, would raise judgment seats to Opus). Never enable economy
+  silently; never skip the offer where the lockout risk is real. **Structural gate:** write
+  `economy_offered: true` (with the user's answer) into `meta.json` BEFORE launching any
+  Workshop-or-larger run on a Fable session — a missing field is an auditable omission,
+  not a silent skip.
 - **Economy register pre-flight (only when economy or a custom `models` map is on).** Confirm
   which model tiers the plan actually serves (a quick probe: spawn one trivial subagent per
   mapped tier, or check plan documentation); a mapped-but-unavailable model falls back to
   inheritance at spawn time and is logged in the run's `casting.degraded_casting` — expect and
-  disclose that, do not treat it as a failure. For notation-, math-, or table-dense papers keep
+  disclose that, do not treat it as a failure. ALWAYS pass `session_model` (the model
+  recorded at kickoff) in the workflow args: it arms the engine's never-upgrade clamp, so a
+  mapped model above the session tier inherits instead of silently raising the run's cost
+  (the clamp is what makes economy safe to request on any session; without the arg the map
+  is applied as given). For notation-, math-, or table-dense papers keep
   CARTOGRAPHY at the session model even under economy (pass a `models` override without the
   `carto` entry): paper.txt is what the deterministic quote gate matches against, so extraction
   fidelity is load-bearing. Record the casting object (mode, role→model map, degraded fallbacks,

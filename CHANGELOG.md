@@ -25,7 +25,12 @@ records for re-adjudication once blind-validation data exists.
   terminal API death, or a user skip — the engine cannot distinguish the two, so a skipped
   cast agent is re-run once at the session model and logged) retries once WITHOUT
   the override and logs the fallback (`casting.degraded_casting`) — a plan missing a mapped
-  tier completes the run instead of crashing. The applied cast never silently upgrades. A raw
+  tier completes the run instead of crashing. A never-upgrade clamp guards the other
+  direction: the orchestrator passes `session_model` in the args (the doctor mandates it
+  whenever casting is on) and a mapped model ranked above the session tier inherits
+  instead, logged to the casting record — so requesting economy on a Sonnet session cannot
+  silently raise the run's cost; without the arg the map is applied as given and the
+  doctor flags economy as not recommended on sub-Opus sessions. A raw
   `models` role→map remains as a power-user escape hatch; such runs are labeled `custom` and
   documented as unvalidated.
 - **Casting disclosure is part of the record.** Both workflows return a machine-readable

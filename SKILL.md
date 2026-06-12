@@ -197,7 +197,11 @@ means a Low can neither rise nor drive the verdict). Every
 deterministic rail (quote gate, absence gate, fail-closed panel aggregation, the
 Execution-Provenance Wall) is identical in both modes. The cast is recorded in `meta.json`
 and stated in the report header; a mapped model the plan does not serve falls back to
-inheritance and is logged, never crashed on. Honest status: the economy cast matches one
+inheritance and is logged, never crashed on, and a never-upgrade clamp (armed by the
+`session_model` argument the orchestrator passes) keeps economy from raising any role
+above the session model, so asking for economy can lower a run's cost but never lift it.
+On a Fable session the pre-flight presents economy as the recommended, pre-selected
+choice (the documented lockout case); full power stays one explicit "yes" away. Honest status: the economy cast matches one
 real field run (Act I: 39 agents in total, its 37-agent tribunal workflow recorded at
 3.70M subagent tokens in 55 minutes, delivering a 60-finding verified
 ledger), which is evidence it preserves output strength, not blind validation (see
