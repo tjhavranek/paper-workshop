@@ -190,7 +190,10 @@ two tiers: the judgment layers (specialist seats, generalists, premortem, cross-
 integrators, the verification panel, and Act II's runner, triage, reconciler, and package)
 run at the Opus floor and never below it; the mechanical phases (cartography, source
 grounding, gate relays, completeness, Act II intake/staging/disclosure) run on Sonnet; the
-scout, the chair, and Act II's scribes always stay at the session model. Every
+scout, the chair, and Act II's scribes always stay at the session model. Under economy,
+Low-severity findings are panel-checked on the quick three-angle set (the logical-validity
+hard gate, fix-safety, and the steelman defense stay on every finding; the locked rubric
+means a Low can neither rise nor drive the verdict). Every
 deterministic rail (quote gate, absence gate, fail-closed panel aggregation, the
 Execution-Provenance Wall) is identical in both modes. The cast is recorded in `meta.json`
 and stated in the report header; a mapped model the plan does not serve falls back to

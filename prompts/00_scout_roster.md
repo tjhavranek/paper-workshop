@@ -21,8 +21,10 @@ Then produce a ROSTER CONTRACT (schema: roster_contract). Requirements:
    dropped): a close-reader; a methods-&-stats auditor; a related-work expert; a
    robustness/limitations critic; a presentation & academic-writing critic (clarity,
    figures/tables, the author's voice, and whether any prose reads as machine-generated
-   rather than human-written); a desk-reject pre-mortem
-   seat; and a standing "what load-bearing analysis is MISSING" seat. PLUS the
+   rather than human-written); the desk-reject pre-mortem (list it in `mandatory_floor`
+   but do NOT cast a specialist seat for it — the engine runs its own pre-mortem agent
+   with special verbatim kill-shot routing, and a scout-cast duplicate just doubles the
+   cost); and a standing "what load-bearing analysis is MISSING" seat. PLUS the
    **paper-type-locked mandatory specialist**: meta-analysis → publication-bias &
    heterogeneity; observational-causal → identification referee; theory → proof-checker;
    ML → benchmark-leakage/ablation referee; RCT → pre-registration/CONSORT.

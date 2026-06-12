@@ -69,6 +69,32 @@ records for re-adjudication once blind-validation data exists.
 - **Gate relays stop reading the manuscript.** Both relay prompts now state what was always
   the design: the Python gate reads the source file from disk; the agent passes paths and
   returns the script's JSON verbatim. Pure waste removal, no rail change.
+- **The completed field run's own memo, folded in.** The Workshop-band field run finished
+  (Act I + Act II end to end, ~6.1M subagent tokens including two baseline-gate retries)
+  while this release was being built, and its orchestrating session left a grounded
+  memo; its remaining recommendations landed here. (a) Severity-tiered panel under
+  economy: Low findings get the quick three-angle set — safe because calibration only
+  lowers, Lows never drive the verdict, and the hard logical-validity gate plus the
+  steelman stay on every finding. (b) Findings word diet: seat prompts now cap
+  issue/why/fix wording (~80/60/60 words), since findings bytes are re-read by every
+  integrator and verifier downstream. (c) The chair persists `findings_ledger.json` and
+  `synthesis_raw.json` to the session (best-effort, disclosed; the returned object stays
+  the source of truth), and orchestration now tells the orchestrator to read files, not
+  the blob — a large run's full return exceeds the notification channel. (d) Act II
+  dependency pre-flight in the doctor: grep do-files for SSC commands and R sources for
+  library() calls BEFORE any launch; a missing package becomes one consented question at
+  kickoff instead of failed baseline attempts against a network-off sandbox. (e) Gate
+  calibration defaults in the sandbox notes: precision-matched tolerances (half a unit of
+  the anchor's last stated digit) and the consistent-horizon-mapping rule for LP/IRF
+  papers, both of which a field attempt was lost to. (f) Consumed-token reconcile split:
+  the deterministic run-match covers only tokens a scribed edit transcribed; unconsumed
+  run byproducts are documented, never failures — orphan detection still sees every
+  changed number. (g) Premortem dedup (the scout no longer casts a seat the engine
+  already runs) and a completeness auditor keyed off delivered finding types and seat
+  jurisdictions, not location strings (a field run produced false NOT-COVERED flags that
+  would have triggered needless reopen rounds at the heavy tiers). (h) Resume
+  (`resumeFromRunId` after fail-closed halts) documented as the primary cost containment:
+  field-measured at 0.1-0.2M tokens per halted-baseline retry instead of a fresh run.
 - **Supersedes the v0.4.0 deliberate non-change on per-agent model casting** (recorded below,
   kept intact). Its premise is stale: the per-agent `model` option is now documented public
   API on both the Agent tool and the Workflow engine's `agent()` call. The other half of that

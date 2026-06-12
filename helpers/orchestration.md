@@ -111,9 +111,14 @@ quote-gate).
   anything left open.
 
 ## Step 5 — Assemble and present the Act-I report
-From the returned result object (the synthesis plus `findings` — each carrying its
+From the result (the synthesis plus `findings` — each carrying its
 `panel_verdicts` — `integration`, and `rejected_in_panel`), render the human-facing
-**report bundle**: verdict; validity verdict (dominates venue); the prioritized
+**report bundle**. On a large run the full return can exceed the notification channel:
+prefer the chair-written artifact files named in the result's `artifact_paths`
+(`round_artifacts/findings_ledger.json`, `round_artifacts/synthesis_raw.json` — verify
+they exist and parse before relying on them; they are best-effort copies and the returned
+object stays the source of truth), and fall back to the harness's task output file for
+the complete return rather than pasting the blob into context. Then render: verdict; validity verdict (dominates venue); the prioritized
 must-fix list (capped ~5–7, sorted by magnitude); the per-seat findings grouped by
 seat; the cross-critique consolidation (clusters and crux notes — where rival seats
 collided and what evidence would move each side); the generalists' relevance and
@@ -183,3 +188,12 @@ you want." Never merge, submit, or release data.
 If a phase's subagent fails, retry once, then record the gap in `meta.json` and the
 report rather than fabricating a result. If Act II inputs are missing, narrow scope
 and say so — never invent a number, a citation, or a reproduction that did not happen.
+
+**Resume is the best cost containment in practice.** After any fail-closed halt (a
+baseline gate failure, a blocking-gap return, a usage-limit interruption), relaunch the
+SAME workflow script with `resumeFromRunId`: every completed agent call with unchanged
+inputs replays from cache, so a halted Act II retry costs a fraction of a fresh run
+(field-measured: 0.1–0.2M tokens per baseline retry instead of a full re-run). Pass the
+pre-staged cartography paths and the approved roster on Act I re-entry for the same
+reason. If no journal is available, the agent transcripts under the session's workflow
+directory still hold every StructuredOutput payload for manual salvage.

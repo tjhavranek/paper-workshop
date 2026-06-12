@@ -80,6 +80,16 @@ rather than failing silently.
 - **Interpreters** for the author's stack on PATH and runnable: `Rscript`,
   `python`, `stata`/`stata-mp`, as the code requires. Missing ⇒ the affected
   numeric/figure findings degrade to author-decision checklists.
+- **Package dependencies, checked BEFORE any workflow launch** (field-grounded: a baseline
+  gate failed twice on a missing SSC package a 30-second check would have caught, and the
+  sandbox correctly refuses mid-run network installs). Stata: grep every do-file for
+  community commands (`xtscc`, `reghdfe`, `ppmlhdfe`, `ivreg2`, `ivreghdfe`, `estout`,
+  `esttab`, `outreg2`, `winsor2`, `coefplot`, `boottest`, `xtabond2`, …) and resolve each
+  via Stata batch `which <cmd>`. R: parse `library()`/`require()`/`p_load()` calls against
+  `installed.packages()`. Python: imports against the environment. Any missing dependency
+  ⇒ ask the user UP FRONT: install now (network, with explicit consent) or run the
+  documented degraded path. One question at kickoff replaces failed workflow launches and
+  permission-denial round-trips mid-run.
 - **Build tooling.** `latexmk` (+ `bibtex`/`biber`) for LaTeX; the bundled `docx`
   skill for Word. Missing `latexmk` ⇒ emit the tracked source but cannot prove a
   clean compile; say so.

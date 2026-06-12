@@ -238,7 +238,15 @@ log('Verify: ' + vTasks.length + ' batched verifier agents; ' + applied.length +
 // ---------- Reconcile ----------
 phase('Reconcile')
 const runArtifacts = results.map(r => r.run).filter(Boolean).flatMap(r => r.provenance_tokens || [])
-const reconcile = await cast('reconcile', promptRef('phase2/14_consistency_reconciler', { REVISED_SOURCE_PATH: workDir, BASELINE_SOURCE_PATH: INPUTS.source || '(none)', RUN_ARTIFACTS_JSON: runArtifacts, BASELINE_NUMBERS_JSON: baseline.provenance_tokens || [], RUN_DIR: (PATHS.session || '.') + '/phase2/runs/reconcile', HELPERS_DIR }), { ...GP, label: 'reconcile', phase: 'Reconcile', schema: RECON })
+// Consumed-token split (field-grounded): the deterministic run-match must run over the
+// tokens a scribed edit actually transcribed; tokens a run produced but no edit consumed
+// (raw IRF points, unrounded intermediates) are documented byproducts, never failures —
+// without this split, every descriptive run that computes more than it inserts dirties
+// the reconcile. Orphan detection is unaffected: it works off the manuscript-vs-baseline
+// diff, so a number that changed without a consumed token behind it still blocks.
+const consumedTokens = results.filter(r => r.scribe && !/blocked/.test(r.scribe.status || '')).map(r => r.run).filter(Boolean).flatMap(r => r.provenance_tokens || [])
+const unconsumedTokens = runArtifacts.filter(t => consumedTokens.indexOf(t) === -1)
+const reconcile = await cast('reconcile', promptRef('phase2/14_consistency_reconciler', { REVISED_SOURCE_PATH: workDir, BASELINE_SOURCE_PATH: INPUTS.source || '(none)', RUN_ARTIFACTS_JSON: consumedTokens, UNCONSUMED_TOKENS_JSON: unconsumedTokens, BASELINE_NUMBERS_JSON: baseline.provenance_tokens || [], RUN_DIR: (PATHS.session || '.') + '/phase2/runs/reconcile', HELPERS_DIR }), { ...GP, label: 'reconcile', phase: 'Reconcile', schema: RECON })
 const reconcileClean = !reconcile.orphans.length && !reconcile.mismatches.length && !reconcile.run_mismatches.length && !(reconcile.integrity_flags || []).length
 log('Reconcile: ' + (reconcileClean ? 'clean' : (reconcile.orphans.length + ' orphans, ' + reconcile.mismatches.length + ' mismatches, ' + reconcile.run_mismatches.length + ' run-mismatches, ' + (reconcile.integrity_flags || []).length + ' integrity-flags')))
 // The reconciler is a TERMINAL GATE (prompts/phase2/14): a dirty reconcile blocks "final".

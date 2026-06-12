@@ -50,3 +50,8 @@ pad with minor items to look productive (a fabricated or trivial finding is a se
 failure); genuinely minor notes can be folded into a single low-severity "minor notes"
 finding. If your jurisdiction is clean, return an empty array — that is a valid,
 respected result.
+
+**Write tight.** Your findings are re-read verbatim by every integrator and verifier
+downstream, so their cost scales with your words: keep `issue` to ~80 words,
+`why_it_matters` to ~60, and `proposed_fix` to ~60 (the `quote` is exact text and exempt).
+A finding that needs more than that is usually two findings.

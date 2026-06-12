@@ -77,6 +77,14 @@ wasteful one-agent-per-finding-per-angle fan-out is removed. The same shape appl
 Act II since v0.7.0: edit verification is batched by angle ACROSS edits
 (`args.verify_batch`, default 12), never fanned out per edit.
 
+**Severity-tiered angles (economy register only).** Under economy, Low-severity findings
+are checked by the quick three-angle set (logical-validity, fix-safety, steelman-charity)
+while High/Medium findings get the tier's full set. This is safe under the locked rubric,
+not a loosened rail: panel calibration can only LOWER a severity (a Low has nowhere to
+go), Lows never drive the verdict or keep the deepening loop alive, and every quote
+already rode the standalone deterministic gate. The hard logical-validity gate and the
+steelman defense stay on every finding in every mode.
+
 **The span-diet (experimental, opt-in inside the economy register only).** With
 `span_diet: true`, the local-judgment angles (logical-validity, severity-calibration,
 decision-relevance, fix-safety, factual-literature) read a per-batch EXCERPT file (each

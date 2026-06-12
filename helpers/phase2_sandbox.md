@@ -23,6 +23,21 @@ integrity rails.
    A broken baseline is itself the most important finding; never "improve" numbers on
    top of a pipeline that never reproduced.
 
+**Calibrate the gate ex ante — both defaults are field-grounded (a full baseline attempt
+was once lost to a blanket tolerance):**
+- **Precision-matched tolerances.** A prose anchor's tolerance is half a unit of its last
+  stated digit: "approximately 2.5%" ⇒ ±0.05; "about 2%" ⇒ ±0.5. Never pin an
+  integer-precision claim at one-decimal tolerance — that manufactures a spurious gate
+  failure the author never claimed to survive. Record each anchor's tolerance with the
+  anchor BEFORE the comparison runs.
+- **One consistent horizon convention (LP/IRF papers).** When prose anchors reference
+  horizons ("the effect after five years"), the gate passes if ALL anchors pass under ONE
+  consistent horizon mapping (e.g. trough vs endpoint, year-indexed vs lag-indexed).
+  Record the chosen mapping and flag it `needs-author-confirmation` — the figure-producing
+  code is often not in the package, so no edit may assert the convention as fact. An
+  anchor that matches a neighboring horizon is a real finding about the prose, not a
+  reproduction failure.
+
 ## Runner / Scribe separation
 - The **Runner** subagent executes code and captures artifacts. It **cannot edit the
   manuscript.**

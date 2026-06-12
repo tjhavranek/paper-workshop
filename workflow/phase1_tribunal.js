@@ -282,8 +282,18 @@ if (BUDGETED && budget.remaining() < 600000 && BATCH < 30) {
   BATCH = 30
   BUDGET_ACTIONS.push('verification batch raised to 30 (' + Math.round(budget.remaining() / 1000) + 'k tokens remaining before Verification)')
 }
+// Severity-tiered panel (economy register only, field-grounded): Low-severity findings get
+// the quick-tier 3-angle set. Safe under the locked rubric: panel calibration can only
+// LOWER a severity (a Low has nowhere to go), Lows never drive the verdict or the
+// deepening loop, and every quote already rode the standalone deterministic gate. The
+// logical-validity hard gate, fix-safety, and the steelman defense stay on EVERY finding.
+const QUICK_ANGLES = anglesFor('quick')
+const groups = (ECON && angles.length > QUICK_ANGLES.length)
+  ? [{ items: findings.filter(f => f.severity !== 'Low'), angles: angles },
+     { items: findings.filter(f => f.severity === 'Low'), angles: QUICK_ANGLES }]
+  : [{ items: findings, angles: angles }]
 const batches = []
-for (let i = 0; i < findings.length; i += BATCH) batches.push(findings.slice(i, i + BATCH))
+groups.forEach(g => { for (let i = 0; i < g.items.length; i += BATCH) batches.push({ items: g.items.slice(i, i + BATCH), angles: g.angles }) })
 // Span-diet (experimental, opt-in inside economy): the local-judgment angles read a
 // per-batch excerpt (each finding's quote plus its surrounding context) and the precis
 // instead of re-reading the full manuscript. quote-locator keeps the full path (the
@@ -294,15 +304,15 @@ const DIET_ANGLES = new Set(['logical-validity', 'severity-calibration', 'decisi
 const excerptByBatch = {}
 if (SPAN_DIET && batches.length) {
   const excerptDir = (PATHS.session || '.') + '/verification'
-  const sl = await cast('slice', 'Build per-batch excerpt files for the verification panel. Read the manuscript at ' + carto.paper_txt_path + ' . For EACH batch below, write ' + excerptDir + '/excerpts_b<batch>.md containing, for every finding in that batch: its id, its quote VERBATIM, and the surrounding context (the full paragraph it sits in, or two sentences either side). Copy the manuscript text exactly: never paraphrase, never comment. Create the directory first. BATCHES (batch index -> findings):\n' + JSON.stringify(batches.map((b, i) => ({ batch: i, findings: b.map(f => ({ id: f.id, quote: f.quote, location: f.location })) }))) + '\nReturn the files written.', { ...GP, label: 'span-slicer', phase: 'Verification', schema: { type: 'object', additionalProperties: false, properties: { files: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { batch: { type: 'integer' }, path: { type: 'string' } }, required: ['batch', 'path'] } } }, required: ['files'] } })
+  const sl = await cast('slice', 'Build per-batch excerpt files for the verification panel. Read the manuscript at ' + carto.paper_txt_path + ' . For EACH batch below, write ' + excerptDir + '/excerpts_b<batch>.md containing, for every finding in that batch: its id, its quote VERBATIM, and the surrounding context (the full paragraph it sits in, or two sentences either side). Copy the manuscript text exactly: never paraphrase, never comment. Create the directory first. BATCHES (batch index -> findings):\n' + JSON.stringify(batches.map((b, i) => ({ batch: i, findings: b.items.map(f => ({ id: f.id, quote: f.quote, location: f.location })) }))) + '\nReturn the files written.', { ...GP, label: 'span-slicer', phase: 'Verification', schema: { type: 'object', additionalProperties: false, properties: { files: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { batch: { type: 'integer' }, path: { type: 'string' } }, required: ['batch', 'path'] } } }, required: ['files'] } })
   ;((sl && sl.files) || []).forEach(f => { excerptByBatch[f.batch] = f.path })
   log('Span-diet: ' + Object.keys(excerptByBatch).length + '/' + batches.length + ' excerpt files staged (missing batches fall back to the full text)')
 }
 const panelTasks = []
-angles.forEach(ang => batches.forEach((b, bi) => {
+batches.forEach((b, bi) => b.angles.forEach(ang => {
   for (let k = 0; k < REDUNDANCY; k++) panelTasks.push(() => {
     const dietPath = DIET_ANGLES.has(ang) ? excerptByBatch[bi] : null
-    const vars = { ANGLE: ang, ANGLE_QUESTION: ANGLE_Q[ang], TARGETS_JSON: b, PAPER_TXT_PATH: dietPath || carto.paper_txt_path, STAGED_SOURCES_DIR: seatPaths.STAGED_SOURCES_DIR, QUOTE_GATE_PATH: PATHS.quote_gate || '', RULES_PATH: PATHS.rules || '', RUBRIC_PATH: PATHS.rubric || '' }
+    const vars = { ANGLE: ang, ANGLE_QUESTION: ANGLE_Q[ang], TARGETS_JSON: b.items, PAPER_TXT_PATH: dietPath || carto.paper_txt_path, STAGED_SOURCES_DIR: seatPaths.STAGED_SOURCES_DIR, QUOTE_GATE_PATH: PATHS.quote_gate || '', RULES_PATH: PATHS.rules || '', RUBRIC_PATH: PATHS.rubric || '' }
     if (dietPath) { vars.PRECIS_PATH = carto.precis_path; vars.CONTEXT_NOTE = 'span-diet batch: PAPER_TXT_PATH points to a per-batch EXCERPT (each finding\'s quote plus surrounding context), not the full manuscript; the precis at PRECIS_PATH gives global context. If the excerpt cannot support a confident verdict, return cant-tell; never guess.' }
     return cast('verify', promptRef('05_verification_panel', vars),
       { ...GP, label: ('vfy:' + ang + ':b' + bi + (REDUNDANCY > 1 ? ':r' + k : '')).slice(0, 56), phase: 'Verification', schema: VERIF_BATCH })
@@ -312,7 +322,7 @@ const panelResults = (await parallel(panelTasks)).filter(Boolean)
 const verdictsById = {}
 panelResults.forEach(r => (r.verdicts || []).forEach(v => { (verdictsById[v.target_id] = verdictsById[v.target_id] || []).push(v) }))
 const verified = findings.map(f => decide(f, verdictsById[f.id] || []))
-log('Verification: ' + panelTasks.length + ' batched verifier agents over ' + angles.length + ' angles x ' + batches.length + ' batches' + (REDUNDANCY > 1 ? ' x' + REDUNDANCY : ''))
+log('Verification: ' + panelTasks.length + ' batched verifier agents over ' + batches.length + ' batches' + (REDUNDANCY > 1 ? ' x' + REDUNDANCY : '') + (groups.length > 1 ? ' (severity-tiered: Lows get the 3-angle quick set)' : ''))
 
 // Conservative tally per angle. Only EXPLICIT verdicts count as votes (cant-tell is
 // recorded, never a pass); a reject that ties the upholds wins (fail closed at even
@@ -375,7 +385,10 @@ log('Verification: ' + deliveredFindings.length + ' findings cleared the panel; 
 
 // ---------- PHASE G: Completeness ----------
 phase('Completeness')
-const coverage = await cast('completeness', promptRef('07_completeness_audit', { CLAIM_INVENTORY_PATH: carto.inventory_path, SENTENCE_MAP_PATH: carto.sentence_map_path, COVERED_LOCATIONS_JSON: { covered_ranges: coveredRanges, finding_locations: deliveredFindings.map(f => f.location) }, COVERAGE_RUBRIC_PATH: PATHS.coverage_rubric || '' }), { ...GP, label: 'completeness', phase: 'Completeness', schema: COVERAGE })
+// the auditor keys dimensions off the delivered findings (type/seat/severity), the
+// seats' jurisdictions, and the locations — not location strings alone (a field run
+// produced false NOT-COVERED flags on dimensions that had verified findings)
+const coverage = await cast('completeness', promptRef('07_completeness_audit', { CLAIM_INVENTORY_PATH: carto.inventory_path, SENTENCE_MAP_PATH: carto.sentence_map_path, COVERED_LOCATIONS_JSON: { covered_ranges: coveredRanges, delivered_findings: deliveredFindings.map(f => ({ id: f.id, seat_id: f.seat_id, finding_type: f.finding_type, severity: f.severity, location: f.location })) }, SEAT_JURISDICTIONS_JSON: roster.seats.map(s => ({ seat_id: s.seat_id, role_title: s.role_title, jurisdiction: s.jurisdiction })), COVERAGE_RUBRIC_PATH: PATHS.coverage_rubric || '' }), { ...GP, label: 'completeness', phase: 'Completeness', schema: COVERAGE })
 log('Completeness: claims ' + coverage.claims_covered + '/' + coverage.claims_total + ', sentences ' + coverage.sentences_covered + '/' + coverage.sentences_total + ', reopen=' + coverage.reopen.length)
 
 // ---------- PHASE H: Synthesis ----------
@@ -392,7 +405,13 @@ const allDelivered = verified.filter(v => v.delivered).map(v => ({ ...v.finding,
 const contributionFindings = allDelivered.filter(f => f.finding_type === 'contribution-undersell')
 contributionFindings.forEach(f => { f.verification_status = 'needs-author-confirmation' })
 const chairFindings = allDelivered.filter(f => f.finding_type !== 'contribution-undersell')
-const synthesis = await cast('chair', promptRef('06_chair_synthesis', { VERIFIED_FINDINGS_JSON: chairFindings, CONTRIBUTION_JSON: contributionFindings, INTEGRATION_JSON: integration, PREMORTEM_JSON: premortemFindings, COVERAGE_JSON: coverage, REJECTED_JSON: rejected, REGISTER, RULES_PATH: PATHS.rules || '', RUBRIC_PATH: PATHS.rubric || '' }), { ...GP, label: 'chair:synthesis', phase: 'Synthesis', schema: SYNTHESIS })
+// The chair also persists the heavy artifacts to disk (best-effort; field-grounded: a
+// large run's full return can exceed the notification channel, and the orchestrator
+// should read these files instead of the blob). The returned object remains the source
+// of truth — the writes are a convenience, never a substitute.
+const artDir = (PATHS.session || '.') + '/round_artifacts'
+const artifactNote = '\nALSO, before returning your StructuredOutput, write two byte-faithful JSON artifact files with your tools (create the directory first; no commentary inside the files): (1) ' + artDir + '/findings_ledger.json = {"findings": <the VERIFIED_FINDINGS_JSON you received, verbatim>, "contribution_findings": <the CONTRIBUTION_JSON you received, verbatim>, "rejected_in_panel": <the REJECTED_JSON you received, verbatim>, "integration": <the INTEGRATION_JSON you received, verbatim>}; (2) ' + artDir + '/synthesis_raw.json = exactly the synthesis object you return. These files are a convenience copy; your StructuredOutput remains the deliverable.'
+const synthesis = await cast('chair', promptRef('06_chair_synthesis', { VERIFIED_FINDINGS_JSON: chairFindings, CONTRIBUTION_JSON: contributionFindings, INTEGRATION_JSON: integration, PREMORTEM_JSON: premortemFindings, COVERAGE_JSON: coverage, REJECTED_JSON: rejected, REGISTER, RULES_PATH: PATHS.rules || '', RUBRIC_PATH: PATHS.rubric || '' }) + artifactNote, { ...GP, label: 'chair:synthesis', phase: 'Synthesis', schema: SYNTHESIS })
 // Enforce the non-blocking contract in code, not trust: an undersell id can never appear in
 // prioritized_findings, and the memo holds at most 3 items, each tracing to a DELIVERED
 // undersell finding (anything else is dropped, fail closed).
@@ -407,6 +426,9 @@ return {
   // not 'inherit', states the role-class cast in the report header (grounding rule 15).
   casting: { mode: CASTING_MODE, role_models: MODELS, degraded_casting: DEGRADED, span_diet: SPAN_DIET, seat_cap: SEAT_CAP, generalist_cap: GEN_CAP, verification_batch: BATCH },
   budget_actions: BUDGET_ACTIONS,
+  // best-effort chair-written copies of the heavy arrays below; verify on disk before
+  // relying on them — this returned object stays the source of truth either way
+  artifact_paths: { findings_ledger: artDir + '/findings_ledger.json', synthesis_raw: artDir + '/synthesis_raw.json' },
   roster: { paper_type: roster.paper_type, seats: roster.seats.length, generalists: roster.generalist_seats.length, central_tensions: roster.central_tensions, not_staffed: roster.not_staffed },
   counts: { raw_findings: findings.length, delivered: deliveredFindings.length, rejected: rejected.length },
   findings: chairFindings,
