@@ -81,9 +81,12 @@ rather than failing silently.
   mapped model above the session tier inherits instead of silently raising the run's cost
   (the clamp is what makes economy safe to request on any session; without the arg the map
   is applied as given). For notation-, math-, or table-dense papers keep
-  CARTOGRAPHY at the session model even under economy (pass a `models` override without the
-  `carto` entry): paper.txt is what the deterministic quote gate matches against, so extraction
-  fidelity is load-bearing. Record the casting object (mode, role→model map, degraded fallbacks,
+  CARTOGRAPHY at the session model: paper.txt is what the deterministic quote gate matches
+  against, so extraction fidelity is load-bearing. Mechanism (a `models` map REPLACES the
+  economy map wholesale and labels the run `custom`, so there is no partial tweak): either
+  run such papers at the default full power, or pass the full documented economy map with
+  only the `carto` entry raised to the session tier and disclose the run as the
+  `custom`-labeled cast it then is. Record the casting object (mode, role→model map, degraded fallbacks,
   caps, batch) in `meta.json` at kickoff; whenever the mode is not `inherit`, the report header
   must state the role-class cast in one sentence (grounding rule 15).
 

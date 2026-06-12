@@ -6,10 +6,12 @@ description: |
   paper PDF (plus a few public cited works it fetches), a topic-adapted fleet of expert
   referee subagents (every
   contested claim argued from at least two COMPETING intellectual traditions,
-  plus generalist seats for relevance and understandability) reviews the paper
+  plus generalist seats for relevance, understandability, and cross-field
+  significance) reviews the paper
   to the sentence, every comment grounded in an exact quote (no fabrication, no
   confidence scores) and independently re-checked from many angles before
-  delivery. ACT II (ATELIER, opt-in): with the author's source + data + code,
+  delivery. On every run it also flags where the paper UNDERSELLS its own
+  results, in a separate non-blocking Contribution Memo (suggestions only). ACT II (ATELIER, opt-in): with the author's source + data + code,
   it implements the agreed changes as a tracked-changes redline plus a clean
   revised version, RE-RUNS the analysis under an execution-provenance wall
   (no number enters the paper unless a logged re-run produced it), and
@@ -58,7 +60,7 @@ and Act II is demonstrated end-to-end once on one accepted paper, not broadly va
   mandate and staged only if actually fetched). Output: a verified,
   prioritized finding ledger + a referee-report bundle + the cross-critique crux notes
   (where rival seats collided and what evidence would move each side) + the generalists'
-  relevance and understandability memo + a non-blocking **Contribution Memo** (at most 3
+  relevance, understandability, and cross-field-significance memo + a non-blocking **Contribution Memo** (at most 3
   verified ways the paper undersells its own results, each grounded in a quoted foothold;
   suggestions only, the author's call) + a completeness certificate. Read-only;
   nothing of the author's is touched. (`workflow/phase1_tribunal.js`)
@@ -175,7 +177,8 @@ efficiently (same phases, prompts, schemas); the subagents still do the work. **
 needs neither a fleet nor workflows and is the safe choice on the lightest setups. See
 `helpers/orchestration.md` for how the orchestrator picks the engine.
 Either way, the spawned agents inherit the orchestrating session's model and context by default
-(no per-agent model is set unless you opt into the economy register below), so dynamic
+(no per-agent model is set unless you opt into the economy register below or supply a
+custom role-to-model map), so dynamic
 workflows do not bypass the 1M-context credit caveat: a 1M-context session may need usage
 credits enabled for that tier, or run the orchestrator on a standard-context model. In the
 default mode that inheritance means the session model sets the workshop's capability: a
@@ -201,12 +204,15 @@ inheritance and is logged, never crashed on, and a never-upgrade clamp (armed by
 `session_model` argument the orchestrator passes) keeps economy from raising any role
 above the session model, so asking for economy can lower a run's cost but never lift it.
 On a Fable session the pre-flight presents economy as the recommended, pre-selected
-choice (the documented lockout case); full power stays one explicit "yes" away. Honest status: the economy cast matches one
+choice (the documented lockout case); full power stays one explicit "yes" away. An
+experimental span-diet for the verification panel is a separate economy-only opt-in
+(`span_diet: true`; see `helpers/verification_panel.md`). Honest status: the economy cast matches one
 real field run (Act I: 39 agents in total, its 37-agent tribunal workflow recorded at
 3.70M subagent tokens in 55 minutes, delivering a 60-finding verified
 ledger), which is evidence it preserves output strength, not blind validation (see
 `LIMITATIONS.md`). A user token target (a "+500k"-style budget) auto-enables economy plus
-small logged structural adjustments; deeper cuts (a Sonnet panel, Haiku relays, economy as
+small logged structural adjustments; deeper cuts (a Sonnet panel, Sonnet generalists,
+Haiku relays, the panel span-diet, economy as
 the default) are named validation arms, not options.
 
 ## Reading order for the orchestrating Claude

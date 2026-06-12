@@ -122,7 +122,7 @@ to orchestrate those same subagent phases more efficiently; if they're off, Symp
 Summit run at Workshop depth and CRUCIBLE tells you rather than downgrading silently. **Desk
 Review** needs neither, so it works anywhere. CRUCIBLE
 runs at full power on Max, with nothing capped. Either engine's agents inherit the orchestrating
-session's model and context by default (the opt-in economy register below is the one
+session's model and context by default (the opt-in economy register below is the main
 exception), so dynamic workflows do not bypass the one account caveat: a
 large-context (1M) session may need usage credits enabled for that tier, or just run the session
 on a standard-context model (`/model sonnet`), which keeps the methodology identical. Neither
@@ -157,7 +157,10 @@ verification panel, Act II's runner/triage/reconciler/package) at the Opus floor
 phases (cartography, grounding, gate relays, completeness, Act II intake/staging/disclosure)
 on Sonnet, with the scout, the chair, and Act II's scribes always at the session model. Every
 deterministic rail is unchanged, the cast is recorded in `meta.json` and stated in the report
-header, and an unavailable model falls back to inheritance with the fallback logged. The
+header, and an unavailable model falls back to inheritance with the fallback logged. Economy
+is the lever for Fable sessions specifically: a never-upgrade clamp keeps it from raising any
+role above the session model, so it can lower a run's cost but never lift it — on an Opus
+session it saves little, and on a Sonnet session it simply inherits. The
 measured anchor so far: one real Workshop-band field run at this cast recorded its 37-agent
 tribunal workflow at 3.70M subagent tokens in 55 minutes (Act I totaled 39 agents and
 delivered a 60-finding verified ledger, 11 High) — well

@@ -24,7 +24,9 @@ Produce an array of FINDINGS (schema: finding; use `finding_type` `relevance` or
 the contribution is overstated, or where the exposition breaks); use `absence-silence`
 when the problem is something unsaid (e.g., the "so what" is never stated) — every
 absence-class finding carries an `absence_probe` of at least 3 terms (with paraphrases)
-whose presence would refute the claimed absence; a deterministic gate searches them. A
+whose presence would refute the claimed absence; a deterministic gate searches them. Set
+`magnitude` on every finding (moves-a-number / moves-a-conclusion / presentation-only —
+most generalist findings are presentation-only or moves-a-conclusion). A
 generalist finding CAN be `High` — "even if correct, this does not matter, and the
 paper never argues otherwise" is a desk-reject-grade observation.
 

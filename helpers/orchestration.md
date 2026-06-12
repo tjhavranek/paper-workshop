@@ -163,9 +163,13 @@ Never auto-start Act II.
    master script unchanged; diff current headline numbers. Mismatch ⇒ stop and report
    (a broken baseline is the first finding).
 3. Launch `workflow/phase2_atelier.js` with `args` = `{ ledger, inputs, paths: { session,
-   prompts_dir, helpers_dir, rules, rubric, quote_gate, sandbox_notes } }` — `helpers_dir`
+   prompts_dir, helpers_dir, rules, rubric, quote_gate, sandbox_notes, staged_sources,
+   ledger_path } }` — `helpers_dir`
    lets the Runner / reconciler / package agents call the deterministic checkers
-   (`provenance.py`, `consistency.py`, `reproduces.py`, `integrity_diff.py`). The same
+   (`provenance.py`, `consistency.py`, `reproduces.py`, `integrity_diff.py`);
+   `staged_sources` feeds the Act-II panel's factual-literature/steelman angles the same
+   staged cited-sources tree Act I used (omit it and those checks degrade to cant-tell);
+   `ledger_path` is optional (falls back to the inlined `ledger`). The same
    optional knobs apply: `economy: true` (runner/triage/reconciler/package/panel at the
    Opus floor, intake/staging/disclosure on Sonnet, scribes ALWAYS at the session model),
    `session_model` (arms the never-upgrade clamp, as in Act I), `models`, `scribe_batch`
@@ -182,8 +186,12 @@ Never auto-start Act II.
    awaiting per-item approval. Walk the author through them.
 
 ## Step 8 — Final assembly and labeling
-Produce: the revised manuscript (`revised_minimal` + `revised_optimal`, tracked), the
-`changes.pdf`, the verification report, the replication package, and the
+Produce (the names prompt 15 and the engine's return object actually use): the revised
+manuscript `revised_clean.(tex|docx)` (+ compiled `revised_clean.pdf`), the auditable
+redline (`revised_redline.pdf` via latexdiff, or `revised_tracked.docx` for Word), the
+`changes_map.md` (every change → edit_id → finding_id → the reviewer concern it answers),
+`MAP.md` (every headline number → script+line+run_id+output_hash), the verification
+report, the replication package, and the
 auto-generated **AI-involvement disclosure**. State plainly what was and was not done
 (missing inputs, unreproduced baseline, skipped external leg). The terminal state is
 "here is a reviewable branch + tracked changes + a reproducing package — accept what

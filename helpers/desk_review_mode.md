@@ -29,7 +29,10 @@ panel to keep cost at ~1–6 agents.
 5. **Synthesis.** Call `prompts/06_chair_synthesis.md` once to produce the report (verdict,
    prioritized must-fix capped ~5–7, venue read, minority report, rejected suggestions).
    Desk Review produces no integrators, no pre-mortem, and no completeness audit, so
-   substitute explicitly: `INTEGRATION_JSON: []`, `PREMORTEM_JSON: []` (`kill_shots` may
+   substitute explicitly: `VERIFIED_FINDINGS_JSON:` the gate-checked findings from step 4
+   (the chair's primary input), `REGISTER:` the run's register, `RULES_PATH` /
+   `RUBRIC_PATH:` the usual file paths,
+   `INTEGRATION_JSON: []`, `PREMORTEM_JSON: []` (`kill_shots` may
    be empty), `REJECTED_JSON:` the findings the chair's inline checks dropped (below),
    and `COVERAGE_JSON: { claims_total: <count from step 1>, claims_covered: <claims
    touched by findings>, sentences_total: 0, sentences_covered: 0, dimension_coverage:

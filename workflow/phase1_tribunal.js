@@ -55,7 +55,7 @@ const M = k => {
   const m = MODELS[k]
   if (!m) return {}
   if (SESSION_RANK && TIER_RANK[m] && TIER_RANK[m] > SESSION_RANK) {
-    if (!DEGRADED.some(d => d.role === k && d.reason === 'above-session-tier')) DEGRADED.push({ role: k, tried: m, fell_back_to: 'inherit', reason: 'above-session-tier' })
+    if (!DEGRADED.some(d => d.role === k && d.reason === 'above-session-tier')) DEGRADED.push({ role: k, label: k, tried: m, fell_back_to: 'inherit', reason: 'above-session-tier' })
     return {}
   }
   return { model: m }
@@ -64,7 +64,7 @@ async function cast(role, prompt, opts) {
   const m = M(role)
   let r = await agent(prompt, { ...opts, ...m })
   if (r === null && m.model) {
-    DEGRADED.push({ role, label: opts.label || role, tried: m.model, fell_back_to: 'inherit' })
+    DEGRADED.push({ role, label: opts.label || role, tried: m.model, fell_back_to: 'inherit', reason: 'spawn-returned-null' })
     r = await agent(prompt, opts)
   }
   return r
