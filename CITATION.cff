@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "If this software helps your work, please cite it as below."
+title: "CRUCIBLE (paper-workshop): an adversarial multi-expert workshop that stress-tests and rebuilds a research paper"
+type: software
+authors:
+  - family-names: Havranek
+    given-names: Tomas
+  - family-names: Irsova
+    given-names: Zuzana
+version: 0.7.0
+date-released: "2026-06-12"
+url: "https://github.com/tjhavranek/paper-workshop"
+repository-code: "https://github.com/tjhavranek/paper-workshop"
+license: CC-BY-4.0

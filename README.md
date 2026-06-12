@@ -23,7 +23,7 @@ that answer it before you submit.
 
 It earns trust at the seams: every criticism is pinned to a real quote, and every revised number
 is produced by a real re-run of your own code. It is equally plain about the rest: effectiveness
-is not measured yet, and Act II has been demonstrated end-to-end only once (one accepted paper,
+is not measured yet (no recall or false-positive numbers), and Act II has been demonstrated end-to-end only once (one accepted paper,
 the authors' own group; see [`examples/incentives-workshop`](examples/incentives-workshop)), not
 broadly validated. Read the [honest limits](LIMITATIONS.md) before you rely on it.
 
@@ -85,19 +85,15 @@ run end to end on an accepted JPE-Microeconomics meta-analysis: a topic-built re
 then a re-run of the authors' own Stata and R that regenerated the data byte-for-byte identical, with a
 deterministic provenance proof. ([`examples/self-audit`](examples/self-audit) is the tool run on its own design.)
 
-**Honesty about limits.** See **[`LIMITATIONS.md`](LIMITATIONS.md)** for a straight account of
+**Honesty about limits.** **[`LIMITATIONS.md`](LIMITATIONS.md)** is the straight account of
 what is genuinely enforced and what is not proven yet: no measured recall or false-positive
-numbers yet; same-model decorrelation is a design bet, not a proof; coverage means *attention*,
-not correctness; and the Contribution Memo is a gate-anchored option set whose selection is
-still same-model judgment, with no measured undersell-recall yet. Act II is built, unit-tested, and **demonstrated end-to-end once** on a real
-accepted paper (see [`examples/incentives-workshop`](examples/incentives-workshop): both the
-Stata and R paths re-executed, the headline reproduced), though on one paper from the authors'
-own group, so it is a demonstration and not independent validation; re-derive any
-regenerated number yourself. We ran CRUCIBLE on its own
-design before release, and it caught real overclaims and a bug in its own quote-gate, both
-fixed; a later self-audit of the shipped version is in
-[`examples/self-audit/`](examples/self-audit/), framed as a development pass, not
-independent validation.
+numbers; same-model decorrelation is a design bet, not a proof; coverage means *attention*,
+not correctness; and the Contribution Memo's selection is same-model judgment with no measured
+undersell-recall yet. Act II is built, unit-tested, and **demonstrated end-to-end once** on a
+real accepted paper ([`examples/incentives-workshop`](examples/incentives-workshop)), a
+demonstration and not independent validation; re-derive any regenerated number yourself. A
+pre-release self-audit caught real overclaims and a quote-gate bug, both fixed
+([`examples/self-audit/`](examples/self-audit/)); a development pass, not validation.
 
 ## Modes: pick your depth (Desk Review through Workshop run at full depth on any paid plan)
 
@@ -117,56 +113,38 @@ Symposium/Summit for a major pre-submission pass.
 
 **Engine.** The workshop runs on subagents (helper Claude sessions your main session spawns),
 which work on every plan. When dynamic workflows are available (a Claude Code orchestration
-feature: on by default on Max; on Pro, switch them on in `/config`), CRUCIBLE uses them
-to orchestrate those same subagent phases more efficiently; if they're off, Symposium and
-Summit run at Workshop depth and CRUCIBLE tells you rather than downgrading silently. **Desk
-Review** needs neither, so it works anywhere. CRUCIBLE
-runs at full power on Max, with nothing capped. Either engine's agents inherit the orchestrating
-session's model and context by default (the opt-in economy register below is the main
-exception), so dynamic workflows do not bypass the one account caveat: a
-large-context (1M) session may need usage credits enabled for that tier, or just run the session
-on a standard-context model (`/model sonnet`), which keeps the methodology identical. Neither
-weakens the tool (see [`helpers/doctor.md`](helpers/doctor.md)).
+feature: on by default on Max; on Pro, switch them on in `/config`), CRUCIBLE uses them to run
+the same phases more efficiently; if they're off, Symposium and Summit run at Workshop depth
+and CRUCIBLE tells you rather than downgrading silently. Engine detection, model and context
+inheritance, and the 1M-context account caveat and its remedies live in the pre-flight,
+[`helpers/doctor.md`](helpers/doctor.md).
 
-**Running on Claude Fable 5 (mythos-class).** In the default mode, that same inheritance means
-starting the session on
-Claude Fable 5 (Anthropic's mythos-class tier, the class above Opus) lifts every seat, verifier,
-and chair to that capability with no configuration: select it with `/model best` in Claude Code
-v2.1.170 or later, which picks Fable where your plan has it and the latest Opus where it does not.
-Anthropic's prompting guidance for Fable 5 describes the pattern this skill is built on: it states
-that separate, fresh-context verifier subagents tend to outperform self-critique, which matches
-CRUCIBLE's verification panel. We cite that as a design endorsement, not as a measured improvement;
-we have not measured one.
-
-The honest constraints, as of June 2026. Fable 5 carries safety classifiers that can silently drop
-a flagged session back to Opus 4.8, and the session then stays on Opus until you re-select Fable;
-for substantive biology work expect nearly all requests to reroute, so for biology- or
-security-flavored papers start on Opus 4.8 deliberately (see
-[`helpers/doctor.md`](helpers/doctor.md); the run records which model actually served, and the
-report discloses it). Fable 5 is a Covered Model: inputs are retained for 30 days (for safety
-defense only, not training) and zero-data-retention is not available, which matters for
-unpublished manuscripts (see [`helpers/safety_notes.md`](helpers/safety_notes.md)). It is priced at
-twice Opus. The workshop runs unchanged on Opus and Sonnet; the methodology does not depend on the
-model tier.
+**Running on Claude Fable 5 (mythos-class).** In the default mode the fleet inherits the
+session model, so starting the session on Claude Fable 5 (Anthropic's mythos-class tier, the
+class above Opus) lifts every seat, verifier, and chair to that capability with no
+configuration; `/model best` (Claude Code v2.1.170+) picks Fable where your plan has it and
+the latest Opus where it does not. Anthropic's prompting guidance for Fable 5 states that
+separate, fresh-context verifier subagents tend to outperform self-critique, which matches
+CRUCIBLE's verification panel; a design endorsement, not a measured improvement. The honest
+constraints, as of June 2026 (safety-classifier rerouting to Opus 4.8, which makes Opus the
+deliberate start for biology- or security-flavored papers; 30-day input retention with no
+zero-data-retention; twice Opus pricing), are detailed in
+[`helpers/doctor.md`](helpers/doctor.md) and [`helpers/safety_notes.md`](helpers/safety_notes.md);
+the run records which model actually served, and the report discloses it. The workshop runs
+unchanged on Opus and Sonnet; the methodology does not depend on the model tier.
 
 **Running on a usage-constrained plan: the economy register.** A default Workshop run inherits
 the session model into every agent, and on Fable that can exhaust a usage-capped plan's window
-before the run finishes — a locked-out run delivers zero findings. Saying "economy" casts the
-fleet in two tiers instead: judgment layers (seats, generalists, premortem, integrators, the
-verification panel, Act II's runner/triage/reconciler/package) at the Opus floor, mechanical
-phases (cartography, grounding, gate relays, completeness, Act II intake/staging/disclosure)
-on Sonnet, with the scout, the chair, and Act II's scribes always at the session model. Every
-deterministic rail is unchanged, the cast is recorded in `meta.json` and stated in the report
-header, and an unavailable model falls back to inheritance with the fallback logged. Economy
-is the lever for Fable sessions specifically: a never-upgrade clamp keeps it from raising any
-role above the session model, so it can lower a run's cost but never lift it — on an Opus
-session it saves little, and on a Sonnet session it simply inherits. The
-measured anchor so far: one real Workshop-band field run at this cast recorded its 37-agent
-tribunal workflow at 3.70M subagent tokens in 55 minutes (Act I totaled 39 agents and
-delivered a 60-finding verified ledger, 11 High) — well
-inside a Max-plan window. That is one run's evidence, not blind validation; see
-[`LIMITATIONS.md`](LIMITATIONS.md). The pre-flight (`helpers/doctor.md`) shows a cost preview
-and offers economy before any Workshop-or-larger launch, so the choice is informed either way.
+mid-run; a locked-out run delivers zero findings. Saying "economy" casts judgment layers at
+the Opus floor and mechanical phases on Sonnet, with the scout, the chair, and Act II's
+scribes always at the session model; every deterministic rail is unchanged, the cast is
+recorded in `meta.json` and stated in the report header, and a never-upgrade clamp means
+economy can lower a run's cost but never raise it. The anchor so far: one real Workshop-band
+field run recorded its tribunal workflow at 3.70M subagent tokens in 55 minutes, well inside a
+Max-plan window, and delivered a 60-finding verified ledger; one run's evidence, not blind
+validation (see [`LIMITATIONS.md`](LIMITATIONS.md)). The pre-flight
+([`helpers/doctor.md`](helpers/doctor.md)) shows a cost preview and offers economy before any
+Workshop-or-larger launch.
 
 ## Install
 
