@@ -68,7 +68,7 @@ adversarial cross-review during development.
   Caveats, so this is a demonstration and not independent validation: one paper, from the
   authors' own group, in a single run; the numbers already reproduced, so the redline stayed
   prose-only and the path where a re-run value replaces a stale number was never exercised; and
-  environment capture is not yet container-pinned. Treat Act II as *built, unit-tested, and
+  environment capture is not yet container-pinned. Treat Act II as *built, [unit-tested](.github/workflows/ci.yml), and
   demonstrated once* — and re-derive any number yourself before trusting it.
 - **The Contribution Memo's selection is a same-model judgment with no measured
   undersell-recall yet.** The gates verify each memo item's anchors (the foothold quote is
@@ -99,8 +99,38 @@ adversarial cross-review during development.
   row-parity check), the panel span-diet (excerpts instead of the full manuscript for the
   local-judgment angles), and flipping economy to the default. Custom `models` maps beyond the
   shipped economy cast are entirely unvalidated and run labeled `custom`.
+- **The quote gate verifies a quote exists, not that it sits where the finding says.**
+  `helpers/quote_gate.py` confirms each quote occurs verbatim somewhere in the manuscript; it
+  does not yet map the match back through the sentence map to confirm the quote actually
+  appears at the finding's claimed section or sentence range. A real quote pinned to the wrong
+  locator (a misattributed section, a transposed line) passes the deterministic rail and is
+  caught only by the LLM verification angles, not by code. Findings carry a locator
+  (`location.sentence_range` / `section`), but seats fill it inconsistently and many findings
+  give a free-text section only, so a deterministic locator check is not yet reliable across
+  runs. Treat the locator on a finding as a pointer to check, not a code-verified fact.
 - **A self-audit is a development pass, not independent validation.** The example in this repo
   is the tool reviewing its own design; that is a closed loop and we label it as such.
+
+### Process metrics from the known runs (process, not outcome)
+
+These are PROCESS numbers from the runs whose records are committed in this repo or already
+disclosed above. They describe how the pipeline behaved (how many findings the panel dropped,
+what the gates checked), NOT whether the findings were correct. They are not recall,
+precision, or any measured-effectiveness number, none of which exists yet (see the first
+bullet of this section and the Roadmap).
+
+| Run | Mode / register | Agents | Raw -> delivered | Panel-rejected | Quote-gate | Severity (delivered) |
+|---|---|---|---|---|---|---|
+| Self-audit (`examples/self-audit/`) | Roundtable (quick) / brutal | 42 | 80 -> 69 | 11 | not recorded | 31 High / 29 Med / 9 Low |
+| Incentives meta-analysis (`examples/incentives-workshop/`) | Workshop (thorough) / supportive | 27 | 137 -> 131 | 6 | 108 matched, 1 downgraded, 28 absence-exempt | 45 High / 58 Med / 34 Low |
+| Economy field run (disclosed above) | Workshop-band / economy | 39 (Act I) | -> 60 delivered | not recorded | not recorded | 11 High (rest not recorded) |
+
+Notes: the self-audit is the tool reviewing its own design (a closed loop, not validation)
+and ran Act I only; the incentives run is a demonstration on one already-accepted paper from
+the authors' own group; the economy field run is the single Workshop-band economy pass
+already described above (3.70M subagent tokens, 55 minutes, for its tribunal workflow). A
+"not recorded" cell means the figure is not in a committed record, so it is left out rather
+than estimated.
 
 ## Roadmap
 1. A measured validation run (recall + false-positive rate) on third-party papers; lead the
@@ -117,6 +147,10 @@ adversarial cross-review during development.
 4. An optional **independent numerical re-derivation** pass (recompute a key result a second
    way to catch a real coding error; labeled, never auto-applied).
 5. Make the cross-provider dissent leg a first-class, easy opt-in.
+6. A deterministic locator check: once seats emit a parseable sentence-map id on every
+   finding, map the quote's match offset through the sentence map and confirm it falls in
+   the claimed range, degrading a mismatch to needs-author-confirmation (annotate, never
+   delete).
 
 If any of these matter to your decision, weigh the output accordingly — and tell us what
 breaks.

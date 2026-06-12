@@ -5,8 +5,10 @@ type: software
 authors:
   - family-names: Havranek
     given-names: Tomas
+    orcid: "https://orcid.org/0000-0002-3158-2539"
   - family-names: Irsova
     given-names: Zuzana
+    orcid: "https://orcid.org/0000-0002-0753-8124"
 version: 0.7.0
 date-released: "2026-06-12"
 url: "https://github.com/tjhavranek/paper-workshop"

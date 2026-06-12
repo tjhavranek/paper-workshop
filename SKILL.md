@@ -194,7 +194,9 @@ integrators, the verification panel, and Act II's runner, triage, reconciler, an
 run at the Opus floor and never below it; the mechanical phases (cartography, source
 grounding, gate relays, completeness, Act II intake/staging/disclosure) run on Sonnet; the
 scout, the chair, and Act II's scribes always stay at the session model. Under economy,
-Low-severity findings are panel-checked on the quick three-angle set (the logical-validity
+Low-severity findings are panel-checked on the quick gate set plus severity-calibration
+(the calibration angle is the one channel that can flag an under-rated Low for the chair;
+the logical-validity
 hard gate, fix-safety, and the steelman defense stay on every finding; the locked rubric
 means a Low can neither rise nor drive the verdict). Every
 deterministic rail (quote gate, absence gate, fail-closed panel aggregation, the

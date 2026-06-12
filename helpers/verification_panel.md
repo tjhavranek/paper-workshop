@@ -42,7 +42,7 @@ adversarial findings). The panel *audits* candidate outputs — findings and edi
 
 | Angle | The question it asks | Hard gate? |
 |---|---|---|
-| `quote-locator` | Does the quote exist verbatim at the stated location? (runs `quote_gate.py`; absence-class findings are instead certified by `absence_gate.py`, the probe-term search) | **Enforced by the standalone Quote-gate phase, not the panel aggregator** — fail (unmatched quote, or anything but a clean `absent` certificate) ⇒ status forced to `needs-author-confirmation`; the finding is **not** dropped |
+| `quote-locator` | Does the quote exist verbatim in the manuscript? (runs `quote_gate.py`, which checks 1:1 existence in paper.txt, not that the quote sits at the finding's stated locator, see `LIMITATIONS.md`; absence-class findings are instead certified by `absence_gate.py`, the probe-term search) | **Enforced by the standalone Quote-gate phase, not the panel aggregator** — fail (unmatched quote, or anything but a clean `absent` certificate) ⇒ status forced to `needs-author-confirmation`; the finding is **not** dropped |
 | `logical-validity` | Does the criticism actually *follow* from the quoted text? (catches a real quote + an invalid inference) | **Yes** — fail ⇒ reject |
 | `factual-literature` | Is the norm/method/citation the finding appeals to actually correct? (checked against fetched sources, never memory) | No — fail ⇒ revise or reject |
 | `severity-calibration` | Is the severity calibrated under `rubric.md` — neither inflated nor deflated? | No — fail ⇒ revise severity (never silently; recorded) |
@@ -78,12 +78,15 @@ Act II since v0.7.0: edit verification is batched by angle ACROSS edits
 (`args.verify_batch`, default 12), never fanned out per edit.
 
 **Severity-tiered angles (economy register only).** Under economy, Low-severity findings
-are checked by the quick three-angle set (logical-validity, fix-safety, steelman-charity)
-while High/Medium findings get the tier's full set. This is safe under the locked rubric,
-not a loosened rail: panel calibration can only LOWER a severity (a Low has nowhere to
-go), Lows never drive the verdict or keep the deepening loop alive, and every quote
-already rode the standalone deterministic gate. The hard logical-validity gate and the
-steelman defense stay on every finding in every mode.
+are checked by the quick gate set (logical-validity, fix-safety, steelman-charity) plus
+severity-calibration, while High/Medium findings get the tier's full set. This is safe
+under the locked rubric, not a loosened rail: panel calibration can only LOWER a severity
+(a Low has nowhere to go), Lows never drive the verdict or keep the deepening loop alive,
+and every quote already rode the standalone deterministic gate. Severity-calibration rides
+on Lows on purpose: it is the only angle that can flag a Low as under-rated for the chair
+(the panel never raises a severity itself), so dropping it would remove the sole upgrade
+channel; keeping it costs one extra angle on the minority Low batch. The hard
+logical-validity gate and the steelman defense stay on every finding in every mode.
 
 **The span-diet (experimental, opt-in inside the economy register only).** With
 `span_diet: true`, the local-judgment angles (logical-validity, severity-calibration,

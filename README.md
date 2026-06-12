@@ -1,5 +1,7 @@
 # CRUCIBLE — the `paper-workshop` skill
 
+[![ci](https://github.com/tjhavranek/paper-workshop/actions/workflows/ci.yml/badge.svg)](https://github.com/tjhavranek/paper-workshop/actions/workflows/ci.yml)
+
 Imagine a panel of the world's leading experts, assembled for your exact paper, arguing it out
 from rival schools and then rebuilding it themselves, re-running your own code so the numbers are real.
 
@@ -89,13 +91,13 @@ deterministic provenance proof. ([`examples/self-audit`](examples/self-audit) is
 what is genuinely enforced and what is not proven yet: no measured recall or false-positive
 numbers; same-model decorrelation is a design bet, not a proof; coverage means *attention*,
 not correctness; and the Contribution Memo's selection is same-model judgment with no measured
-undersell-recall yet. Act II is built, unit-tested, and **demonstrated end-to-end once** on a
+undersell-recall yet. Act II is built, [unit-tested](.github/workflows/ci.yml), and **demonstrated end-to-end once** on a
 real accepted paper ([`examples/incentives-workshop`](examples/incentives-workshop)), a
 demonstration and not independent validation; re-derive any regenerated number yourself. A
 pre-release self-audit caught real overclaims and a quote-gate bug, both fixed
 ([`examples/self-audit/`](examples/self-audit/)); a development pass, not validation.
 
-## Modes: pick your depth (Desk Review through Workshop run at full depth on any paid plan)
+## Modes: pick your depth
 
 | Mode | What convenes | Experts | ≈ agents | Best for |
 |---|---|---|---|---|

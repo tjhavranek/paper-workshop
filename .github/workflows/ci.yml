@@ -1,0 +1,35 @@
+name: ci
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+jobs:
+  rails:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Helper selftests
+        run: |
+          for h in quote_gate absence_gate provenance consistency reproduces integrity_diff; do
+            echo "== $h =="
+            python helpers/$h.py selftest
+          done
+      - name: Schema JSON validity
+        run: |
+          for s in schemas/*.json; do
+            echo "== $s =="
+            python -m json.tool "$s" > /dev/null
+          done
+      - name: Workflow JS syntax
+        run: |
+          node --check workflow/phase1_tribunal.js
+          node --check workflow/phase2_atelier.js
+          node --check examples/parse_selfaudit.js
+      - name: Provenance proofs verify (reader-reproducible)
+        run: |
+          python helpers/provenance.py verify --token examples/incentives-workshop/phase2_true/provenance/token_lab.json --artifact-dir examples/incentives-workshop/phase2_true/run_results
+          python helpers/provenance.py verify --token examples/incentives-workshop/phase2_true/stata/provenance/token_stata.json --artifact-dir examples/incentives-workshop/phase2_true/stata/results

@@ -1,5 +1,52 @@
 # Changelog
 
+## v0.7.1 — 2026-06-12
+
+Trust hardening from two further external reviews, triaged by a three-checker subagent pass
+under an explicit high bar (the validation harness, both reviewers' top strategic ask, stays
+deferred by owner decision; it remains Roadmap item 1).
+
+- **CI: the rails now prove themselves on every push.** `.github/workflows/ci.yml` runs the
+  six deterministic helper selftests, validates all five schemas, syntax-checks both workflow
+  scripts, and re-verifies BOTH committed provenance proofs on a clean ubuntu checkout (the
+  `.gitattributes -text` protection makes the byte-exact hashes reproduce cross-platform;
+  every step verified locally before commit). README badge added; the "unit-tested" claims in
+  README and LIMITATIONS now link to the workflow instead of standing bare.
+- **The quote-locator gap is now disclosed, not papered over.** Both reviewers flagged that
+  `quote_gate.py` verifies a quote exists somewhere in the manuscript, not that it sits at
+  the finding's claimed locator. A deterministic locator check was scoped and REJECTED for
+  now on measured grounds: in the two committed runs only 41% and 3% of findings carry a
+  parseable sentence-range id (the field is voluntary and prompts never standardize it), and
+  the fail-closed polarity would degrade legitimate findings far more often than it would
+  catch the rare mislocated quote. Instead: the verification-panel doc's overclaiming
+  quote-locator row is corrected, LIMITATIONS names the gap plainly, and the deterministic
+  check is Roadmap item 6, gated on seats emitting parseable locators first.
+- **Economy severity circularity closed.** Under economy, Low findings had skipped
+  severity-calibration, the only channel that can flag an under-rated Low for the chair
+  (the panel never raises a severity itself). Lows now get the quick gate set PLUS
+  severity-calibration, at the cost of one extra angle on the minority Low batch.
+- **The manuscript is now named as an injection vector.** Grounding rule 11 extends from
+  inter-agent packets to the manuscript text and web-fetched sources: an imperative
+  addressed to an AI reader inside them is evidence, never a directive. The cartography
+  agent additionally writes a report-only `injection_scan.md` (never blocks, changes no
+  finding) and the report header notes any hit; the subagent fallback carries the same
+  instruction.
+- **Every report now carries the coverage caveat.** The coverage certificate renders with
+  "Coverage means reviewed, not proven correct: a flaw can hide in a covered span",
+  previously stated only in LIMITATIONS.
+- **Process metrics, labeled as process.** LIMITATIONS gains a small table of pipeline
+  numbers from the committed example runs and the disclosed field run (raw vs delivered,
+  panel rejections, gate results), explicitly distinguished from the outcome numbers
+  (recall, false positives) that do not exist yet.
+- **Small fixes.** ORCID iDs added to CITATION.cff (both verified against the ORCID public
+  API); the README Modes heading dropped its redundant parenthetical.
+- Also reviewed and rejected this pass, for the record: a tests/ wrapper (the selftests are
+  the tests), moving `examples/parse_selfaudit.js` (three committed references point at its
+  current path), a README four-way split (just streamlined in the prior pass), a shipped
+  smoke-test PDF, LLM-behavior integration tests in CI (non-deterministic, would make the
+  rails signal flaky), an environment lock-file format, a fallback enforcement-report
+  artifact, and the "verified research-change pipeline" reframing.
+
 ## v0.7.0 — 2026-06-12
 
 The economy register: the workshop now fits a usage-capped plan without trading away a single
