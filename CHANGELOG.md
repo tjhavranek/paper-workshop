@@ -1,5 +1,40 @@
 # Changelog
 
+## v0.7.2 — 2026-06-12
+
+Voice hardening, triaged by a brief subagent debate (3 grounded auditors + a fresh judge)
+after the author observed AI-style artifacts surviving an Act II run. The author-voice
+standard and the `human-voice` hard gate already covered manuscript edits well (the one
+committed true-Act-II example inserted clean economics prose), but voice was the single
+Act-II trust rail with no deterministic half, and the AI-authored deliverable and report
+prose had no voice instruction at all.
+
+- **New deterministic helper `helpers/style_gate.py` (+ `style_gate.md`).** It does the
+  counting the `human-voice` angle used to eyeball: em/en-dash and semicolon rates (Unicode
+  AND LaTeX `---`/`--`) measured against the author's baseline, the banned AI lexicon minus
+  any word the author already uses, and the staged negation-correction antithesis. It is
+  ADVISORY and author-relative, the opposite polarity to the quote gate: a rate spike maps to
+  `cant-tell` (routes the edit to author sign-off, never an auto-reject, because a legitimate
+  author may use dashes), and only an author-independent banned token or staged antithesis
+  exits non-zero. Stdlib-only, reuses `quote_gate.normalize` so the gates cannot drift, with
+  its own selftest now in CI.
+- **Deliberately conservative, to avoid damaging legitimate prose.** Bare `rather than X, Y`
+  (a normal comparative), `not only X but also Y`, and `highlight` as a verb are NOT flagged
+  deterministically; they remain the LLM verifier's semantic call. (The committed Edit 3,
+  "...an identifying assumption rather than a tested property...", scores `clean`.)
+- **The `human-voice` angle now runs the gate** instead of eyeballing the counts (prompt 05
+  + the engine's angle text), with the spike-to-`cant-tell` mapping wired through the existing
+  sign-off path; `decideEdit()` and the hard-gate set are unchanged.
+- **The unguarded AI-authored prose now has a voice rail.** The replication-package writer
+  (README, `changes_map.md`, `MAP.md`, `data_dictionary.md`), the disclosure writer, and the
+  Act I chair report get a plain-prose instruction pointing at the canonical standard, and the
+  package/disclosure writers run the style gate over their own output and rewrite to `clean`
+  (these files have no author voice to protect).
+- **Additive-edit baseline defined.** When an inserted sentence has no adjacent author prose,
+  the baseline is the document-wide author rate (sample paragraphs elsewhere in the file),
+  named in the scribe standard and the `human-voice` angle so an additive edit never defaults
+  to the model's own voice.
+
 ## v0.7.1 — 2026-06-12
 
 Trust hardening from two further external reviews, triaged by a three-checker subagent pass

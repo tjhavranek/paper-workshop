@@ -48,5 +48,13 @@ Produce the synthesis (schema: synthesis). Binding constraints:
   validity or venue verdict — they are grounded suggestions the author may ignore
   (rule 14). If {{CONTRIBUTION_JSON}} is empty, return an empty array; never invent.
 
+- **Plain prose, no AI tells.** The report is the tool's own voice (not the author's), so
+  write it as a careful human referee would: do not spike em/en-dashes or semicolons, do not
+  use negation-correction antithesis ("it is not X, it is Y" / "not X but Y"), do not use the
+  banned AI lexicon (delve, leverage, underscore, showcase, foster, harness, pivotal, and the
+  rest of the list in `prompts/phase2/12_scribe_implementer.md`), and do not use signposting
+  filler (it is worth noting, importantly, moreover, furthermore, in summary). This binds
+  under either register; it changes tone only, never a severity or the must-fix set.
+
 Compose nothing that is not traceable to a verified finding. If the verified set is
 thin, the report is short and to the point — never padded.

@@ -45,6 +45,19 @@ Requirements:
   baseline anchor), set `reproduced: "n/a"` and add "no baseline anchor — reproduction not
   established" to `labeled_gaps`; never report a bare `true`/`false` you could not derive.
 
+**Plain-prose voice for everything you write.** The README, `changes_map.md`, `MAP.md`,
+`data_dictionary.md`, and any redline narration are AI-authored prose the author reads. Write
+them in plain, direct English: no em/en-dash or semicolon spikes above a normal academic rate,
+no negation-correction antithesis ("it is not X, it is Y"), no banned AI lexicon (delve,
+leverage, underscore, showcase, foster, harness, pivotal, and the rest of the list in
+`prompts/phase2/12_scribe_implementer.md`), and no signposting filler (it is worth noting,
+importantly, moreover, furthermore, in summary). Here there is no author text to match, so this
+is a FIXED plain-prose target, not author-matching. After writing each such file, run
+`python {{HELPERS_DIR}}/style_gate.py check --inserted-file <file> --baseline-file {{REVISED_SOURCE_PATH}}`
+(the manuscript is the baseline); any verdict other than `clean` ⇒ revise the file to clear it
+before returning (these files carry no scientific record, so rewrite to clean voice rather than
+routing to sign-off). If `{{HELPERS_DIR}}/style_gate.py` is missing, glob for `**/style_gate.py`.
+
 Return the package `manifest`, the README text, the clean-room verification result
 (`reproduced: true | false | "n/a"` with the log), and the absolute paths of the
 deliverables you built: `package_dir`, `redline_path` (the latexdiff/redline PDF),

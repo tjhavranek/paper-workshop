@@ -296,8 +296,8 @@ paper-workshop/
 ├── schemas/                 ← finding, verification, roster_contract, synthesis, edit_spec
 ├── prompts/                 ← shared_grounding_rules + 00..07 (Act I) + phase2/10..16 (Act II)
 ├── helpers/                 ← orchestration, doctor, verification_panel, quote_gate.(py|md),
-│                              absence_gate.(py|md), provenance.py, consistency.py,
-│                              reproduces.py, integrity_diff.py, stopping_rule,
+│                              absence_gate.(py|md), style_gate.(py|md), provenance.py,
+│                              consistency.py, reproduces.py, integrity_diff.py, stopping_rule,
 │                              desk_review_mode, pdf_extraction, phase2_sandbox, safety_notes
 ├── workflow/                ← phase1_tribunal.js, phase2_atelier.js (the Workflow scripts)
 └── examples/                ← incentives-workshop/ (end-to-end on a real accepted paper)

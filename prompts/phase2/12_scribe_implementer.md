@@ -35,10 +35,16 @@ verifier checks against. Before you return a Lane-A edit:
   vocabulary, sentence length, rhythm, and punctuation habits. If the author writes plainly,
   write plainly.
 - **Match the author's punctuation density; do not impose your own.** Count the em/en-dashes
-  ("—", "–") and semicolons in the surrounding paragraphs. If the author uses them, you may,
+  ("—", "–", and in LaTeX source "---", "--") and semicolons in the surrounding paragraphs. If
+  the author uses them, you may,
   at their rate and for their purpose; if the author does not, do not introduce them (use a
   comma, parentheses, a colon, or two sentences). The tell is a *spike* in any one mark above
   the author's baseline, not the mark itself.
+- **Additive edit with no neighbor?** If the edit inserts a new sentence or caveat where there
+  is little or no adjacent author prose (a section head, a sparse list, a near-empty region),
+  the baseline is the DOCUMENT-WIDE author rate: sample several of the author's own paragraphs
+  elsewhere in this file and match that punctuation and lexicon profile. Never default to your
+  own voice for lack of a local neighbor.
 - **No negation-correction antithesis, in any form:** "it is not X, it is Y", "X. Not Y.",
   "it's not X — it's Y", "not X, but (rather) Y", "less about X than Y", "rather than X, Y".
   State the positive claim (Y) directly, without staging the contrast. Also avoid "not only X

@@ -167,10 +167,12 @@ Never auto-start Act II.
    master script unchanged; diff current headline numbers. Mismatch ⇒ stop and report
    (a broken baseline is the first finding).
 3. Launch `workflow/phase2_atelier.js` with `args` = `{ ledger, inputs, paths: { session,
-   prompts_dir, helpers_dir, rules, rubric, quote_gate, sandbox_notes, staged_sources,
-   ledger_path } }` — `helpers_dir`
+   prompts_dir, helpers_dir, rules, rubric, quote_gate, style_gate, sandbox_notes,
+   staged_sources, ledger_path } }` — `helpers_dir`
    lets the Runner / reconciler / package agents call the deterministic checkers
-   (`provenance.py`, `consistency.py`, `reproduces.py`, `integrity_diff.py`);
+   (`provenance.py`, `consistency.py`, `reproduces.py`, `integrity_diff.py`); `style_gate`
+   (optional; falls back to `<helpers_dir>/style_gate.py`) is the deterministic author-voice
+   counter the `human-voice` angle and the package/disclosure writers run;
    `staged_sources` feeds the Act-II panel's factual-literature/steelman angles the same
    staged cited-sources tree Act I used (omit it and those checks degrade to cant-tell);
    `ledger_path` is optional (falls back to the inlined `ledger`). The same

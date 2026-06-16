@@ -29,9 +29,14 @@ adversarial findings). The panel *audits* candidate outputs — findings and edi
   `absence_gate`; its hit snippets feed the steelman angle); and in Act II, `numeric-provenance` by
   `helpers/provenance.py` (re-hash the output artifact + confirm the value is in it),
   `consistency` by `helpers/consistency.py` (run-match every token value + flag orphans), the
-  reproduction predicate by `helpers/reproduces.py` (per-class float tolerance), and the
+  reproduction predicate by `helpers/reproduces.py` (per-class float tolerance), the
   result-suppression half of `integrity` by `helpers/integrity_diff.py` (net-removal diff of
-  {coefficients, N, samples, caveats}). The LLM verifier still runs on top for the semantic
+  {coefficients, N, samples, caveats}), and the counting half of `human-voice` by
+  `helpers/style_gate.py` (em/en-dash + semicolon rates vs the author baseline, banned lexicon
+  minus author-used words, the staged antithesis). The style gate is ADVISORY and
+  author-relative, the opposite polarity to the quote gate: a rate spike is `cant-tell` (routes
+  the edit to author sign-off, never an auto-reject, because a real author may use dashes); only
+  an author-independent banned token or staged antithesis maps to `rejected`. The LLM verifier still runs on top for the semantic
   judgment a script cannot make — does the inference follow, is a quantity consistent across
   places by meaning, is an edit HARKing or spin — and that layer is LLM-audited and labeled as
   such in `LIMITATIONS.md`.

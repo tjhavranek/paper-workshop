@@ -95,7 +95,7 @@ const ANGLE_Q = {
   'integrity': 'Does the edit suppress/attenuate a result, narrow a sample, drop a control/observation, weaken a caveat, swap the headline spec, or HARK?',
   'logical-validity': 'Does the edit faithfully implement the finding without overreaching?',
   'steelman-charity': 'Is the original passage actually fine as-is, making this edit unnecessary or harmful?',
-  'human-voice': 'Does this edit read as the AUTHOR wrote it, not AI? Judge against the author-voice standard in prompts/phase2/12_scribe_implementer.md and GROUND it: quote an adjacent author sentence as the benchmark and report a style diff (em/en-dash, semicolon and hedge counts, words-per-sentence, plus any banned-lexicon or negation-correction-antithesis hits). Reject on any banned token, the antithesis in any form, or a punctuation spike above the author baseline; no quoted benchmark => cant-tell, never upheld.',
+  'human-voice': 'Does this edit read as the AUTHOR wrote it, not AI? Judge against the author-voice standard in prompts/phase2/12_scribe_implementer.md and GROUND it with the deterministic counter: quote an adjacent author sentence as the benchmark and run the style gate (`python <STYLE_GATE_PATH> check --inserted-file <new_text> --baseline-file <benchmark>`), quoting its JSON as your style diff. Map its verdict: banned or antithesis => rejected; spike or no-baseline => cant-tell (routes to author sign-off; a rate spike is never an auto-reject because a legitimate author may use dashes); clean + your own read => upheld. No quoted benchmark and no gate output => cant-tell, never upheld.',
 }
 
 // ---------- Intake ----------
@@ -236,7 +236,7 @@ Object.keys(angleTargets).forEach(ang => {
   const ts = angleTargets[ang]
   for (let i = 0; i < ts.length; i += VBATCH) {
     const b = ts.slice(i, i + VBATCH)
-    vTasks.push(() => cast('verify', promptRef('05_verification_panel', { ANGLE: ang, ANGLE_QUESTION: ANGLE_Q[ang] || ('Judge from the ' + ang + ' angle.'), TARGETS_JSON: b, PAPER_TXT_PATH: workDir + '  (the working copy; each target\'s edit.file names the file to read)', STAGED_SOURCES_DIR: PATHS.staged_sources || '(none)', QUOTE_GATE_PATH: PATHS.quote_gate || '', RULES_PATH: PATHS.rules || '', RUBRIC_PATH: PATHS.rubric || '' }), { ...GP, label: ('vfy:' + ang + ':b' + Math.floor(i / VBATCH)).slice(0, 56), phase: 'Verify', schema: VERIF_BATCH }))
+    vTasks.push(() => cast('verify', promptRef('05_verification_panel', { ANGLE: ang, ANGLE_QUESTION: ANGLE_Q[ang] || ('Judge from the ' + ang + ' angle.'), TARGETS_JSON: b, PAPER_TXT_PATH: workDir + '  (the working copy; each target\'s edit.file names the file to read)', STAGED_SOURCES_DIR: PATHS.staged_sources || '(none)', QUOTE_GATE_PATH: PATHS.quote_gate || '', STYLE_GATE_PATH: PATHS.style_gate || (HELPERS_DIR ? HELPERS_DIR + '/style_gate.py' : ''), RULES_PATH: PATHS.rules || '', RUBRIC_PATH: PATHS.rubric || '' }), { ...GP, label: ('vfy:' + ang + ':b' + Math.floor(i / VBATCH)).slice(0, 56), phase: 'Verify', schema: VERIF_BATCH }))
   }
 })
 const vRes = (await parallel(vTasks)).filter(Boolean)
@@ -288,7 +288,7 @@ const pkg = await cast('package', promptRef('phase2/15_repro_package', { SESSION
 // ---------- Disclose ----------
 phase('Disclose')
 const auditTrail = { applied: applied.map(r => ({ edit_id: r.edit.edit_id, finding_id: r.edit.finding_id, lane: r.edit.lane, justification: r.edit.justification_type })), queued: queued.map(r => r.edit.edit_id), proposals: proposals.map(r => r.edit.edit_id), blocked: blocked.map(r => ({ edit_id: r.edit.edit_id, reason: r.reason })), signoff_status: 'pending-author-review', reruns: results.map(r => r.run).filter(Boolean).map(r => r.run_id), reconcile, package_reproduced: pkg.reproduced }
-const disclosure = await cast('disclosure', promptRef('phase2/16_disclosure', { AUDIT_TRAIL_JSON: auditTrail }), { ...GP, label: 'disclosure', phase: 'Disclose', schema: DISCLOSURE })
+const disclosure = await cast('disclosure', promptRef('phase2/16_disclosure', { AUDIT_TRAIL_JSON: auditTrail, HELPERS_DIR, REVISED_SOURCE_PATH: workDir }), { ...GP, label: 'disclosure', phase: 'Disclose', schema: DISCLOSURE })
 
 return {
   scope, baseline_status: baseline.status, baseline_ran: baselineRan, work_dir: workDir, branch: WORK_BRANCH,
