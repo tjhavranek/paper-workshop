@@ -3,21 +3,19 @@
 [![ci](https://github.com/tjhavranek/paper-workshop/actions/workflows/ci.yml/badge.svg)](https://github.com/tjhavranek/paper-workshop/actions/workflows/ci.yml)
 
 Imagine a panel of the world's leading experts, assembled for your exact paper, arguing it out
-from rival schools and then rebuilding it themselves, re-running your own code so the numbers are real.
+from rival schools and then rebuilding it themselves, re-running your own code so every revised number is regenerated, not retyped.
 
-**An adversarial expert workshop that doesn't stop at the critique. It hands back the edits
-that answer each objection: a tracked redline, a clean draft, and a replication package,
-before you submit.**
+**An adversarial expert workshop that turns its critique into the edits that answer it: a
+tracked redline, a clean draft, and a replication package, before you submit.**
 
-> **One skill, said two ways.** `paper-workshop` is the repo you install and the phrase you
-> type to run it. **CRUCIBLE** is its name, the one you'll see in the report headers; there is
-> no separate tool.
+*One tool, two names: `paper-workshop` is the repo you install and the phrase you type;
+**CRUCIBLE** is what you'll see in the report headers.*
 
 CRUCIBLE convenes a panel of AI referees built specifically for *your* manuscript and makes
 them **argue with each other** from rival schools of thought, grounding every criticism in an
 exact quote (no invented objections, no confidence theater). Then, if you want, it
 **implements the agreed fixes**: a tracked-changes redline, a clean revised version, your
-analysis code **re-run so the numbers are real**, and a reproducible replication package.
+analysis code **re-run to regenerate every affected number**, and a reproducible replication package.
 
 It is for researchers who want more than a list of complaints. You want the *sharpest*
 objection a top referee would raise, argued from more than one angle, plus the *actual edits*
@@ -27,7 +25,7 @@ It earns trust at the seams: every criticism is pinned to a real quote, and ever
 is produced by a real re-run of your own code. It is equally plain about the rest: effectiveness
 is not measured yet (no recall or false-positive numbers), and Act II has been demonstrated end-to-end only once (one accepted paper,
 the authors' own group; see [`examples/incentives-workshop`](examples/incentives-workshop)), not
-broadly validated. Read the [honest limits](LIMITATIONS.md) before you rely on it.
+broadly validated. Read the [limitations](LIMITATIONS.md) before you rely on it.
 
 A [Claude Code](https://claude.com/claude-code) skill. Claude-only. Runs on any paid plan.
 
@@ -87,7 +85,7 @@ run end to end on an accepted JPE-Microeconomics meta-analysis: a topic-built re
 then a re-run of the authors' own Stata and R that regenerated the data byte-for-byte identical, with a
 deterministic provenance proof. ([`examples/self-audit`](examples/self-audit) is the tool run on its own design.)
 
-**Honesty about limits.** **[`LIMITATIONS.md`](LIMITATIONS.md)** is the straight account of
+**Limits.** **[`LIMITATIONS.md`](LIMITATIONS.md)** is the straight account of
 what is genuinely enforced and what is not proven yet: no measured recall or false-positive
 numbers; same-model decorrelation is a design bet, not a proof; coverage means *attention*,
 not correctness; and the Contribution Memo's selection is same-model judgment with no measured
@@ -127,7 +125,7 @@ class above Opus) lifts every seat, verifier, and chair to that capability with 
 configuration; `/model best` (Claude Code v2.1.170+) picks Fable where your plan has it and
 the latest Opus where it does not. Anthropic's prompting guidance for Fable 5 states that
 separate, fresh-context verifier subagents tend to outperform self-critique, which matches
-CRUCIBLE's verification panel; a design endorsement, not a measured improvement. The honest
+CRUCIBLE's verification panel; a design endorsement, not a measured improvement. The
 constraints, as of June 2026 (safety-classifier rerouting to Opus 4.8, which makes Opus the
 deliberate start for biology- or security-flavored papers; 30-day input retention with no
 zero-data-retention; twice Opus pricing), are detailed in
