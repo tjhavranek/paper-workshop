@@ -115,14 +115,18 @@ The fleet is the product; the rails below are what keep a 300–600-agent run fr
 laundering a fatal flaw into a confident green light. They are always on, cost
 almost nothing, and are never traded away for scale.
 
-- **Multi-angle independent verification before delivery.** *Nothing* reaches the
+- **Multi-angle independent verification before delivery.** At Roundtable and above,
+  *nothing* reaches the
   user until several blind subagents, **each from a different angle**, have checked
   it (quote/locator, logical validity, severity calibration, decision-relevance,
   fix-safety, charitable steelman; factual/literature added at the deeper tiers; Act
-  II adds numeric provenance, consistency, integrity). See `helpers/verification_panel.md`.
+  II adds numeric provenance, consistency, integrity). Desk Review, the lightest mode, runs
+  no panel: its chair applies logical-validity and steelman inline and labels itself a
+  single-pass read. See `helpers/verification_panel.md`.
 - **Ground, don't recall; never fabricate.** Exact quote + locator on every
-  finding, verified by the deterministic `helpers/quote_gate.py` (not an LLM).
-  Unverifiable → `needs-author-confirmation`, never asserted.
+  finding, decided by the deterministic `helpers/quote_gate.py` script (a subagent runs it
+  and relays the output; the script, not an LLM, makes the match call, and a dropped or
+  mis-relayed row fails closed). Unverifiable → `needs-author-confirmation`, never asserted.
 - **Even absence claims ride a deterministic gate.** "The paper never says X" findings
   (and their constructive twin, "the paper never CLAIMS what its own results support")
   carry a probe of refuting terms searched by `helpers/absence_gate.py`, fail-closed;
@@ -211,8 +215,9 @@ experimental span-diet for the verification panel is a separate economy-only opt
 (`span_diet: true`; see `helpers/verification_panel.md`). Honest status: the economy cast matches one
 real field run (Act I: 39 agents in total, its 37-agent tribunal workflow recorded at
 3.70M subagent tokens in 55 minutes, delivering a 60-finding verified
-ledger), which is evidence it preserves output strength, not blind validation (see
-`LIMITATIONS.md`). A user token target (a "+500k"-style budget) auto-enables economy plus
+ledger), which is evidence it preserves output strength, not blind validation; and unlike the
+self-audit and incentives examples, this field run is author-disclosed only, with no committed
+record in the repo (see `LIMITATIONS.md`). A user token target (a "+500k"-style budget) auto-enables economy plus
 small logged structural adjustments; deeper cuts (a Sonnet panel, Sonnet generalists,
 Haiku relays, the panel span-diet, economy as
 the default) are named validation arms, not options.
@@ -250,9 +255,11 @@ deliverable states plainly what was and was not done. Specifically:
   quote-gate cannot run: the doctor stops the run and says so; if the gate fails
   mid-run, the affected findings degrade to `needs-author-confirmation`, never to a
   silent pass.
-- **An agent dies mid-run.** The orchestrator retries once, then records the gap in
-  `meta.json` and in the report. A missing result stays missing; nothing is fabricated
-  to fill it.
+- **An agent dies mid-run.** On the subagent-fallback path the orchestrator retries once. On
+  the Workflow path a dead seat is dropped fail-closed and the gap is recorded as the
+  cast-vs-delivered seat count (`seats_cast` / `seats_delivered` in the run output and
+  `meta.json`), so a missing seat is visible, never silent. A missing result stays missing;
+  nothing is fabricated to fill it.
 - **The Workflow engine is off.** Symposium and Summit fall back to Workshop depth and
   the report says so. The fallback engine changes speed and scale only; every rule
   still applies.

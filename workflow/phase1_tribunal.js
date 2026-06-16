@@ -234,7 +234,7 @@ seatResults.forEach(r => { findings.push(...r.findings); coveredRanges.push(...(
 // stable global ids
 findings.forEach((f, i) => { f.id = 'F-' + String(i + 1).padStart(3, '0') })
 const premortemFindings = findings.filter(f => f.tradition === 'desk-reject-premortem')
-log('Specialists: ' + findings.length + ' raw findings from ' + seatResults.length + ' seats')
+log('Specialists: ' + findings.length + ' raw findings from ' + seatResults.length + '/' + seatTasks.length + ' seats delivered' + (seatResults.length < seatTasks.length ? ' (' + (seatTasks.length - seatResults.length) + ' produced no result, dropped fail-closed)' : ''))
 
 // ---------- Quote-gate ----------
 phase('Quote-gate')
@@ -246,7 +246,8 @@ if (findings.length) {
   // is treated as unverified, exactly like a non-match - never a silent keep of the seat's
   // self-reported status (per rubric.md, status annotates; severity is untouched).
   findings.forEach(f => { const r = byId[f.id]; if ((!r || !r.matched) && f.finding_type !== 'absence-silence') { f.verification_status = 'needs-author-confirmation' } })
-  log('Quote-gate: ' + (gate.results || []).filter(r => r.matched).length + '/' + (gate.results || []).length + ' quotes verified')
+  const gr = (gate && gate.results) || [] // guard gate itself: a fully-dead gate agent must not abort an already-fail-closed run
+  log('Quote-gate: ' + gr.filter(r => r.matched).length + '/' + gr.length + ' quotes verified')
 }
 // Absence gate: the deterministic rail for the quote-EXEMPT finding classes. Every
 // absence-class finding ('absence-silence' and 'contribution-undersell') carries an
@@ -453,7 +454,7 @@ return {
   // relying on them — this returned object stays the source of truth either way
   artifact_paths: { findings_ledger: artDir + '/findings_ledger.json', synthesis_raw: artDir + '/synthesis_raw.json' },
   roster: { paper_type: roster.paper_type, seats: roster.seats.length, generalists: roster.generalist_seats.length, central_tensions: roster.central_tensions, not_staffed: roster.not_staffed },
-  counts: { raw_findings: findings.length, delivered: deliveredFindings.length, rejected: rejected.length },
+  counts: { raw_findings: findings.length, delivered: deliveredFindings.length, rejected: rejected.length, seats_cast: seatTasks.length, seats_delivered: seatResults.length },
   findings: chairFindings,
   contribution_findings: contributionFindings,
   rejected_in_panel: rejected,

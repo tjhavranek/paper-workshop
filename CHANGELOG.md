@@ -1,5 +1,46 @@
 # Changelog
 
+## v0.7.4 — 2026-06-16
+
+Fixes from running CRUCIBLE on its own repo (Roundtable, Opus 4.8; 33 agents, 58 verified
+findings, verdict major-revision). The audit's must-fix cluster sat on load-bearing trust
+claims that were slightly stronger than the code or records support; these close the gap.
+Two concrete bugs and five honesty-precision corrections, all verified against the code:
+
+- **Bug (F-013):** the quote-gate log line dereferenced `gate.results` without guarding
+  `gate` itself, so a fully-dead gate agent threw and aborted an otherwise cleanly
+  fail-closed run after the findings were already correctly handled. Now guarded.
+- **Bug / honesty (F-011):** a dead seat on the default Workflow path was dropped by
+  `filter(Boolean)` with no record, while the degraded-run contract said "retries once,
+  then records the gap." The engine now records `seats_cast` / `seats_delivered` (a dropped
+  seat is visible in the log, the return, and meta.json), and SKILL.md's contract is
+  corrected to describe the engine's actual behavior (retry is the subagent-fallback path).
+- **F-020:** "verified by the deterministic quote_gate.py (not an LLM)" overstated the
+  path: the engine does not run the gate, a subagent runs the script and relays its output.
+  Restated to "the script, not an LLM, makes the match call, and a dropped or mis-relayed
+  row fails closed."
+- **F-044:** the "nothing reaches the user until several blind subagents have checked it"
+  guarantee was unscoped, but Desk Review runs no panel. Scoped to "Roundtable and above"
+  in SKILL.md and README.md, with the Desk Review single-pass carve-out stated where the
+  guarantee is.
+- **F-021:** the Execution-Provenance Wall confirms the value occurs as a standalone number
+  in the hashed artifact; LIMITATIONS now states plainly that binding the number to a named
+  cell or row stays LLM-judged, and the input-data hash is checked only when a data file is
+  supplied.
+- **F-004:** the economy field-run anchor has no committed record in the repo (unlike the
+  self-audit and incentives examples); marked author-disclosed-only in SKILL.md and the
+  LIMITATIONS process-metrics table.
+- **F-001:** the process-metrics table's "Severity (delivered)" column was mislabeled for
+  the incentives row (45/58/34 = 137 raw, not 131 delivered). The column basis is not
+  uniform across rows; the header is now plain "Severity" and the Notes state each row's
+  basis (the panel's fix-safety verdict ruled out recomputing a delivered split, since the
+  committed records do not flag which rejected findings fell in which bucket).
+
+Already-disclosed audit points (e.g. that the one end-to-end Act II demo reproduced
+byte-identical, so the replace-a-stale-number path is unit-tested not yet exercised) were
+confirmed already covered in LIMITATIONS and left as-is. Run record:
+`paper_workshop_sessions/selfaudit-roundtable-20260616-1613/`.
+
 ## v0.7.3 — 2026-06-16
 
 Multi-pass voice-baseline rule (doc/prompt only, no code), from a field post-mortem. On a

@@ -47,9 +47,10 @@ a corrected, reproducing manuscript.
   script rather than the model's memory, and the most load-bearing **cited works are fetched**
   so the paper's claims about them are checked against the originals. What can't be verified is
   flagged *needs author confirmation* and never asserted. No acceptance-probability numbers, ever.
-- **Every comment is re-checked from many angles** by independent blind verifiers (does the
-  quote exist, does the criticism actually follow, is the severity calibrated, does the
-  proposed fix break something) before it ever reaches you.
+- **Every comment is re-checked from many angles** (Roundtable and up) by independent blind
+  verifiers (does the quote exist, does the criticism actually follow, is the severity
+  calibrated, does the proposed fix break something) before it ever reaches you; Desk Review,
+  the lightest mode, is a single-pass read with inline chair checks instead of the panel.
 - **It also argues FOR your paper.** Every full tribunal run also staffs a contribution rival
   pair: an *overclaim prosecutor* hunting where your framing outruns the evidence, and a
   *contribution maximizer* hunting the opposite failure, the bolder claim your own results

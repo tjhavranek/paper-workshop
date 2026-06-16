@@ -44,8 +44,10 @@ adversarial cross-review during development.
   "what did we all miss?" leg is the intended mitigation; enable it for anything
   high-stakes.
 - **The Act-II numeric rails now have deterministic backing, with an LLM layer on top.**
-  `helpers/provenance.py` re-hashes each output artifact and confirms the transcribed value is
-  present (the Execution-Provenance Wall), `helpers/consistency.py` run-matches every token
+  `helpers/provenance.py` re-hashes each output artifact and confirms the transcribed value
+  occurs in it as a standalone number (the Execution-Provenance Wall); binding that number to
+  the cited cell or row stays LLM-judged, and the input-data hash is checked only when a data
+  file is supplied. `helpers/consistency.py` run-matches every token
   value and flags orphans, `helpers/reproduces.py` defines the reproduction predicate, and
   `helpers/integrity_diff.py` flags net result-removals — all fail-closed, like the quote-gate.
   What stays LLM-judged (and is labeled as such): the *semantic* half — does a quantity match
@@ -119,7 +121,7 @@ what the gates checked), NOT whether the findings were correct. They are not rec
 precision, or any measured-effectiveness number, none of which exists yet (see the first
 bullet of this section and the Roadmap).
 
-| Run | Mode / register | Agents | Raw -> delivered | Panel-rejected | Quote-gate | Severity (delivered) |
+| Run | Mode / register | Agents | Raw -> delivered | Panel-rejected | Quote-gate | Severity |
 |---|---|---|---|---|---|---|
 | Self-audit (`examples/self-audit/`) | Roundtable (quick) / brutal | 42 | 80 -> 69 | 11 | not recorded | 31 High / 29 Med / 9 Low |
 | Incentives meta-analysis (`examples/incentives-workshop/`) | Workshop (thorough) / supportive | 27 | 137 -> 131 | 6 | 108 matched, 1 downgraded, 28 absence-exempt | 45 High / 58 Med / 34 Low |
@@ -128,7 +130,11 @@ bullet of this section and the Roadmap).
 Notes: the self-audit is the tool reviewing its own design (a closed loop, not validation)
 and ran Act I only; the incentives run is a demonstration on one already-accepted paper from
 the authors' own group; the economy field run is the single Workshop-band economy pass
-already described above (3.70M subagent tokens, 55 minutes, for its tribunal workflow). A
+already described above (3.70M subagent tokens, 55 minutes, for its tribunal workflow), and
+unlike the other two rows it is author-disclosed only, with no committed record in this repo.
+The Severity column's basis is not uniform: the self-audit and economy counts are over the
+delivered set, while the incentives row's 45 / 58 / 34 is the post-calibration set (137,
+before the 6 panel rejections), so it sums to the raw count, not the 131 delivered. A
 "not recorded" cell means the figure is not in a committed record, so it is left out rather
 than estimated.
 
