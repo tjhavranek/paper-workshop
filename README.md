@@ -1,4 +1,4 @@
-# CRUCIBLE — the `paper-workshop` skill
+# CRUCIBLE: the `paper-workshop` skill
 
 [![ci](https://github.com/tjhavranek/paper-workshop/actions/workflows/ci.yml/badge.svg)](https://github.com/tjhavranek/paper-workshop/actions/workflows/ci.yml)
 
@@ -21,7 +21,7 @@ It is for researchers who want more than a list of complaints. You want the *sha
 objection a top referee would raise, argued from more than one angle, plus the *actual edits*
 that answer it before you submit.
 
-It earns trust at the seams: every criticism is pinned to a real quote, and every revised number
+Two things are mechanically checked: every criticism is pinned to a real quote, and every revised number
 is produced by a real re-run of your own code. It is equally plain about the rest: effectiveness
 is not measured yet (no recall or false-positive numbers), and Act II has been demonstrated end-to-end only once (one accepted paper,
 the authors' own group; see [`examples/incentives-workshop`](examples/incentives-workshop)), not
@@ -54,19 +54,16 @@ a corrected, reproducing manuscript.
 - **Every comment is re-checked from many angles** by independent blind verifiers (does the
   quote exist, does the criticism actually follow, is the severity calibrated, does the
   proposed fix break something) before it ever reaches you.
-- **It also argues FOR your paper.** Every full tribunal run staffs a contribution rival
+- **It also argues FOR your paper.** Every full tribunal run also staffs a contribution rival
   pair: an *overclaim prosecutor* hunting where your framing outruns the evidence, and a
   *contribution maximizer* hunting the opposite failure, the bolder claim your own results
-  defensibly support but your paper never makes. The maximizer's candidates ride two
-  deterministic gates (the under-leveraged result must be quoted; a probe search confirms
-  no refuting phrasing of the bolder claim occurs in your text, with the semantic call left
-  to a steelman verifier) and arrive as a separate, non-blocking **Contribution
-  Memo** of at most 3 items: suggestions for you to ratify or ignore, never must-fixes. At
-  Workshop depth and above, a related-literature scout widens the lens past your own
-  bibliography, deliberately hunting overlooked work (adjacent fields, older papers,
-  working-paper series), under a strict fetch-or-drop rule: a work it could not actually
-  open is never cited as evidence (a mandate the scout follows, not a script; see
-  [`LIMITATIONS.md`](LIMITATIONS.md)).
+  defensibly support but your paper never makes. The maximizer's candidates clear two
+  deterministic gates and arrive as a separate, non-blocking **Contribution Memo** of at most
+  3 items: suggestions for you to ratify or ignore, never must-fixes. At Workshop depth and
+  above a related-literature scout also looks past your own bibliography for overlooked work,
+  under a strict fetch-or-drop rule: a work it could not actually open is never cited as
+  evidence. The two gates' internals and what the scout does not certify are in
+  [`LIMITATIONS.md`](LIMITATIONS.md).
 - **It rebuilds the paper itself.** The opt-in second act (the **ATELIER**) turns the agreed
   findings into a tracked-changes **redline** *and* a **clean revised version**, **re-runs
   your own code** to regenerate the affected numbers, tables, and figures, and assembles a
@@ -78,7 +75,7 @@ a corrected, reproducing manuscript.
   copy, never submits, never releases data.
 
 If you only want a fast referee-style critique, lighter tools (and CRUCIBLE's own **Desk
-Review** mode) do that. CRUCIBLE earns its keep when you want the argument *and* the rebuild.
+Review** mode) do that. CRUCIBLE is for when you want the argument *and* the rebuild.
 
 **See it on a real paper.** [`examples/incentives-workshop`](examples/incentives-workshop) is CRUCIBLE
 run end to end on an accepted JPE-Microeconomics meta-analysis: a topic-built referee panel that argues,
@@ -123,28 +120,26 @@ inheritance, and the 1M-context account caveat and its remedies live in the pre-
 session model, so starting the session on Claude Fable 5 (Anthropic's mythos-class tier, the
 class above Opus) lifts every seat, verifier, and chair to that capability with no
 configuration; `/model best` (Claude Code v2.1.170+) picks Fable where your plan has it and
-the latest Opus where it does not. Anthropic's prompting guidance for Fable 5 states that
-separate, fresh-context verifier subagents tend to outperform self-critique, which matches
-CRUCIBLE's verification panel; a design endorsement, not a measured improvement. The
-constraints, as of June 2026 (safety-classifier rerouting to Opus 4.8, which makes Opus the
-deliberate start for biology- or security-flavored papers; 30-day input retention with no
-zero-data-retention; twice Opus pricing), are detailed in
-[`helpers/doctor.md`](helpers/doctor.md) and [`helpers/safety_notes.md`](helpers/safety_notes.md);
-the run records which model actually served, and the report discloses it. The workshop runs
-unchanged on Opus and Sonnet; the methodology does not depend on the model tier.
+the latest Opus where it does not. Anthropic's Fable 5 prompting guidance favors separate
+fresh-context verifier subagents over self-critique, which matches CRUCIBLE's verification
+panel: a design endorsement, not a measured gain. For biology- or security-flavored papers,
+start on Opus deliberately, because a safety classifier can reroute Fable to Opus 4.8 mid-run;
+starting on Opus keeps the run on one model. The run records which model actually served, and
+the report discloses it. Fable's other June 2026 constraints (30-day input retention with no
+zero-data-retention, twice Opus pricing) are in [`helpers/doctor.md`](helpers/doctor.md) and
+[`helpers/safety_notes.md`](helpers/safety_notes.md). The workshop runs unchanged on Opus and
+Sonnet; the methodology does not depend on the model tier.
 
-**Running on a usage-constrained plan: the economy register.** A default Workshop run inherits
-the session model into every agent, and on Fable that can exhaust a usage-capped plan's window
-mid-run; a locked-out run delivers zero findings. Saying "economy" casts judgment layers at
-the Opus floor and mechanical phases on Sonnet, with the scout, the chair, and Act II's
-scribes always at the session model; every deterministic rail is unchanged, the cast is
-recorded in `meta.json` and stated in the report header, and a never-upgrade clamp means
-economy can lower a run's cost but never raise it. The anchor so far: one real Workshop-band
-field run recorded its tribunal workflow at 3.70M subagent tokens in 55 minutes, well inside a
-Max-plan window, and delivered a 60-finding verified ledger; one run's evidence, not blind
-validation (see [`LIMITATIONS.md`](LIMITATIONS.md)). The pre-flight
-([`helpers/doctor.md`](helpers/doctor.md)) shows a cost preview and offers economy before any
-Workshop-or-larger launch.
+**Running on a usage-constrained plan: the economy register.** A default Workshop inherits the
+session model into every agent, and on Fable that can exhaust a usage-capped plan's window
+mid-run; a locked-out run delivers zero findings. Saying "economy" casts the run in tiers
+(judgment seats at the Opus floor, mechanical phases on Sonnet, scout/chair/scribes at the
+session model), with every deterministic rail unchanged, the cast recorded in `meta.json` and
+the report header, and a never-upgrade clamp so economy can lower a run's cost but never raise
+it. The pre-flight ([`helpers/doctor.md`](helpers/doctor.md)) shows a cost preview and offers it
+before any Workshop-or-larger launch. The anchor so far is one real Workshop-band field run:
+3.70M subagent tokens in 55 minutes, well inside a Max-plan window, delivering a 60-finding
+verified ledger; one run's evidence, not blind validation (see [`LIMITATIONS.md`](LIMITATIONS.md)).
 
 ## Install
 
@@ -198,6 +193,12 @@ treatment of your files) and adds the topic-adapted debating fleet and the rebui
 configuration ranked above its cross-model setup by an independent judge: illustrative, not
 proof. CRUCIBLE is Claude-only by design, and a single optional non-Claude "what did we all
 miss?" pass is available for those who configure it.)
+
+A lighter sibling by the same author group,
+[`erc-ai-feedback`](https://github.com/tjhavranek/erc-ai-feedback), is a rubric-based pre-review
+for ERC Starting and Consolidator grant proposals, run in a single chat session. It only flags
+problems and leaves the drafting to the applicant, whereas CRUCIBLE argues a paper out and, if
+you want, rebuilds it: one is built for proposals, the other for papers.
 
 ## What it deliberately will not do
 
