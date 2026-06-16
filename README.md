@@ -17,10 +17,6 @@ exact quote (no invented objections, no confidence theater). Then, if you want, 
 **implements the agreed fixes**: a tracked-changes redline, a clean revised version, your
 analysis code **re-run to regenerate every affected number**, and a reproducible replication package.
 
-It is for researchers who want more than a list of complaints. You want the *sharpest*
-objection a top referee would raise, argued from more than one angle, plus the *actual edits*
-that answer it before you submit.
-
 Two things are mechanically checked: every criticism is pinned to a real quote, and every revised number
 is produced by a real re-run of your own code. It is equally plain about the rest: effectiveness
 is not measured yet (no recall or false-positive numbers), and Act II has been demonstrated end-to-end only once (one accepted paper,
