@@ -93,6 +93,13 @@ rather than failing silently.
 ## Act II (only if the user opts in)
 - **Manuscript source** present (.tex + `\input` children, or .docx). This is the
   near-blocking input; without it, offer "edit-spec only" mode.
+- **Multi-pass provenance** (field-grounded: re-running on a prior revision compounded
+  em-dash drift 10→18→20 across passes). Ask whether the source is the author's own writing
+  or an earlier paper-workshop output being re-run. If the latter, also get the author's last
+  hand-written version and record its path as `original_manuscript`: the style gate is
+  author-relative, so a baseline that already carries the tool's voice lets the drift launder
+  silently. The voice check must also run on the final polished text, not only the first
+  revision's edits.
 - **Interpreters** for the author's stack on PATH and runnable: `Rscript`,
   `python`, `stata`/`stata-mp`, as the code requires. Missing ⇒ the affected
   numeric/figure findings degrade to author-decision checklists.

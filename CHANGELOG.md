@@ -1,5 +1,27 @@
 # Changelog
 
+## v0.7.3 — 2026-06-16
+
+Multi-pass voice-baseline rule (doc/prompt only, no code), from a field post-mortem. On a
+real paper whose author used zero em-dashes, a multi-pass Act II run let em-dashes compound
+across passes (10 → 18 → 20) because pass 2's input was pass 1's own already-revised output,
+so the author-relative voice check baselined against the tool's own prior prose and the
+spike never fired. The deterministic style gate (v0.7.2) closes the single-pass detection
+gap but not this one.
+
+- Intake (`prompts/phase2/10_intake.md`) now asks whether the manuscript is the author's own
+  writing or a prior paper-workshop revision being re-run, and records the author's last
+  hand-written version as `original_manuscript`.
+- The scribe standard (`prompts/phase2/12_scribe_implementer.md`) and the `human-voice` angle
+  (`prompts/05_verification_panel.md`) state that the voice baseline is always the author's
+  pristine original, never a prior tool revision.
+- `helpers/style_gate.md` and `helpers/doctor.md` note that the gate is only as clean as its
+  baseline, and that the voice check must run on the final polished text, not only the first
+  revision's edits.
+- Staged, not shipped (awaiting validation across ≥2 papers in ≥2 domains): threading the
+  `original_manuscript` path into the engine so the gate baselines against it automatically
+  on a detected re-run. The doc rule closes the realistic exposure now.
+
 ## v0.7.2 — 2026-06-12
 
 Voice hardening, triaged by a brief subagent debate (3 grounded auditors + a fresh judge)

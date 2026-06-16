@@ -45,6 +45,12 @@ verifier checks against. Before you return a Lane-A edit:
   the baseline is the DOCUMENT-WIDE author rate: sample several of the author's own paragraphs
   elsewhere in this file and match that punctuation and lexicon profile. Never default to your
   own voice for lack of a local neighbor.
+- **The baseline is the author's ORIGINAL prose, never a prior tool revision.** If the file you
+  are editing is itself an earlier paper-workshop output (a multi-pass re-run), the surrounding
+  text already carries this tool's voice, so matching it would launder and compound the drift.
+  Take the punctuation and lexicon baseline from the author's last hand-written version (the
+  `original_manuscript` the intake recorded); if only a revised file is available, hold to the
+  conservative default the author's own draft set, not the rate in the text around you.
 - **No negation-correction antithesis, in any form:** "it is not X, it is Y", "X. Not Y.",
   "it's not X — it's Y", "not X, but (rather) Y", "less about X than Y", "rather than X, Y".
   State the positive claim (Y) directly, without staging the contrast. Also avoid "not only X

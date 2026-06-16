@@ -62,7 +62,8 @@ verification; `target_id` = the target's id). How to judge, by angle:
   verdict with the deterministic counter rather than eyeballing it. (a) Quote one sentence of
   the author's own prose from {{PAPER_TXT_PATH}} adjacent to the edit as the voice benchmark
   (for an additive edit with no adjacent author sentence, quote one from elsewhere in the
-  file). (b) Write the edit's new_text and that benchmark sentence to temp files and run
+  file; on a multi-pass re-run whose working copy is itself a prior tool revision, benchmark
+  against the author's `original_manuscript`, never the tool's own earlier output). (b) Write the edit's new_text and that benchmark sentence to temp files and run
   `python {{STYLE_GATE_PATH}} check --inserted-file <new_text> --baseline-file <benchmark>`;
   quote its JSON (`dash_rate_inserted` vs `dash_rate_author`, semicolon counts, `banned_hits`,
   `antithesis_hits`) as your style diff. The script COUNTS; you make the semantic call. Map

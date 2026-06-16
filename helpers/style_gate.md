@@ -52,3 +52,11 @@ Dash counting runs on RAW text and counts both Unicode (—, –) and LaTeX-sour
 encodings. The banned-lexicon scan subtracts any term that appears in the author baseline (the
 deterministic form of "unless the author already uses it"). The gate runs ONLY on inserted
 spans and AI-authored deliverables, NEVER on the author's untouched prose.
+
+## The gate is only as clean as its baseline (multi-pass caveat)
+Because the gate is author-relative, the `--baseline-file` must be the author's PRISTINE
+original prose. On a multi-pass re-run whose input is itself an earlier paper-workshop
+revision, the working copy already carries the tool's voice; baselining against it would read
+the tool's own em-dashes as "the author's style" and the spike would never fire, so drift
+launders and compounds across passes. Always pass the author's last hand-written version (the
+`original_manuscript` recorded at intake) as the baseline, never a prior tool output.

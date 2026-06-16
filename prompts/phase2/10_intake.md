@@ -10,6 +10,12 @@ The canonical inputs, ranked by leverage (each request must state WHY and what b
 impossible without it):
 1. **Manuscript source** (.tex + `\input` children, or .docx) — near-blocking; without
    it, only an "edit-spec only" handoff is possible (patches keyed to quote+locator).
+   Also ask whether this source is the author's own writing or a PRIOR paper-workshop
+   revision being re-run: if it is a prior revision, ask for the author's last
+   hand-written version too, and record its path as `original_manuscript` in the manifest,
+   so the voice gate baselines against human prose and not against the tool's own earlier
+   output (otherwise AI-style drift compounds silently across passes; see
+   `prompts/phase2/12_scribe_implementer.md`).
 2. **Analysis code** — without it, every numeric/figure finding degrades to an
    author-decision checklist (the tool will not change a number it cannot reproduce).
 3. **Data** (raw + cleaning step preferred over processed-only) — without raw +
