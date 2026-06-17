@@ -41,7 +41,10 @@ Claude reads the PDF natively; the only artifacts to **write** are below.
 ## Notes
 - Tables/figures: capture their captions and any numbers stated in the text. The tool
   does not OCR figure internals; a finding about a figure's content is
-  `needs-author-confirmation` unless the number also appears in text.
+  `needs-author-confirmation` unless the number also appears in text. A claim that a figure
+  FAILS TO RENDER, embed, or display is not derivable from this text substrate at all and must
+  not be filed from it: that is a rendering/binary property; degrade any such observation to
+  `needs-author-confirmation`, never assert it.
 - Equations: capture as the author wrote them; a proof-checker seat reads them in
   context.
 - If the source is .tex rather than PDF, extract `paper.txt` from the compiled text

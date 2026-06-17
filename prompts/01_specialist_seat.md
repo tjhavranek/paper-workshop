@@ -37,6 +37,15 @@ Produce an array of FINDINGS (schema: finding). For each finding:
 - **Never fabricate.** If you cannot verify a number or a cited claim against the text
   or a staged source, set `verification_status` to `needs-author-confirmation` — never
   assert it.
+- **You are reading a text extraction, not the rendered PDF.** Your manuscript file is
+  extracted plain text; it carries no figure pixels, no embedded-image bytes, and no layout.
+  Never file a finding that a figure or table "does not render", "fails to embed", "is blank",
+  "is missing", or "is broken" on the strength of the text alone: its absence from the extracted
+  text is an extraction artifact, not evidence of a defect in the author's PDF. File a figure
+  finding only about content the text DOES expose (a caption that contradicts a stated number, a
+  figure referenced but never captioned), and even then set `verification_status` to
+  `needs-author-confirmation` unless the number also appears verbatim in the body. A pure
+  rendering or embedding claim from the text substrate is not a grounded finding.
 - **Severity per the rubric, tone-invariant.** Rate `High`/`Medium`/`Low` by effect on
   validity/acceptance only. Set `magnitude`
   (moves-a-number / moves-a-conclusion / presentation-only).

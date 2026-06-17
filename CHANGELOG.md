@@ -1,5 +1,48 @@
 # Changelog
 
+## v0.7.5 — 2026-06-17
+
+Triaged response to one author's feedback on one biology run (Divin et al.; the tool's
+detection was right on ~6 of 7 contested items, the author's two strongest rebuttals refuted
+on his own tables). Two independent audits of the decision — a paper-workshop Roundtable on a
+decision memo, and a mad-research pass (Claude streams + cross-critique + a Codex synthesis
+judge on an abstracted packet) — converged, then a two-voice subpanel verified each edit is
+safe. The discipline held: only cheap, generalizable fixes that touch no rail and no severity
+shipped; the centerpiece ask was rejected; everything rail-touching stays staged under the
+project's own >=2-papers-in->=2-domains rule (n=1 here).
+
+Shipped (no rail or severity touched):
+- **Resilience: persist the verified ledger before the chair runs.** The synthesis chair is a
+  single point of failure; the engine now writes `findings_ledger.json` from the verified set
+  before the chair is cast, so a chair death loses only the prose, never the fleet's findings.
+- **No figure-render findings from a text substrate.** A "figure does not render/embed/display"
+  claim is a binary/rendering property the extracted text cannot show; the seat prompt and
+  `pdf_extraction.md` now forbid filing it from the text and downgrade any such observation to
+  `needs-author-confirmation`. This closes the run's one genuine false positive.
+- **Correction-propagation guard.** A mechanical fail-closed filter restricts the chair's
+  `prioritized_findings` to ids actually delivered to the chair, so a rejected or downgraded
+  finding cannot reappear in the must-fix list (the stale-claim leak), logged when it fires.
+- **Defect-vs-discretionary placement in the chair.** A `must` entry must trace to a verified
+  defect; a discretionary suggestion ("add a Limitations paragraph") goes under should/nice as
+  the author's call. Placement only, keyed off whether a verified defect backs the item, never
+  off how a reviewer might feel — it changes no severity and no must-fix set.
+- **Supplement-disclosure banner.** Cartography scans for cited supplementary material not
+  provided to the review and the report header discloses it; disclosure only, with an explicit
+  rule that it never defers or softens a main-text finding.
+
+Rejected: a "a reviewer will likely raise this; your strategic call" register tier with a
+"validity floor." It would edit the locked severity rubric and the chair's severity on the
+strength of one author's negotiation strategy, its only trigger was a true overclaim the
+rubric already classes High, and the validity floor does not even bind on that overclaim. All
+three audits flagged it as the owner's stated yes-man risk; the existing "register governs
+delivery only" firewall plus the defect-vs-discretionary placement above cover the safe signal.
+
+Staged (need a 2nd reproducing example in a 2nd domain): extending the deterministic
+absence/credit-the-text gate to statistical finding types; a steelman-quote-the-hedge clause
+(partly redundant with the existing steelman angle); hold-the-line tags; an unconditioned
+supplement-deferral clause; an artifact-guard; an experiment->dataset ontology; a causal
+classifier. Record: `workshop/_michal_revision_audit_20260616/`.
+
 ## v0.7.4 — 2026-06-16
 
 Fixes from running CRUCIBLE on its own repo (Roundtable, Opus 4.8; 33 agents, 58 verified
