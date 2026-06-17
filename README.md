@@ -181,13 +181,16 @@ changes only the tone of the write-up; the severity of a finding never changes.
 
 ## Lineage
 
-CRUCIBLE is the successor to the authors'
+CRUCIBLE grew out of the authors'
 [`mad-research`](https://github.com/tjhavranek/mad-research) (a cross-model audit that produces
 a memo) and
 [`research-audit-duel-protocol`](https://github.com/tjhavranek/research-audit-duel-protocol)
 (manual multi-model protocols). It inherits their discipline (a locked severity rubric,
 quote-and-locate grounding, a preserved minority report, no confidence scores, read-only
-treatment of your files) and adds the topic-adapted debating fleet and the rebuild.
+treatment of your files) and adds the topic-adapted debating fleet and the rebuild. It
+complements `mad-research` rather than replacing it: `mad-research` is a fast cross-model
+(Claude + Codex) audit memo, while CRUCIBLE is a deeper Claude-only fleet that can also rebuild
+the paper. For an important project, run both in parallel and compare.
 (`mad-research`'s own small blinded comparison, n = 5 meta-analyses, found a Claude-only
 configuration ranked above its cross-model setup by an independent judge: illustrative, not
 proof. CRUCIBLE is Claude-only by design, and a single optional non-Claude "what did we all

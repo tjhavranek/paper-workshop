@@ -27,10 +27,12 @@ description: |
    - Act II: "implement the workshop changes" / "rebuild my paper" /
      "build the replication package" / "do Act II / the atelier"
 
-  Use mad-research instead for a fast, read-only, cross-model (Claude+Codex)
-  audit memo with no implementation. Use paper-workshop when you want the
-  largest possible Claude-only expert fleet AND the option to actually fix
-  the paper and ship its replication package.
+  mad-research and paper-workshop are complementary, not substitutes. Use
+  mad-research for a fast, read-only, cross-model (Claude+Codex) audit memo with
+  no implementation; use paper-workshop when you want the largest possible
+  Claude-only expert fleet AND the option to actually fix the paper and ship its
+  replication package. For an important paper you can run both in parallel and
+  compare.
 ---
 
 # paper-workshop (CRUCIBLE)
