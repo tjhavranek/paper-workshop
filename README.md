@@ -19,9 +19,11 @@ analysis code **re-run to regenerate every affected number**, and a reproducible
 
 Two things are mechanically checked: every criticism is pinned to a real quote, and every revised number
 is produced by a real re-run of your own code. It is equally plain about the rest: effectiveness
-is not measured yet (no recall or false-positive numbers), and Act II has been demonstrated end-to-end only once (one accepted paper,
-the authors' own group; see [`examples/incentives-workshop`](examples/incentives-workshop)), not
-broadly validated. Read the [limitations](LIMITATIONS.md) before you rely on it.
+is not measured yet (no recall or false-positive numbers). We have run the workshop on more than ten
+papers in our own work, but only one is public (an accepted paper from the authors' own group; see
+[`examples/incentives-workshop`](examples/incentives-workshop)), where Act II is demonstrated
+end-to-end once; none of it is a controlled validation. Read the [limitations](LIMITATIONS.md)
+before you rely on it.
 
 A [Claude Code](https://claude.com/claude-code) skill. Claude-only. Runs on any paid plan.
 
