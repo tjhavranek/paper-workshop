@@ -77,7 +77,7 @@ const promptRef = (name, vars) =>
 
 // ---------- schemas ----------
 const SCOPE = { type: 'object', additionalProperties: false, properties: { achievable_scope: { type: 'array', items: { type: 'string' } }, degraded: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { finding_id: { type: 'string' }, missing_input: { type: 'string' }, consequence: { type: 'string' } }, required: ['finding_id', 'missing_input', 'consequence'] } }, blocking_gaps: { type: 'array', items: { type: 'string' } }, request_list: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { input: { type: 'string' }, reason: { type: 'string' } }, required: ['input', 'reason'] } } }, required: ['achievable_scope', 'degraded', 'blocking_gaps', 'request_list'] }
-const EDIT = { type: 'object', additionalProperties: false, properties: { edit_id: { type: 'string' }, finding_id: { type: 'string' }, lane: { type: 'string', enum: ['A-writing', 'B-recompute', 'C-new-analysis', 'D-author-decision'] }, file: { type: 'string' }, locator: { type: 'string' }, old_text: { type: ['string', 'null'] }, new_text: { type: ['string', 'null'] }, depends_on_run: { type: ['string', 'null'] }, provenance_token: { type: ['string', 'null'] }, justification_type: { type: 'string', enum: ['more-correct', 'clearer'] }, edit_class: { type: 'string', enum: ['presentation', 'additive-verified', 'numeric', 'result-suppressing', 'claim-altering'] }, author_signoff_required: { type: 'boolean' }, reverify_angles: { type: 'array', items: { type: 'string' } } }, required: ['edit_id', 'finding_id', 'lane', 'file', 'locator', 'old_text', 'new_text', 'depends_on_run', 'provenance_token', 'justification_type', 'edit_class', 'author_signoff_required', 'reverify_angles'] }
+const EDIT = { type: 'object', additionalProperties: false, properties: { edit_id: { type: 'string' }, finding_id: { type: 'string' }, lane: { type: 'string', enum: ['A-writing', 'B-recompute', 'C-new-analysis', 'D-author-decision'] }, file: { type: 'string' }, locator: { type: 'string' }, old_text: { type: ['string', 'null'] }, new_text: { type: ['string', 'null'] }, depends_on_run: { type: ['string', 'null'] }, provenance_token: { type: ['string', 'null'] }, justification_type: { type: 'string', enum: ['more-correct', 'clearer'] }, edit_class: { type: 'string', enum: ['presentation', 'additive-verified', 'numeric', 'result-suppressing', 'claim-altering'] }, author_signoff_required: { type: 'boolean' }, reverify_angles: { type: 'array', items: { type: 'string' } }, edit_intent: { type: 'string', enum: ['defect-fix', 'proportional-caveat', 'presentation'] }, proportionality_note: { type: ['string', 'null'] } }, required: ['edit_id', 'finding_id', 'lane', 'file', 'locator', 'old_text', 'new_text', 'depends_on_run', 'provenance_token', 'justification_type', 'edit_class', 'author_signoff_required', 'reverify_angles'] }
 const EDIT_SPEC = { type: 'object', additionalProperties: false, properties: { edits: { type: 'array', items: EDIT } }, required: ['edits'] }
 const RUNREC = { type: 'object', additionalProperties: false, properties: { run_id: { type: 'string' }, status: { type: 'string', enum: ['ok', 'failed', 'baseline-failed'] }, command: { type: 'string' }, provenance_tokens: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { value: { type: 'string' }, script: { type: 'string' }, line_or_chunk: { type: 'string' }, run_id: { type: 'string' }, input_data_hash: { type: 'string' }, output_file: { type: 'string' }, output_hash: { type: 'string' } }, required: ['value', 'script', 'line_or_chunk', 'run_id', 'input_data_hash', 'output_file', 'output_hash'] } }, log_excerpt: { type: 'string' } }, required: ['run_id', 'status', 'command', 'provenance_tokens', 'log_excerpt'] }
 const SCRIBE_RESULT = { type: 'object', additionalProperties: false, properties: { edit_id: { type: 'string' }, status: { type: 'string' }, diff: { type: 'string' }, commit: { type: 'string' }, new_text: { type: 'string' } }, required: ['edit_id', 'status', 'diff', 'commit', 'new_text'] }
@@ -139,7 +139,7 @@ if (INPUTS.code && INPUTS.data) {
 // tree here and thread its ABSOLUTE path into Scribe / Reconcile / Package.
 phase('Stage')
 const WORK_BRANCH = 'paper-workshop/phase2'
-let workDir = INPUTS.source || ''
+let workDir = INPUTS.source || INPUTS.manuscript_text || ''
 if (INPUTS.source) {
   const staged = await cast('stage',
     'Create the Act-II working copy the Scribe will edit — NEVER touch the author\'s original. Using Bash:\n' +
@@ -150,6 +150,28 @@ if (INPUTS.source) {
     { ...GP, label: 'stage-worktree', phase: 'Stage', schema: { type: 'object', additionalProperties: false, properties: { work_dir: { type: 'string' }, branch: { type: 'string' }, git_ok: { type: 'boolean' } }, required: ['work_dir', 'branch', 'git_ok'] } })
   workDir = staged.work_dir || workDir
   log('Stage: working copy at ' + workDir + ' (branch ' + (staged.branch || WORK_BRANCH) + ', git ' + (staged.git_ok ? 'ok' : 'unavailable') + ')')
+} else if (INPUTS.manuscript_text) {
+  // Referee / PDF-only context: no editable source TREE, but the manuscript TEXT exists
+  // (e.g. reconstructed/extracted text). Stage a single-file working copy from it so the
+  // writing-lane redline is produced THROUGH the guarded Scribe + panel + Package, never
+  // hand-rolled outside the Atelier. Numeric findings still degrade to author-decision
+  // (no code/data to re-run, baseline gate stays skipped); this path implements lane-A
+  // writing edits only, and the Reconcile orphan check still blocks any number that moved.
+  const staged = await cast('stage',
+    'Create the Act-II working copy from the manuscript TEXT substrate (referee / PDF-only context; no source tree). Using Bash:\n' +
+    '1) mkdir -p "' + (PATHS.session || '.') + '/phase2/work"\n' +
+    '2) copy the manuscript text file from "' + INPUTS.manuscript_text + '" into that work dir, keeping its filename; this single file IS the editable substrate the Scribe edits.\n' +
+    '3) cd into the work dir and run: git init -q && git add -A && git commit -q -m "act2 baseline (manuscript text substrate)" && git checkout -q -b ' + WORK_BRANCH + '\n' +
+    '4) Return the ABSOLUTE path of the work dir, the branch name, and git_ok. If git is unavailable, still copy the file and return git_ok:false (edits tracked by unified diff).',
+    { ...GP, label: 'stage-text', phase: 'Stage', schema: { type: 'object', additionalProperties: false, properties: { work_dir: { type: 'string' }, branch: { type: 'string' }, git_ok: { type: 'boolean' } }, required: ['work_dir', 'branch', 'git_ok'] } })
+  workDir = staged.work_dir || workDir
+  log('Stage: manuscript-text working copy at ' + workDir + ' (referee/PDF-only writing-lane redline; branch ' + (staged.branch || WORK_BRANCH) + ', git ' + (staged.git_ok ? 'ok' : 'unavailable') + ')')
+}
+// Fail closed: if we expected to stage a working copy (a source tree or a manuscript-text
+// substrate was provided) but staging did not produce one DISTINCT from the author's original,
+// refuse to edit that original in place (grounding rule 12). Halt rather than fall back to it.
+if ((INPUTS.source || INPUTS.manuscript_text) && (!workDir || workDir === INPUTS.source || workDir === INPUTS.manuscript_text)) {
+  return { halted: 'stage-failed', reason: 'no working copy was staged distinct from the author original; refusing to edit it in place (grounding rule 12)', scope, casting: CASTING() }
 }
 
 // ---------- Implement (Runners parallel, Scribes sequential) + Verify (batched by angle) ----------
@@ -261,7 +283,7 @@ const runArtifacts = results.map(r => r.run).filter(Boolean).flatMap(r => r.prov
 // diff, so a number that changed without a consumed token behind it still blocks.
 const consumedTokens = results.filter(r => r.scribe && !/blocked/.test(r.scribe.status || '')).map(r => r.run).filter(Boolean).flatMap(r => r.provenance_tokens || [])
 const unconsumedTokens = runArtifacts.filter(t => consumedTokens.indexOf(t) === -1)
-const reconcile = await cast('reconcile', promptRef('phase2/14_consistency_reconciler', { REVISED_SOURCE_PATH: workDir, BASELINE_SOURCE_PATH: INPUTS.source || '(none)', RUN_ARTIFACTS_JSON: consumedTokens, UNCONSUMED_TOKENS_JSON: unconsumedTokens, BASELINE_NUMBERS_JSON: baseline.provenance_tokens || [], RUN_DIR: (PATHS.session || '.') + '/phase2/runs/reconcile', HELPERS_DIR }), { ...GP, label: 'reconcile', phase: 'Reconcile', schema: RECON })
+const reconcile = await cast('reconcile', promptRef('phase2/14_consistency_reconciler', { REVISED_SOURCE_PATH: workDir, BASELINE_SOURCE_PATH: INPUTS.source || INPUTS.manuscript_text || '(none)', RUN_ARTIFACTS_JSON: consumedTokens, UNCONSUMED_TOKENS_JSON: unconsumedTokens, BASELINE_NUMBERS_JSON: baseline.provenance_tokens || [], RUN_DIR: (PATHS.session || '.') + '/phase2/runs/reconcile', HELPERS_DIR }), { ...GP, label: 'reconcile', phase: 'Reconcile', schema: RECON })
 const reconcileClean = !reconcile.orphans.length && !reconcile.mismatches.length && !reconcile.run_mismatches.length && !(reconcile.integrity_flags || []).length
 log('Reconcile: ' + (reconcileClean ? 'clean' : (reconcile.orphans.length + ' orphans, ' + reconcile.mismatches.length + ' mismatches, ' + reconcile.run_mismatches.length + ' run-mismatches, ' + (reconcile.integrity_flags || []).length + ' integrity-flags')))
 // The reconciler is a TERMINAL GATE (prompts/phase2/14): a dirty reconcile blocks "final".

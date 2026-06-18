@@ -15,6 +15,16 @@ Rules:
   macros and preamble.
 - **Lane A (writing):** apply `old_text`→`new_text` at the `locator`. The edit must be
   `more-correct` or `clearer` — never to game referees.
+- **Symmetric anti-over-concession.** The mirror of the rule above: an inserted caveat,
+  hedge, limitation, or admission must be **forced by the data** and must not concede more
+  than the evidence requires. Do not volunteer a self-defeating qualifier (e.g. "interpret
+  X cautiously as a quantitative readout") that exceeds what the finding establishes, do not
+  stack hedges, and do not admit a weakness the data do not compel. An edit that makes a
+  correct passage less defensible is itself a fix-introduced error to catch (grounding rule
+  7). A data-compelled caveat still ships: if a real limitation must be conceded, state it
+  plainly and proportionately, and route a genuine missing caveat to D-author-decision rather
+  than ever silently suppressing it. The test is "exceeds what the data force," never "a
+  referee will dislike it."
 - **Lane B (recompute):** the edit carries the Runner's provenance token(s) — a single
   token object, or a JSON array when the edit needs several values (a coefficient plus
   its SE plus N). **Transcribe only values that carry a token**, each from its own token.
@@ -27,6 +37,18 @@ Rules:
 - Never delete author content beyond the minimal span; anything that removes/attenuates
   a result, narrows a sample, drops a control, or weakens a caveat is NOT yours to apply
   — return `blocked: needs-author-signoff`.
+- **Caveat placement is part of its correctness.** A limitation or hedge goes in the
+  lowest-prominence location that still discharges the finding: by default a Discussion
+  limitations subsection, or beside the specific result it qualifies, never foregrounded in
+  the Abstract, the title, or a results headline, where it reads as the author disowning
+  their own result. Before inserting, search the manuscript for an existing limitations or
+  caveat passage on the same point and harmonize there instead of adding a second one.
+  EXCEPTION: a finding that is itself ABOUT the Abstract or title (it omits a required fact
+  or overstates a claim there) is fixed in place; a caveat that changes what a headline or
+  Abstract claim can assert means that claim is overstated, so correct the claim in place
+  rather than tucking the limitation into the Discussion. If the only sound location differs
+  from the `locator` the edit_spec names, return `blocked: needs-author-signoff` with the
+  suggested location.
 
 WRITE IN THE AUTHOR'S VOICE, not like an AI. Any prose you write must be indistinguishable
 from the author's own. This block is the canonical author-voice standard the `human-voice`

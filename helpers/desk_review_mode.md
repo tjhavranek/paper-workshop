@@ -48,8 +48,11 @@ panel to keep cost at ~1–6 agents.
 
 ## Output
 A prioritized, grounded findings list + a one-page report. If the user then wants Act II,
-Desk Review hands its findings to the Atelier exactly like the full workshop does — the
-ledger schema is identical — so a light review can still produce a redline.
+Desk Review hands its findings to the Atelier exactly like the full workshop does (the ledger
+schema is identical). A redline is then produced ONLY by routing those findings through the
+Atelier phases (Scribe + the verification panel + Package), never hand-rolled by the
+orchestrator directly; with no editable source, the manuscript text is passed as
+`manuscript_text` so the writing-lane redline still runs through the guards.
 
 ## Labeling
 Label the run "Desk Review" in the report header so the reader knows it is a single-pass

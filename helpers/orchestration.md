@@ -166,10 +166,24 @@ Stop. Offer Act II explicitly:
 
 Never auto-start Act II.
 
+**Route every Act-II edit through the Atelier; never hand-roll a redline.** Every Act-II edit,
+redline, or tracked-changes "improved manuscript" (in every mode and every context, INCLUDING a
+referee / PDF-only deliverable with no author source) is produced ONLY by routing the finding
+ledger through the Atelier phases (Triage, Scribe, the Act-II verification panel, Package), via
+`workflow/phase2_atelier.js` where dynamic workflows are available or the documented subagent
+fallback running those same phase prompts otherwise. The orchestrator MUST NOT hand-roll tracked
+changes or assemble a redline with its own Bash/Edit or scripting tools outside that pipeline
+(e.g. a find/replace script): that bypasses the quote-grounding, the anti-over-concession +
+caveat-placement guards, and the human-voice / fix-safety / integrity panel that make an edit
+safe (grounding rules 7, 8, 12). A degraded run (no source, or no code/data) NARROWS scope; it
+never drops the panel. With no editable source tree but the manuscript TEXT available, pass it as
+`inputs.manuscript_text` so the Atelier still produces the writing-lane redline through the guards.
+
 ## Step 7 — Run ACT II via the Workflow tool (only on opt-in)
 1. **Intake** (`prompts/phase2/10_intake.md`): request source/data/code/.bib/figure
-   sources/venue style/env, each with its reason; copy what's provided into
-   `phase2/input/`; compute and show back the **achievable scope**.
+   sources/venue style/env, each with its reason (or, in a referee / PDF-only context, the
+   manuscript `manuscript_text` so the writing-lane redline still runs through the Atelier);
+   copy what's provided into `phase2/input/`; compute and show back the **achievable scope**.
 2. **Baseline-reproduction gate** (`helpers/phase2_sandbox.md`): run the author's
    master script unchanged; diff current headline numbers. Mismatch ⇒ stop and report
    (a broken baseline is the first finding).

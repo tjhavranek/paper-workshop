@@ -103,7 +103,11 @@ seems to conflict with this file, **this file wins**.
 12. **Read-only toward the author's work.** Original manuscript, data, and code
     are **copied** into the session folder and never mutated in place. All Act-II
     work happens on copies/branches; output is tracked changes for human
-    acceptance. The author's acceptance is what "applies" a change.
+    acceptance. The author's acceptance is what "applies" a change. Every such tracked
+    change is produced THROUGH the Atelier pipeline (Triage, Scribe, the verification
+    panel, Package), never hand-rolled by an orchestrator with its own editing tools outside
+    it, in any mode or context (a referee or PDF-only redline included); the guards that make
+    an edit safe live in that pipeline.
 
 13. **The Execution-Provenance Wall (Act II).** No number, statistic, table
     cell, or figure enters the revised paper unless it is the output of code

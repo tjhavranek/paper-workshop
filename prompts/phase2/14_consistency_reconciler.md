@@ -16,7 +16,10 @@ your work inside {{RUN_DIR}}.
 
 1. **Run-match + orphans (deterministic).** Write the run tokens to a JSON file, then run
    `python {{HELPERS_DIR}}/consistency.py check --manuscript {{REVISED_SOURCE_PATH}}/<main source>
-   --tokens <tokens.json> --baseline {{BASELINE_SOURCE_PATH}}/<main source>`. It returns
+   --tokens <tokens.json> --baseline {{BASELINE_SOURCE_PATH}}/<main source>`. (If the baseline is a
+   single-file manuscript-text substrate rather than a source tree, i.e. a referee / PDF-only run,
+   `{{BASELINE_SOURCE_PATH}}` already IS that file: pass it directly with no `/<main source>` join,
+   and point `--manuscript` at the matching single file inside the working copy.) It returns
    `reconciled` / `run_mismatches` (token values not present verbatim in the revised text) and
    `orphans` (numbers that changed or are new vs the baseline but trace to no token). Carry
    these through verbatim — a non-empty `run_mismatches` or `orphans` means a number moved

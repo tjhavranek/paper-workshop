@@ -45,6 +45,17 @@ Requirements:
   baseline anchor), set `reproduced: "n/a"` and add "no baseline anchor — reproduction not
   established" to `labeled_gaps`; never report a bare `true`/`false` you could not derive.
 
+- **Manuscript-text substrate (referee / PDF-only, no LaTeX/Word source).** When
+  `{{REVISED_SOURCE_PATH}}` is a single plain-text or Markdown manuscript file (a referee /
+  PDF-only run, no `.tex`/`.docx` source tree), the redline is produced OVER that text, not via
+  latexdiff or Word tracked changes: emit `revised_redline.md` (and, if the docx skill is
+  available, `revised_tracked.docx`) showing every insertion and deletion from the staged
+  baseline to the revised working copy, plus `revised_clean.md` with all changes accepted. On
+  this substrate the tracked-changes redline is a REQUIRED deliverable, not optional: if you
+  cannot produce it, report the run as failing in `labeled_gaps` with a non-null reason, never a
+  silent `null` redline dressed as success. (Numeric findings degrade to author-decision here;
+  there is no code to re-run.)
+
 **Plain-prose voice for everything you write.** The README, `changes_map.md`, `MAP.md`,
 `data_dictionary.md`, and any redline narration are AI-authored prose the author reads. Write
 them in plain, direct English: no em/en-dash or semicolon spikes above a normal academic rate,

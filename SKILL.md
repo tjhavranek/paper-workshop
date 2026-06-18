@@ -72,7 +72,10 @@ and Act II is demonstrated end-to-end once on one accepted paper, not broadly va
   **data**, and **code**, then implements every safely-implementable finding as
   tracked changes, re-runs the analysis against the data, regenerates figures and
   tables, and assembles a reproducing **replication package**, all on copies, all
-  author-approvable. (`workflow/phase2_atelier.js`)
+  author-approvable. (`workflow/phase2_atelier.js`) Every Act-II redline is produced through
+  this Atelier pipeline (Triage, Scribe, the verification panel, Package), never hand-rolled
+  outside it; a referee or PDF-only context passes the manuscript text so the writing-lane
+  redline still runs through the same guards.
 
 The two acts share one spine: the **Verified Finding Ledger**
 (`schemas/finding.schema.json`). Act I produces it; Act II consumes it.

@@ -1,5 +1,90 @@
 # Changelog
 
+## v0.7.6 — 2026-06-18
+
+Act-II over-concession and caveat-placement guards, from a second author's feedback in a
+different domain (oncology / cancer cell biology). On that run the Scribe wrote a
+self-defeating caveat the data did not force and foregrounded a limitation in the Abstract;
+the author would not have written it that way. Detection itself was sound;
+the problem was how the Scribe wrote and placed a caveat, so the corrective signal is about
+the edit-writing surface, never about detection or severity. The
+fix is the symmetric mirror of a gap the Scribe already guarded on one side: it barred
+over-claiming but had no guard against over-conceding and no caveat-placement logic.
+
+These changes are prompt/spec plus one additive Atelier-engine path (below). They touch no
+rubric text, add no severity tier, change no must-fix SET, and move no default-on rail (no
+detector, severity value, locked rubric, or panel-gate angle).
+
+Shipped (do-now, prompt/spec only):
+- **Symmetric anti-over-concession in the Scribe.** An inserted caveat, hedge, or admission
+  must be forced by the data and must not concede more than the evidence requires; a
+  self-defeating qualifier beyond what the finding establishes is a fix-introduced error
+  (grounding rule 7), the mirror of over-claiming. A data-compelled caveat still ships, and a
+  genuine missing caveat routes to author decision rather than being suppressed. The test is
+  "exceeds what the data force," never "a referee will dislike it."
+- **Caveat-placement logic in the Scribe.** A limitation goes in the lowest-prominence place
+  that still discharges the finding (a Discussion limitations subsection, or beside the result
+  it qualifies), not foregrounded in the Abstract/title/headline where it reads as the author
+  disowning their own result. It harmonizes with any existing limitations passage. EXCEPTION:
+  a finding that is itself about the Abstract/title is fixed in place; otherwise a placement
+  conflict returns `blocked: needs-author-signoff` with the suggested location.
+- **Triage mirror.** The banned "more likely to be accepted" justification now also bars
+  "more-defensible-looking": an edit whose effect is to add or strengthen a caveat the data do
+  not force is referee-management, not auto-applicable; a missing caveat that a careful reading
+  requires (rubric Medium) routes to author decision. The `integrity` reverify angle now fires
+  for caveat-ADDING edits too, not only caveat-weakening ones.
+- **`edit_intent` + `proportionality_note` spec field** (`defect-fix` / `proportional-caveat`
+  / `presentation`). Annotation and routing only: it tags an edit toward author sign-off and
+  must never auto-downgrade, veto, or change a finding's severity or existence. The on-disk
+  `edit_spec.schema.json` documents the contract that a `proportional-caveat` edit carries a
+  non-empty `proportionality_note` citing the data, and the triage prompt requires it; the
+  field is read by no path that sets severity (the engine's gating never consults it).
+- **Chair concession-placement clause** (a one-clause extension of the v0.7.5 defect-vs-
+  discretionary rule, not a new tier). A discretionary improvement framed as a concession is
+  the author's strategic call: it goes to should/nice presented as the trade-off it is, never
+  as the tool's recommended default. Placement only; changes no severity and no must-fix set,
+  and tone-invariance (grounding rule 4) still holds.
+
+Binding the guards to the path (a brutal multi-agent stress-test's central finding). The five
+guards were correct but sat on a path the original failure never traveled: that redline had been
+hand-rolled by the orchestrator OUTSIDE the Atelier, so none of the in-Atelier guards would have
+run on it. Three fixes close that, none a rail:
+- **Routing rule.** `orchestration.md`, `SKILL.md`, `desk_review_mode.md`, and grounding rule 12
+  now bind every Act-II redline or tracked-changes "improved manuscript" (in every mode and
+  context, including a referee / PDF-only deliverable with no author source) to the Atelier
+  pipeline: Triage, Scribe, the verification panel, Package. The orchestrator may not hand-roll a
+  redline with its own tools.
+- **No-source manuscript-text path (engine).** `phase2_atelier.js` gains an additive Stage branch:
+  with no editable source tree but a manuscript TEXT substrate (passed as `inputs.manuscript_text`),
+  it stages a single-file working copy and runs the writing-lane redline THROUGH the Scribe + panel
+  + Package, so the referee deliverable the routing rule now requires actually has a guarded route.
+  The with-source path is unchanged; numeric findings still degrade to author-decision.
+- **Runtime coherence + fail-safe.** The engine validates Triage output against an inline schema,
+  so `edit_intent`/`proportionality_note` were added there too (not only to the on-disk schema),
+  letting the field flow at runtime (the on-disk schema's `proportional-caveat`-requires-a-note
+  conditional is the documented contract; the prompt instructs it). And Triage now attaches the
+  `integrity` reverify angle BY DEFAULT to any caveat-adding edit, so a misclassified caveat-add
+  cannot skip that angle; the Scribe's anti-over-concession and placement clauses plus `fix-safety`
+  remain the primary over-concession guards (sharpening the integrity question itself is staged).
+  The no-source manuscript-text path also fails closed if no working copy is staged (it will not
+  edit the author's original in place), and the package step produces the referee redline over the
+  text substrate rather than assuming a LaTeX/Word source.
+
+Added: `prompts/phase2/over_concession_acceptance_tests.md` — binding regression scenarios so the
+guards cannot become a yes-man (a data-compelled headline caveat must survive; a true
+Abstract-omission fix stays in the Abstract; `edit_intent` never flips a finding; tone-invariance
+holds; the protected detection pattern still ships as must-fix; every redline routes through the
+Atelier, never hand-rolled; an author-conceded count inconsistency stays must-fix), plus a Staged
+list recording the rail-class items held back (the integrity-question wording, a deterministic
+force-integrity floor, and the #22 detector).
+
+Not done, on purpose: a default-on over-concession DETECTOR / new panel-gate angle is a rail,
+so it is STAGED, not shipped; it unstages only when a 3rd paper in a 3rd domain shows an
+over-concession edit false or indefensible by operator re-check (not merely unstrategic). The
+"reviewer-will-raise / strategic register" tier remains REJECTED (it would edit the locked
+rubric on an author's negotiation strategy). Also bumped the CITATION.cff version, which had
+been stale at 0.7.0 since the 0.7.0 release.
+
 ## v0.7.5 — 2026-06-17
 
 Triaged response to one author's feedback on one biology run (Divin et al.; the tool's

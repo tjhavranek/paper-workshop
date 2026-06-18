@@ -35,10 +35,25 @@
           "reverify_angles": {
             "type": "array",
             "items": { "type": "string" },
-            "description": "Which verification-panel angles must clear this edit before delivery (always includes fix-safety; numeric edits add numeric-provenance + consistency; any record-touching edit adds integrity)."
+            "description": "Which verification-panel angles must clear this edit before delivery (always includes fix-safety; numeric edits add numeric-provenance + consistency; any record-touching edit adds integrity, including an edit that adds or strengthens a caveat beyond what the data force)."
+          },
+          "edit_intent": {
+            "type": "string",
+            "enum": ["defect-fix", "proportional-caveat", "presentation"],
+            "description": "Annotation/routing only: what the edit is for. 'proportional-caveat' = inserts or strengthens a caveat the data compel. This field tags an edit and routes it toward author sign-off; it MUST NEVER be used to auto-downgrade, veto, or change the severity or existence of the underlying finding. It touches the edit's presentation, never Act-I detection or severity."
+          },
+          "proportionality_note": {
+            "type": ["string", "null"],
+            "description": "Required (non-null, non-empty) when edit_intent = 'proportional-caveat': one line citing the exact data the caveat rests on and confirming the finding is data-compelled. null otherwise."
           }
         },
-        "required": ["edit_id", "finding_id", "lane", "file", "locator", "old_text", "new_text", "depends_on_run", "provenance_token", "justification_type", "edit_class", "author_signoff_required", "reverify_angles"]
+        "required": ["edit_id", "finding_id", "lane", "file", "locator", "old_text", "new_text", "depends_on_run", "provenance_token", "justification_type", "edit_class", "author_signoff_required", "reverify_angles"],
+        "allOf": [
+          {
+            "if": { "required": ["edit_intent"], "properties": { "edit_intent": { "const": "proportional-caveat" } } },
+            "then": { "required": ["proportionality_note"], "properties": { "proportionality_note": { "type": "string", "minLength": 1 } } }
+          }
+        ]
       }
     }
   },

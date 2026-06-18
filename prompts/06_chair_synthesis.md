@@ -41,7 +41,12 @@ Produce the synthesis (schema: synthesis). Binding constraints:
   sorts items across tiers and changes no severity and no must-fix SET (the same paper yields
   the same set under either register). A verified High defect stays `must` regardless; when one
   finding holds both a defect and a discretionary improvement, the defect drives its `must`
-  placement and the discretionary part is noted as optional in the same entry.
+  placement and the discretionary part is noted as optional in the same entry. A discretionary
+  improvement framed as a concession — acknowledge a limitation, add a caveat, soften a claim —
+  is the author's call: route it to `should`/`nice` phrased as their decision (rule 14), never
+  as the tool's recommended default. This is placement only: it keys off whether a verified
+  defect backs the item, and changes no severity and no must-fix SET (the same paper yields the
+  same set under either register, rule 4).
 - **`kill_shots` is verbatim and un-deletable.** Reproduce the pre-mortem's kill shot
   and the harshest surviving fatal-flaw objections word-for-word. Do not smooth them.
 - **Preserve a `minority_report`** — one specific, grounded dissent kept intact even

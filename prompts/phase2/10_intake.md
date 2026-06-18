@@ -8,8 +8,14 @@ READ the verified finding ledger at {{LEDGER_PATH}} and the binding rules at
 
 The canonical inputs, ranked by leverage (each request must state WHY and what becomes
 impossible without it):
-1. **Manuscript source** (.tex + `\input` children, or .docx) — near-blocking; without
-   it, only an "edit-spec only" handoff is possible (patches keyed to quote+locator).
+1. **Manuscript source** (.tex + `\input` children, or .docx) — the editable source tree.
+   If it is absent but the manuscript TEXT is available (a referee / PDF-only context,
+   passed to the Atelier as `manuscript_text`), Act II still runs a WRITING-LANE pass over
+   that text: lane-A edits go through the Scribe + the verification panel + Package to
+   produce a tracked-changes redline THROUGH the guards, never hand-rolled outside the
+   Atelier. Numeric/figure findings then degrade to author-decision (no code to re-run).
+   Only with NEITHER an editable source tree NOR the manuscript text is the output reduced
+   to an "edit-spec only" handoff (patches keyed to quote+locator).
    Also ask whether this source is the author's own writing or a PRIOR paper-workshop
    revision being re-run: if it is a prior revision, ask for the author's last
    hand-written version too, and record its path as `original_manuscript` in the manifest,
