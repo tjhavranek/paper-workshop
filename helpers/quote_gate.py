@@ -12,7 +12,8 @@ Findings of type 'absence-silence' carry an empty quote and are EXEMPT from
 THIS gate (grounding rule 9): batch mode reports them as
 match_level='exempt-absence'. They are not unverified: since v0.6.0 they ride
 the deterministic helpers/absence_gate.py instead. A 'contribution-undersell'
-finding's quote (its foothold) is NOT exempt and is gated here normally.
+or opt-in 'improvement-proposal' finding's quote (its foothold) is NOT exempt
+and is gated here normally.
 
 No third-party dependencies (stdlib only) so it runs anywhere Python 3.8+ is.
 

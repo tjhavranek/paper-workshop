@@ -58,8 +58,8 @@ economy or `models` is on: it arms the engine's never-upgrade clamp), `span_diet
 role→model map; custom casts are unvalidated and the run is labeled `custom`), and
 `improvement: true` (opt-in Improvement Mode: casts mode-scaled generative
 `S-improvement-architect` seat(s) and a separate non-blocking, mode-scaled `improvement_memo` of
-bolder substantive suggestions; default off and byte-identical when off, so it moves no default-on
-rail; set it when the author says "improvement" / "be bolder" / "improve it aggressively"; see
+bolder substantive suggestions; default off and rail-/decision-identical when off, so it moves no
+default-on rail; set it when the author says "improvement" / "be bolder" / "improve it aggressively"; see
 SKILL.md). On a Fable
 session, do not launch Workshop-or-larger until `meta.json` records the economy offer and
 the user's answer (`economy_offered`; see `helpers/doctor.md`). The run

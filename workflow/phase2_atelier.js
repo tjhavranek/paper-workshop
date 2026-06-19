@@ -25,7 +25,7 @@ const TIER = A.tier || 'thorough'
 // tracked-change edits, more of them at heavier tiers. Every improvement edit stays proposal-only +
 // author_signoff_required and rides the SAME gates (fix-safety, integrity, the Execution-Provenance
 // Wall): nothing auto-applies, nothing skips a rail. OFF by default → the triage prompt receives an
-// empty directive and behaves byte-identically to a normal run.
+// empty directive and behaves identically to a normal run (rail- and decision-identical; no-op).
 const IMPROVE = A.improvement === true
 const IMPROVE_TARGET = TIER === 'monumental' ? 'as many as the ledger genuinely supports — this is the most exhaustive mode, so be thorough'
   : TIER === 'exhaustive' ? 'a generous set'

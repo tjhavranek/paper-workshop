@@ -136,8 +136,8 @@ wing turns on:
   introduces still rides the Execution-Provenance Wall, and every edit still rides fix-safety and
   the integrity angle. Nothing auto-applies.
 
-Off by default, a run is byte-identical to a normal run, so Improvement Mode moves no default-on
-rail. It is a grounded option set, not a validated verdict: like the Contribution Memo, which
+Off by default, a run is rail- and decision-identical to a normal run, so Improvement Mode moves
+no default-on rail. It is a grounded option set, not a validated verdict: like the Contribution Memo, which
 improvements surface is a same-model judgment with no measured improvement-recall yet (see
 `LIMITATIONS.md`). The author is the author; these are suggestions you ratify or ignore.
 

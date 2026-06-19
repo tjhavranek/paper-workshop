@@ -1,5 +1,29 @@
 # Changelog
 
+## v0.8.1 — 2026-06-19
+
+Post-release housekeeping for v0.8.0 Improvement Mode, from an independent multi-agent stress test
+(6 review lanes, each finding adversarially refuted, then synthesis) that confirmed 0 blocking
+issues and all five owner invariants holding in code. Four non-blocking follow-ups; a normal
+(improvement-off) run is unchanged in behavior:
+
+- **Chair ledger copy now carries `improvement_findings`.** The pre-chair resilience write already
+  included it, but the chair's own overwrite template had dropped it, so a successful chair run lost
+  it from the on-disk `findings_ledger.json` (the return blob, the documented source of truth,
+  always carried it). The template now matches.
+- **The low-budget cap checkpoint now tightens the improvement cap too**, so the budget throttle
+  reaches the opt-in improvement wing (no-op when off; `IMPROVE_CAP` is already 0).
+- **Wording precision.** Off-mode is now described as "rail- and decision-identical", not literally
+  "byte-identical" (an off run emits a few additive empty placeholder keys); the `quote_gate.py`
+  docstring now names `improvement-proposal` alongside `contribution-undersell` as dual-gated.
+- **Considered and dropped:** a code-level sign-off floor on improvement edits. Improvement edits
+  are meant to be applied as tracked changes the author accepts or rejects, so forcing more sign-off
+  gates would run counter to the design; the proposal-only routing is already triage-instructed with
+  the deterministic number and integrity floors binding.
+
+All rituals green: 7 helper selftests + 5 schema checks + JS syntax on both engines + both
+provenance proofs; SKILL.md at 0 em-dashes.
+
 ## v0.8.0 — 2026-06-19
 
 Improvement Mode (opt-in): an optional generative wing that proposes substantive strengthenings
@@ -7,9 +31,10 @@ alongside the critique, plus two honesty-precision doc fixes. From owner field e
 suggested edits were too few and limited, and the wish for a bolder, more substantively helpful
 tool whose proposals the author can accept or reject in track changes.
 
-The whole wing is OPT-IN and default OFF. With `improvement` off, every run is byte-identical to
-v0.7.6: no seat is cast, no `improvement-proposal` finding can exist, the memo is empty, and the
-Act-II triage directive is empty. So Improvement Mode moves no default-on rail (no detector,
+The whole wing is OPT-IN and default OFF. With `improvement` off, every run is rail- and
+decision-identical to v0.7.6 (every off-path branch is a no-op; the only deltas are additive empty
+placeholder keys): no seat is cast, no `improvement-proposal` finding can exist, the memo is empty,
+and the Act-II triage directive is empty. So Improvement Mode moves no default-on rail (no detector,
 severity value, locked rubric, default panel-angle set, or default per-run cost changes for a
 normal run). It is governed exactly like the economy register and the contribution wing.
 

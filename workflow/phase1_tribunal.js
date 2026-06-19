@@ -26,11 +26,12 @@ const PROMPTS_DIR = PATHS.prompts_dir || ''
 // defensible claims the results support, analyses worth running, sharper framing) into a separate,
 // mode-scaled `improvement_memo`, and Act II can draft them as author-rejectable tracked changes.
 // OFF by default: no seat is cast, the cap is 0, no improvement-proposal finding can exist, and a
-// run is byte-identical to a non-improvement run (it moves no default-on rail). Same non-blocking
+// run is rail- and decision-identical to a non-improvement run (every off-path branch is a no-op;
+// it moves no default-on rail; the only deltas are additive empty placeholder keys). Same non-blocking
 // contract as the contribution memo: suggestions only, never the must-fix list, never a severity,
 // never the verdict. Heavier tiers cast more improvement seats and a larger memo.
 const IMPROVE = A.improvement === true
-const IMPROVE_CAP = IMPROVE ? ({ quick: 3, thorough: 5, exhaustive: 8, monumental: 12 }[TIER] || 5) : 0
+let IMPROVE_CAP = IMPROVE ? ({ quick: 3, thorough: 5, exhaustive: 8, monumental: 12 }[TIER] || 5) : 0
 const N_IMPROVE_SEATS = IMPROVE ? (TIER === 'monumental' ? 3 : TIER === 'exhaustive' ? 2 : 1) : 0
 
 // ---------- casting (economy register; the default is session-model inheritance) ----------
@@ -231,7 +232,10 @@ phase('Specialists')
 // fleet launches, tighten the findings caps one notch and log it — never silently.
 if (BUDGETED && budget.remaining() < 1500000) {
   SEAT_CAP = Math.min(SEAT_CAP, 4); GEN_CAP = Math.min(GEN_CAP, 3)
-  BUDGET_ACTIONS.push('findings caps tightened to ' + SEAT_CAP + '/' + GEN_CAP + ' (' + Math.round(budget.remaining() / 1000) + 'k tokens remaining before Specialists)')
+  // The opt-in improvement wing is extra, non-blocking volume; tighten its cap too under a low
+  // budget so the throttle reaches it (no-op when off, IMPROVE_CAP is already 0).
+  if (IMPROVE_CAP) IMPROVE_CAP = Math.min(IMPROVE_CAP, 4)
+  BUDGET_ACTIONS.push('findings caps tightened to ' + SEAT_CAP + '/' + GEN_CAP + (IMPROVE ? ' (improvement ' + IMPROVE_CAP + ')' : '') + ' (' + Math.round(budget.remaining() / 1000) + 'k tokens remaining before Specialists)')
 }
 const seatTasks = []
 roster.seats.forEach(s => { const cap = /^S-improvement-architect/.test(s.seat_id) ? IMPROVE_CAP : SEAT_CAP; seatTasks.push(() => cast('seat', promptRef('01_specialist_seat', { ...seatPaths, SEAT_JSON: s }) + capNote(cap), { ...GP, label: ('seat:' + s.seat_id).slice(0, 56), phase: 'Specialists', schema: FINDINGS }).then(r => tag(r, s.seat_id, s.tradition))) })
@@ -474,7 +478,7 @@ const artDir = (PATHS.session || '.') + '/round_artifacts'
 const ledgerObj = { findings: chairFindings, contribution_findings: contributionFindings, improvement_findings: improvementFindings, rejected_in_panel: rejected, integration }
 const ledgerWrite = await cast('carto', 'Write this JSON object byte-faithfully to ' + artDir + '/findings_ledger.json (create the directory first; no commentary, no reformatting of values, just the object). Return the path written.\nJSON: ' + JSON.stringify(ledgerObj), { ...GP, label: 'persist-ledger', phase: 'Synthesis', schema: { type: 'object', additionalProperties: false, properties: { path: { type: 'string' } }, required: ['path'] } })
 log(ledgerWrite ? 'Resilience: verified ledger persisted before chair (' + artDir + '/findings_ledger.json)' : 'Resilience: pre-chair ledger persist FAILED (writer returned null); chair best-effort copy is the only on-disk ledger')
-const artifactNote = '\nALSO, before returning your StructuredOutput, write two byte-faithful JSON artifact files with your tools (create the directory first; no commentary inside the files): (1) ' + artDir + '/findings_ledger.json = {"findings": <the VERIFIED_FINDINGS_JSON you received, verbatim>, "contribution_findings": <the CONTRIBUTION_JSON you received, verbatim>, "rejected_in_panel": <the REJECTED_JSON you received, verbatim>, "integration": <the INTEGRATION_JSON you received, verbatim>}; (2) ' + artDir + '/synthesis_raw.json = exactly the synthesis object you return. These files are a convenience copy; your StructuredOutput remains the deliverable.'
+const artifactNote = '\nALSO, before returning your StructuredOutput, write two byte-faithful JSON artifact files with your tools (create the directory first; no commentary inside the files): (1) ' + artDir + '/findings_ledger.json = {"findings": <the VERIFIED_FINDINGS_JSON you received, verbatim>, "contribution_findings": <the CONTRIBUTION_JSON you received, verbatim>, "improvement_findings": <the IMPROVEMENT_JSON you received, verbatim>, "rejected_in_panel": <the REJECTED_JSON you received, verbatim>, "integration": <the INTEGRATION_JSON you received, verbatim>}; (2) ' + artDir + '/synthesis_raw.json = exactly the synthesis object you return. These files are a convenience copy; your StructuredOutput remains the deliverable.'
 const synthesis = await cast('chair', promptRef('06_chair_synthesis', { VERIFIED_FINDINGS_JSON: chairFindings, CONTRIBUTION_JSON: contributionFindings, IMPROVEMENT_JSON: improvementFindings, INTEGRATION_JSON: integration, PREMORTEM_JSON: premortemFindings, COVERAGE_JSON: coverage, REJECTED_JSON: rejected, REGISTER, RULES_PATH: PATHS.rules || '', RUBRIC_PATH: PATHS.rubric || '' }) + artifactNote, { ...GP, label: 'chair:synthesis', phase: 'Synthesis', schema: SYNTHESIS })
 // Enforce the non-blocking contract in code, not trust: an undersell id can never appear in
 // prioritized_findings, and the memo holds at most 3 items, each tracing to a DELIVERED
