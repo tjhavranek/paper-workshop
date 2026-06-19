@@ -81,6 +81,18 @@ adversarial cross-review during development.
   mode the contribution wing exists to counter. There is no measured undersell-recall or
   false-suggestion rate yet (see Roadmap). Treat the memo as a grounded option set the
   author ratifies, never as a verdict on what the contribution should be.
+- **Improvement Mode is an opt-in, unvalidated generative wing.** With `improvement: true`, one or
+  more `S-improvement-architect` seats propose bolder defensible claims, analyses worth running, and
+  reframings into a non-blocking, mode-scaled Improvement Memo, and Act II can draft them as
+  author-rejectable tracked changes (more at heavier tiers). Every item rides the same deterministic
+  gates (foothold quote + absence probe) and the same verification panel as a defect finding, and
+  nothing auto-applies (proposal-only, author sign-off, the Execution-Provenance Wall on any
+  number). But WHICH improvements surface, and whether a "bolder claim the results support" is
+  actually right, are same-model judgments with no measured improvement-recall or false-suggestion
+  rate yet, the same limitation as the Contribution Memo on a wider jurisdiction; a bolder
+  generative claim is exactly where a same-model panel is least able to refute itself. Off by
+  default, so a normal run is unaffected; treat the memo and its drafted edits as a grounded option
+  set the author ratifies in track changes, never as a verdict on how the paper should change.
 - **The related-literature scout widens the lens but cannot certify coverage or
   importance, and fetch-or-drop is a mandate, not a check.** The scout is instructed,
   strictly, to stage only works it actually opened in this run, and the leads list rests
@@ -143,8 +155,10 @@ than estimated.
    README with the number. Extend its design with two contribution-side arms before it
    runs: **undersell-recall** (papers with known under-claimed contributions seeded; does
    the memo recover them?) and **consensus-deference** (seeded flaws that contradict
-   field-standard methods; do seats defer to convention?). Add the casting arms listed
-   above (economy vs full power, Sonnet panel, Sonnet generalists, Haiku relays,
+   field-standard methods; do seats defer to convention?), plus an **improvement-recall /
+   false-suggestion** arm for opt-in Improvement Mode (papers with known available strengthenings
+   seeded; does the Improvement Memo recover them without manufacturing unsupported ones?). Add the
+   casting arms listed above (economy vs full power, Sonnet panel, Sonnet generalists, Haiku relays,
    span-diet) to the same harness.
 2. End-to-end Act-II runs on **independent third-party** papers. The first end-to-end
    demonstration is done (`examples/incentives-workshop/phase2_true/`, both the Stata and R

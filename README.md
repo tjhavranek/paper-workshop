@@ -51,8 +51,10 @@ a corrected, reproducing manuscript.
   flagged *needs author confirmation* and never asserted. No acceptance-probability numbers, ever.
 - **Every comment is re-checked from many angles** (Roundtable and up) by independent blind
   verifiers (does the quote exist, does the criticism actually follow, is the severity
-  calibrated, does the proposed fix break something) before it ever reaches you; Desk Review,
-  the lightest mode, is a single-pass read with inline chair checks instead of the panel.
+  calibrated, does the proposed fix break something) before it reaches you; a comment whose
+  checks did not fully resolve arrives flagged *needs your confirmation*, not as a settled
+  must-fix. Desk Review, the lightest mode, is a single-pass read with inline chair checks
+  instead of the panel.
 - **It also argues FOR your paper.** Every full tribunal run also staffs a contribution rival
   pair: an *overclaim prosecutor* hunting where your framing outruns the evidence, and a
   *contribution maximizer* hunting the opposite failure, the bolder claim your own results
@@ -178,6 +180,14 @@ CRUCIBLE runs the workshop and presents the report. Then it **stops and asks** w
 implement the changes; if you say yes, it requests your source, data, and code and produces the
 redline, the clean version, and the replication package. *Register* (`supportive` / `brutal`)
 changes only the tone of the write-up; the severity of a finding never changes.
+
+**Want it bolder?** Add `improvement` (for example `workshop my paper: mypaper.pdf symposium improvement`)
+to turn on an opt-in generative wing. Alongside the critique, the workshop then proposes substantive
+ways to make the paper stronger: bolder defensible claims your own results support, analyses worth
+running, sharper framing. In the rebuild it drafts these as extra tracked changes you accept or
+reject. It is off by default, never enters the must-fix list, and is most aggressive in the heavier
+modes (Symposium and Summit). Like the contribution memo, it is a grounded option set, not a
+validated verdict.
 
 ## Lineage
 

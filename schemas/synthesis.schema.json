@@ -39,6 +39,22 @@
         "required": ["finding_id", "bolder_claim", "grounded_in", "risk_of_overreach"]
       }
     },
+    "improvement_memo": {
+      "type": "array",
+      "description": "OPT-IN and NON-BLOCKING (empty unless the run is in Improvement Mode, improvement: true). Composed ONLY from verified improvement-proposal findings (fed to the chair through their own channel); the engine strips any of their ids from prioritized_findings and caps the list to the mode's budget (3 at Roundtable up to 12 at Summit). Bolder substantive suggestions the author ratifies or ignores (rule 14); never raises a severity, never moves a verdict, never enters the must-fix list.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "finding_id": { "type": "string" },
+          "improvement": { "type": "string", "description": "The substantive change the paper could make to be stronger." },
+          "kind": { "type": "string", "enum": ["bolder-claim", "new-analysis", "reframing", "extension"] },
+          "grounded_in": { "type": "string", "description": "The quoted foothold result or passage the proposal builds from." },
+          "risk_of_overreach": { "type": "string" }
+        },
+        "required": ["finding_id", "improvement", "kind", "grounded_in", "risk_of_overreach"]
+      }
+    },
     "kill_shots": {
       "type": "array",
       "description": "VERBATIM, un-deletable. The harshest surviving objections from the fatal-flaw and pre-mortem seats, reproduced unsmoothed regardless of delivery tone.",

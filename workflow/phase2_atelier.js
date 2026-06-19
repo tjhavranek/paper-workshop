@@ -19,6 +19,20 @@ const A = (typeof args === 'string' ? JSON.parse(args) : args) || {}
 const PATHS = A.paths || {}
 const INPUTS = A.inputs || {}
 const LEDGER = A.ledger || []        // the verified findings the author elected to implement
+const TIER = A.tier || 'thorough'
+// Improvement Mode (opt-in, default OFF; threaded from Act I / the orchestrator). When on, the
+// Triage agent ALSO drafts the ledger's improvement-proposal findings as bold, author-rejectable
+// tracked-change edits, more of them at heavier tiers. Every improvement edit stays proposal-only +
+// author_signoff_required and rides the SAME gates (fix-safety, integrity, the Execution-Provenance
+// Wall): nothing auto-applies, nothing skips a rail. OFF by default → the triage prompt receives an
+// empty directive and behaves byte-identically to a normal run.
+const IMPROVE = A.improvement === true
+const IMPROVE_TARGET = TIER === 'monumental' ? 'as many as the ledger genuinely supports — this is the most exhaustive mode, so be thorough'
+  : TIER === 'exhaustive' ? 'a generous set'
+  : 'a focused, high-value set'
+const IMPROVE_NOTE = IMPROVE
+  ? '\n\nIMPROVEMENT MODE IS ON (the author opted in and wants the paper improved more aggressively, in track changes). BEYOND the agreed defect fixes, ALSO draft the ledger\'s `improvement-proposal` findings (and any `contribution-undersell` the author forwarded) as concrete tracked-change edits: be bold and generous, proposing substantive ways to make the paper stronger (sharper framing, the boldest defensible claim the results support, additional analyses worth running, defensible extensions). Aim for ' + IMPROVE_TARGET + ' of improvement edits where the ledger supports them. NON-NEGOTIABLE on every improvement edit: set `author_signoff_required: true` and treat it as PROPOSAL-ONLY (the author accepts or rejects each one in track changes); a new analysis is lane C-new-analysis, a bolder claim is `claim-altering` (lane A or D), a reframing is lane A or D; any number it introduces still rides the Execution-Provenance Wall (no number without a logged re-run) and every improvement edit still carries `fix-safety` + `integrity` in `reverify_angles`. An improvement edit NEVER auto-applies and NEVER becomes a defect must-fix. Do not manufacture: propose an improvement only where the paper\'s own evidence supports it, exactly as conservatively grounded as a defect fix.'
+  : ''
 const PROMPTS_DIR = PATHS.prompts_dir || ''
 const HELPERS_DIR = PATHS.helpers_dir || ''   // deterministic Act-II checkers live here (provenance/consistency/reproduces/integrity_diff.py)
 const GP = { agentType: 'general-purpose' }
@@ -61,7 +75,7 @@ async function cast(role, prompt, opts) {
   }
   return r
 }
-const CASTING = () => ({ mode: CASTING_MODE, session_model: A.session_model || 'not-passed', role_models: MODELS, degraded_casting: DEGRADED, scribe_batch: SCRIBE_BATCH, verify_batch: VBATCH })
+const CASTING = () => ({ mode: CASTING_MODE, session_model: A.session_model || 'not-passed', role_models: MODELS, degraded_casting: DEGRADED, scribe_batch: SCRIBE_BATCH, verify_batch: VBATCH, improvement: IMPROVE })
 const SCRIBE_BATCH = A.scribe_batch || 5
 const VBATCH = Math.min(30, A.verify_batch || 12)
 // Each agent reads its own prompt template from the installed skill and applies the
@@ -110,9 +124,9 @@ if (scope.blocking_gaps.length) {
 
 // ---------- Triage ----------
 phase('Triage')
-const spec = await cast('triage', promptRef('phase2/11_triage', { LEDGER_PATH: PATHS.ledger_path || JSON.stringify(LEDGER), INPUT_MANIFEST_JSON: INPUTS, RULES_PATH: PATHS.rules || '' }), { ...GP, label: 'triage', phase: 'Triage', schema: EDIT_SPEC })
+const spec = await cast('triage', promptRef('phase2/11_triage', { LEDGER_PATH: PATHS.ledger_path || JSON.stringify(LEDGER), INPUT_MANIFEST_JSON: INPUTS, RULES_PATH: PATHS.rules || '', IMPROVEMENT_MODE: IMPROVE_NOTE }), { ...GP, label: 'triage', phase: 'Triage', schema: EDIT_SPEC })
 const edits = spec.edits || []
-log('Triage: ' + edits.length + ' edits (' + edits.filter(e => e.lane === 'A-writing').length + ' writing, ' + edits.filter(e => e.lane === 'B-recompute').length + ' recompute, ' + edits.filter(e => e.lane === 'C-new-analysis').length + ' new-analysis, ' + edits.filter(e => e.lane === 'D-author-decision').length + ' author-decision)')
+log('Triage: ' + edits.length + ' edits (' + edits.filter(e => e.lane === 'A-writing').length + ' writing, ' + edits.filter(e => e.lane === 'B-recompute').length + ' recompute, ' + edits.filter(e => e.lane === 'C-new-analysis').length + ' new-analysis, ' + edits.filter(e => e.lane === 'D-author-decision').length + ' author-decision)' + (IMPROVE ? ' [improvement mode ON, ' + TIER + ']' : ''))
 
 // ---------- Baseline gate ----------
 // Run whenever code+data exist (not only for B-recompute edits): the package clean-room
@@ -309,7 +323,7 @@ const pkg = await cast('package', promptRef('phase2/15_repro_package', { SESSION
 
 // ---------- Disclose ----------
 phase('Disclose')
-const auditTrail = { applied: applied.map(r => ({ edit_id: r.edit.edit_id, finding_id: r.edit.finding_id, lane: r.edit.lane, justification: r.edit.justification_type })), queued: queued.map(r => r.edit.edit_id), proposals: proposals.map(r => r.edit.edit_id), blocked: blocked.map(r => ({ edit_id: r.edit.edit_id, reason: r.reason })), signoff_status: 'pending-author-review', reruns: results.map(r => r.run).filter(Boolean).map(r => r.run_id), reconcile, package_reproduced: pkg.reproduced }
+const auditTrail = { applied: applied.map(r => ({ edit_id: r.edit.edit_id, finding_id: r.edit.finding_id, lane: r.edit.lane, justification: r.edit.justification_type })), queued: queued.map(r => r.edit.edit_id), proposals: proposals.map(r => r.edit.edit_id), blocked: blocked.map(r => ({ edit_id: r.edit.edit_id, reason: r.reason })), signoff_status: 'pending-author-review', improvement_mode: IMPROVE, reruns: results.map(r => r.run).filter(Boolean).map(r => r.run_id), reconcile, package_reproduced: pkg.reproduced }
 const disclosure = await cast('disclosure', promptRef('phase2/16_disclosure', { AUDIT_TRAIL_JSON: auditTrail, HELPERS_DIR, REVISED_SOURCE_PATH: workDir }), { ...GP, label: 'disclosure', phase: 'Disclose', schema: DISCLOSURE })
 
 return {

@@ -20,10 +20,13 @@ What it certifies, honestly:
   - "thin-probe" / "no-probe" = fewer than MIN_TERMS probe terms supplied. Fails
     CLOSED: an unsearchable absence claim is never certified.
 
-Applies to finding_type 'absence-silence' (probe = the allegedly missing thing)
-and 'contribution-undersell' (probe = the bolder claim the paper allegedly never
+Applies to finding_type 'absence-silence' (probe = the allegedly missing thing),
+'contribution-undersell' (probe = the bolder claim the paper allegedly never
 makes; its `quote` foothold is checked by quote_gate.py as usual, so undersell
-findings ride BOTH deterministic gates).
+findings ride BOTH deterministic gates), and the opt-in 'improvement-proposal'
+(probe = the improvement the paper has NOT made; same dual-gate treatment as
+undersell, so an improvement suggestion the paper already implements is caught
+and degraded rather than proposed).
 
 No third-party dependencies (stdlib only); reuses quote_gate.py normalization so
 the two gates can never drift apart.
@@ -48,7 +51,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from quote_gate import dehyphenate, normalize  # the canonical normalization
 
-ABSENCE_CLASSES = ("absence-silence", "contribution-undersell")
+ABSENCE_CLASSES = ("absence-silence", "contribution-undersell", "improvement-proposal")
 MIN_TERMS = 3  # a probe this thin invites a narrow search; fail closed below it
 SNIPPET_RADIUS = 60  # chars of context captured around each hit, per side
 MAX_SNIPPETS = 3  # per term; enough for the steelman verifier, bounded for logs
@@ -235,6 +238,14 @@ def cmd_selftest(args):
            certify({"id": "U1", "finding_type": "contribution-undersell",
                     "absence_probe": {"terms": ["one", "two", "three"]}},
                    sn, sd, sh)["certified"] == "absent")
+    expect("improvement-proposal findings are in scope (opt-in)",
+           certify({"id": "I1", "finding_type": "improvement-proposal",
+                    "absence_probe": {"terms": ["one", "two", "three"]}},
+                   sn, sd, sh)["certified"] == "absent")
+    expect("improvement-proposal probe still catches a present term (degrades, not proposes)",
+           certify({"id": "I2", "finding_type": "improvement-proposal",
+                    "absence_probe": {"terms": ["publication bias", "two", "three"]}},
+                   sn, sd, sh)["certified"] == "present")
     expect("non-absence types are out of scope",
            certify({"id": "Q1", "finding_type": "claim-support"}, sn, sd, sh)["certified"]
            == "not-absence-class")

@@ -34,6 +34,19 @@ Produce an array of FINDINGS (schema: finding). For each finding:
   rule 14). These NEVER enter the must-fix list; they feed the chair's non-blocking
   Contribution Memo. File one only when the foothold genuinely supports it — an
   inflated undersell finding is as serious a failure as a fabricated flaw.
+- **If improvement mode cast you as an Improvement Architect, PROPOSE — do not prosecute.**
+  Only the engine-injected `S-improvement-architect` seat(s) file
+  `finding_type: "improvement-proposal"` (an opt-in, non-blocking class; no other seat emits
+  it). Use it for a SUBSTANTIVE way to make the paper stronger that its own evidence and design
+  support: a bolder defensible claim, an analysis worth running (robustness, placebo, alternative
+  estimator, extension), or a sharper framing. Ground it exactly like an undersell finding:
+  `quote` = the foothold result or passage it builds from (rides the quote-gate), `absence_probe` =
+  terms for the improvement the paper has NOT made (the gate searches every term; any hit means the
+  paper already does it, so drop it), `proposed_fix` = the concrete improvement, `risk_of_fix` =
+  how it could overreach, `verification_status` = `needs-author-confirmation`. These NEVER enter the
+  must-fix list; they feed the chair's non-blocking Improvement Memo and, if the author opts into
+  Act II, become author-rejectable tracked changes. Propose only what the evidence supports — an
+  inflated improvement suggestion is exactly as serious a failure as a fabricated flaw.
 - **Never fabricate.** If you cannot verify a number or a cited claim against the text
   or a staged source, set `verification_status` to `needs-author-confirmation` — never
   assert it.

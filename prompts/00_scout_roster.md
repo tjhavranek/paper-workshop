@@ -50,6 +50,10 @@ Then produce a ROSTER CONTRACT (schema: roster_contract). Requirements:
    contribution statement. The engine injects this pair if you omit it; cast it
    yourself so its jurisdiction is sharp and paper-specific.
 
+4c. **Improvement mode (opt-in) is the engine's job, not yours.** If the run is in improvement
+   mode, the engine injects the generative `S-improvement-architect` seat(s) itself, scaled to the
+   tier; you do NOT cast them. Cast the normal critique roster as usual.
+
 5. **Add exactly 3 generalist seats** (`generalist_seats`): one `relevance` (so-what /
    does it matter), one `understandability` (intelligible to a brilliant outsider), one
    `cross-field-significance` (does it travel). These are the antidote to a panel that

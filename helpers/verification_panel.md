@@ -49,7 +49,7 @@ adversarial findings). The panel *audits* candidate outputs — findings and edi
 |---|---|---|
 | `quote-locator` | Does the quote exist verbatim in the manuscript? (runs `quote_gate.py`, which checks 1:1 existence in paper.txt, not that the quote sits at the finding's stated locator, see `LIMITATIONS.md`; absence-class findings are instead certified by `absence_gate.py`, the probe-term search) | **Enforced by the standalone Quote-gate phase, not the panel aggregator** — fail (unmatched quote, or anything but a clean `absent` certificate) ⇒ status forced to `needs-author-confirmation`; the finding is **not** dropped |
 | `logical-validity` | Does the criticism actually *follow* from the quoted text? (catches a real quote + an invalid inference) | **Yes** — fail ⇒ reject |
-| `factual-literature` | Is the norm/method/citation the finding appeals to actually correct? (checked against fetched sources, never memory) | No — fail ⇒ revise or reject |
+| `factual-literature` | Is the norm/method/citation the finding appeals to actually correct? (checked against fetched sources, never memory) — **runs at Symposium/Summit only**; at Desk Review / Roundtable / Workshop the cited works are still fetched and the seats read them, but this dedicated verifier angle is not applied to the findings (see the batching note below) | No — fail ⇒ revise or reject |
 | `severity-calibration` | Is the severity calibrated under `rubric.md` — neither inflated nor deflated? | No — fail ⇒ revise severity (never silently; recorded) |
 | `decision-relevance` | Would fixing this change a number, a conclusion, or only presentation? Is it non-trivial? (the finding-killer) | No — fail ⇒ demote to `nice` or reject as trivial |
 | `steelman-charity` | Can the paper be defended — does it already address this elsewhere, or is the criticism mistaken? | No — strong defense ⇒ reject |
@@ -65,7 +65,10 @@ not discarded silently — they are written to the synthesis `rejected_suggestio
 list with the panel's reason. Delivered `contribution-undersell` findings take one
 extra routing step: the engine feeds them to the chair through their own channel and
 they can only land in the non-blocking `contribution_memo` (capped at 3), never in
-the must-fix list — enforced in the Workflow script, not by instruction alone.
+the must-fix list — enforced in the Workflow script, not by instruction alone. Delivered
+`improvement-proposal` findings (opt-in improvement mode only) take the same extra routing: their
+own chair channel, the non-blocking, mode-scaled `improvement_memo` only (cap 3 at Roundtable up
+to 12 at Summit), never the must-fix list, enforced in code.
 
 **Batched, not per-finding — this is what keeps the run feasible.** Each angle is run by
 one blind agent (two redundant agents at the heavy tiers) that reviews the findings in

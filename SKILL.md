@@ -26,6 +26,8 @@ description: |
    - "red-team and rebuild my paper <file>"
    - Act II: "implement the workshop changes" / "rebuild my paper" /
      "build the replication package" / "do Act II / the atelier"
+   - Improvement Mode (opt-in, any depth): "be bolder" / "improve it aggressively" /
+     "suggest more improvements" / add the word "improvement" to the trigger
 
   mad-research and paper-workshop are complementary, not substitutes. Use
   mad-research for a fast, read-only, cross-model (Claude+Codex) audit memo with
@@ -113,6 +115,31 @@ Honest caveat: which undersell candidates surface, and which memo items rank hig
 remain same-model judgments with no measured undersell-recall yet (see
 `LIMITATIONS.md`). The memo is a grounded option set, not a validated verdict on what
 your contribution should be.
+
+## Improvement Mode (opt-in: a generative wing that proposes substantive strengthenings)
+
+By default the workshop is conservative and subtractive: it finds defects, with a small capped
+Contribution Memo for where you undersell yourself. Say "improvement" (or "be bolder" / "improve it
+aggressively"; the orchestrator passes `improvement: true` to the engine) and an opt-in generative
+wing turns on:
+
+- **Act I** casts one or more `S-improvement-architect` seats (more at heavier tiers) whose job is
+  to PROPOSE, not prosecute: the boldest defensible claims your own results support, additional
+  analyses worth running (robustness, placebo, alternative estimator, extension), and sharper
+  framing. Their output rides the SAME deterministic gates as every finding (a quoted foothold plus
+  an absence probe) and lands in a separate, non-blocking, mode-scaled **Improvement Memo** (cap 3
+  at Roundtable up to 12 at Summit). It never enters the must-fix list, never raises a severity,
+  never moves the verdict.
+- **Act II** (if you opt in) drafts those improvement proposals as extra tracked changes, more of
+  them in the heavier modes. Every improvement edit is PROPOSAL-ONLY and waits for your sign-off
+  (you accept or reject each one in track changes); a new analysis is a proposal, any number it
+  introduces still rides the Execution-Provenance Wall, and every edit still rides fix-safety and
+  the integrity angle. Nothing auto-applies.
+
+Off by default, a run is byte-identical to a normal run, so Improvement Mode moves no default-on
+rail. It is a grounded option set, not a validated verdict: like the Contribution Memo, which
+improvements surface is a same-model judgment with no measured improvement-recall yet (see
+`LIMITATIONS.md`). The author is the author; these are suggestions you ratify or ignore.
 
 ## What makes it trustworthy at scale (read `prompts/shared_grounding_rules.md`)
 

@@ -21,6 +21,17 @@ const PATHS = A.paths || {}
 const TIER = A.tier || 'thorough'
 const REGISTER = A.register || 'supportive'
 const PROMPTS_DIR = PATHS.prompts_dir || ''
+// Improvement Mode (opt-in, default OFF; see SKILL.md). When on, a generative wing casts
+// improvement-architect seat(s) that file non-blocking `improvement-proposal` findings (bolder
+// defensible claims the results support, analyses worth running, sharper framing) into a separate,
+// mode-scaled `improvement_memo`, and Act II can draft them as author-rejectable tracked changes.
+// OFF by default: no seat is cast, the cap is 0, no improvement-proposal finding can exist, and a
+// run is byte-identical to a non-improvement run (it moves no default-on rail). Same non-blocking
+// contract as the contribution memo: suggestions only, never the must-fix list, never a severity,
+// never the verdict. Heavier tiers cast more improvement seats and a larger memo.
+const IMPROVE = A.improvement === true
+const IMPROVE_CAP = IMPROVE ? ({ quick: 3, thorough: 5, exhaustive: 8, monumental: 12 }[TIER] || 5) : 0
+const N_IMPROVE_SEATS = IMPROVE ? (TIER === 'monumental' ? 3 : TIER === 'exhaustive' ? 2 : 1) : 0
 
 // ---------- casting (economy register; the default is session-model inheritance) ----------
 // Default behavior is unchanged: no opts.model is set anywhere, so every agent inherits the
@@ -96,7 +107,7 @@ const FINDING = {
   type: 'object', additionalProperties: false,
   properties: {
     id: { type: 'string' }, seat_id: { type: 'string' }, tradition: { type: 'string' },
-    finding_type: { type: 'string', enum: ['claim-support', 'identification', 'statistical', 'robustness', 'framing-overclaim', 'related-work', 'citation-accuracy', 'reproducibility', 'ethics-integrity', 'presentation', 'clarity', 'relevance', 'understandability', 'absence-silence', 'contribution-undersell'] },
+    finding_type: { type: 'string', enum: ['claim-support', 'identification', 'statistical', 'robustness', 'framing-overclaim', 'related-work', 'citation-accuracy', 'reproducibility', 'ethics-integrity', 'presentation', 'clarity', 'relevance', 'understandability', 'absence-silence', 'contribution-undersell', 'improvement-proposal'] },
     absence_probe: { type: 'object', additionalProperties: false, properties: { terms: { type: 'array', items: { type: 'string' }, minItems: 1 } }, required: ['terms'] },
     location: LOC, quote: { type: 'string' }, issue: { type: 'string' }, why_it_matters: { type: 'string' },
     severity: { type: 'string', enum: ['High', 'Medium', 'Low'] },
@@ -117,7 +128,7 @@ const VERIF = { type: 'object', additionalProperties: false, properties: { targe
 const VERIF_BATCH = { type: 'object', additionalProperties: false, properties: { verdicts: { type: 'array', items: VERIF } }, required: ['verdicts'] }
 const INTEGRATION = { type: 'object', additionalProperties: false, properties: { lens: { type: 'string' }, clusters: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { theme: { type: 'string' }, finding_ids: { type: 'array', items: { type: 'string' } }, merged_issue: { type: 'string' }, recommended_severity: { type: 'string', enum: ['High', 'Medium', 'Low'] }, priority: { type: 'string', enum: ['must', 'should', 'nice'] } }, required: ['theme', 'finding_ids', 'merged_issue', 'recommended_severity', 'priority'] } }, crux_notes: { type: 'array', items: { type: 'string' } }, missing_issue: { type: 'string' } }, required: ['lens', 'clusters', 'crux_notes', 'missing_issue'] }
 const COVERAGE = { type: 'object', additionalProperties: false, properties: { claims_total: { type: 'integer' }, claims_covered: { type: 'integer' }, sentences_total: { type: 'integer' }, sentences_covered: { type: 'integer' }, dimension_coverage: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { dimension: { type: 'string' }, status: { type: 'string' } }, required: ['dimension', 'status'] } }, reopen: { type: 'array', items: { type: 'string' } }, not_covered: { type: 'array', items: { type: 'string' } } }, required: ['claims_total', 'claims_covered', 'sentences_total', 'sentences_covered', 'dimension_coverage', 'reopen', 'not_covered'] }
-const SYNTHESIS = { type: 'object', additionalProperties: false, properties: { verdict: { type: 'string' }, top_strengths: { type: 'array', items: { type: 'string' } }, prioritized_findings: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { finding_id: { type: 'string' }, priority: { type: 'string', enum: ['must', 'should', 'nice'] }, one_line: { type: 'string' }, panel_summary: { type: 'string' } }, required: ['finding_id', 'priority', 'one_line', 'panel_summary'] } }, contribution_memo: { type: 'array', maxItems: 3, items: { type: 'object', additionalProperties: false, properties: { finding_id: { type: 'string' }, bolder_claim: { type: 'string' }, grounded_in: { type: 'string' }, risk_of_overreach: { type: 'string' } }, required: ['finding_id', 'bolder_claim', 'grounded_in', 'risk_of_overreach'] } }, kill_shots: { type: 'array', items: { type: 'string' } }, referee_verdicts: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { seat_id: { type: 'string' }, verdict: { type: 'string' } }, required: ['seat_id', 'verdict'] } }, venue_verdict: { type: 'object', additionalProperties: false, properties: { bucket: { type: 'string', enum: ['desk-reject-risk', 'major-revision', 'competitive'] }, objections: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { objection: { type: 'string' }, quote: { type: 'string' } }, required: ['objection', 'quote'] } }, swing_factor: { type: 'string' } }, required: ['bucket', 'objections', 'swing_factor'] }, validity_verdict: { type: 'string' }, minority_report: { type: 'string' }, rejected_suggestions: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { suggestion: { type: 'string' }, why_rejected: { type: 'string' } }, required: ['suggestion', 'why_rejected'] } }, coverage_certificate: COVERAGE }, required: ['verdict', 'top_strengths', 'prioritized_findings', 'contribution_memo', 'kill_shots', 'referee_verdicts', 'venue_verdict', 'validity_verdict', 'minority_report', 'rejected_suggestions', 'coverage_certificate'] }
+const SYNTHESIS = { type: 'object', additionalProperties: false, properties: { verdict: { type: 'string' }, top_strengths: { type: 'array', items: { type: 'string' } }, prioritized_findings: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { finding_id: { type: 'string' }, priority: { type: 'string', enum: ['must', 'should', 'nice'] }, one_line: { type: 'string' }, panel_summary: { type: 'string' } }, required: ['finding_id', 'priority', 'one_line', 'panel_summary'] } }, contribution_memo: { type: 'array', maxItems: 3, items: { type: 'object', additionalProperties: false, properties: { finding_id: { type: 'string' }, bolder_claim: { type: 'string' }, grounded_in: { type: 'string' }, risk_of_overreach: { type: 'string' } }, required: ['finding_id', 'bolder_claim', 'grounded_in', 'risk_of_overreach'] } }, improvement_memo: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { finding_id: { type: 'string' }, improvement: { type: 'string' }, kind: { type: 'string', enum: ['bolder-claim', 'new-analysis', 'reframing', 'extension'] }, grounded_in: { type: 'string' }, risk_of_overreach: { type: 'string' } }, required: ['finding_id', 'improvement', 'kind', 'grounded_in', 'risk_of_overreach'] } }, kill_shots: { type: 'array', items: { type: 'string' } }, referee_verdicts: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { seat_id: { type: 'string' }, verdict: { type: 'string' } }, required: ['seat_id', 'verdict'] } }, venue_verdict: { type: 'object', additionalProperties: false, properties: { bucket: { type: 'string', enum: ['desk-reject-risk', 'major-revision', 'competitive'] }, objections: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { objection: { type: 'string' }, quote: { type: 'string' } }, required: ['objection', 'quote'] } }, swing_factor: { type: 'string' } }, required: ['bucket', 'objections', 'swing_factor'] }, validity_verdict: { type: 'string' }, minority_report: { type: 'string' }, rejected_suggestions: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { suggestion: { type: 'string' }, why_rejected: { type: 'string' } }, required: ['suggestion', 'why_rejected'] } }, coverage_certificate: COVERAGE }, required: ['verdict', 'top_strengths', 'prioritized_findings', 'contribution_memo', 'kill_shots', 'referee_verdicts', 'venue_verdict', 'validity_verdict', 'minority_report', 'rejected_suggestions', 'coverage_certificate'] }
 
 // ---------- verification angles ----------
 const ANGLE_Q = {
@@ -175,6 +186,19 @@ const hasMaximizer = roster.seats.some(s => s.objective_function === 'find-the-s
 const hasProsecutor = roster.seats.some(s => s.objective_function === 'find-the-fatal-flaw' && /contribution|overclaim/i.test(seatName(s)))
 if (!hasMaximizer) { roster.seats.push({ seat_id: 'S-contribution-maximizer', role_title: 'Contribution maximizer', tradition: 'strongest-defensible-contribution', objective_function: 'find-the-strongest-defensible-version', jurisdiction: 'the paper\'s central contribution claim: the boldest claim its OWN results defensibly support, hunting under-claimed value (results, generality, implications the paper has but never claims); file contribution-undersell findings', justifying_quote: '(contribution floor)', rival_of: 'S-contribution-prosecutor', out_of_scope: 'methods auditing owned by other seats', owned_claim_ids: [] }); log('Roster floor: injected S-contribution-maximizer (cast had no contribution-maximizer seat)') }
 if (!hasProsecutor) { roster.seats.push({ seat_id: 'S-contribution-prosecutor', role_title: 'Overclaim prosecutor', tradition: 'contribution-overclaim prosecution', objective_function: 'find-the-fatal-flaw', jurisdiction: 'the paper\'s central contribution claim: where the stated contribution outruns the evidence (framing-overclaim findings)', justifying_quote: '(contribution floor)', rival_of: 'S-contribution-maximizer', out_of_scope: 'methods auditing owned by other seats', owned_claim_ids: [] }); log('Roster floor: injected S-contribution-prosecutor (cast had no overclaim-prosecutor seat)') }
+// Improvement Mode floor (opt-in): cast generative improvement-architect seat(s) that file
+// non-blocking improvement-proposal findings. Distinct lenses so heavy tiers get real breadth, not
+// duplicates. Their adversary is the always-present overclaim prosecutor (decorrelation: a head
+// that builds is checked by a head that hunts overreach). Cast ONLY when IMPROVE.
+const IMPROVE_LENSES = [
+  'additional analyses worth running that would materially strengthen the contribution (a robustness check, placebo, alternative estimator, or extension the data and design already support)',
+  'sharper framing and positioning, and the boldest defensible claim the paper\'s OWN results support but it never makes',
+  'defensible extensions and generalizations the evidence supports (a wider population, a further implication, a connected question the data can already speak to)',
+]
+for (let i = 0; i < N_IMPROVE_SEATS; i++) {
+  roster.seats.push({ seat_id: 'S-improvement-architect-' + i, role_title: 'Improvement architect', tradition: 'strongest-defensible-improvement', objective_function: 'find-the-strongest-defensible-version', jurisdiction: 'OPT-IN improvement mode, PROPOSE do not prosecute: ' + IMPROVE_LENSES[i % IMPROVE_LENSES.length] + '. File improvement-proposal findings ONLY (each grounded in a foothold quote + an absence_probe for the un-made improvement); these are non-blocking suggestions for the author, never defects and never must-fixes.', justifying_quote: '(improvement floor)', rival_of: 'S-contribution-prosecutor', out_of_scope: 'defects and flaws (owned by the critique seats) and anything that belongs in the must-fix list', owned_claim_ids: [] })
+}
+if (N_IMPROVE_SEATS) log('Roster floor: injected ' + N_IMPROVE_SEATS + ' improvement-architect seat(s) (improvement mode, ' + TIER + ', memo cap ' + IMPROVE_CAP + ')')
 
 // ---------- PHASE C: Ground load-bearing cited sources (fail-safe; uses web) ----------
 // Fetch the most decision-critical cited works so specialists/verifiers can check the
@@ -210,7 +234,7 @@ if (BUDGETED && budget.remaining() < 1500000) {
   BUDGET_ACTIONS.push('findings caps tightened to ' + SEAT_CAP + '/' + GEN_CAP + ' (' + Math.round(budget.remaining() / 1000) + 'k tokens remaining before Specialists)')
 }
 const seatTasks = []
-roster.seats.forEach(s => seatTasks.push(() => cast('seat', promptRef('01_specialist_seat', { ...seatPaths, SEAT_JSON: s }) + capNote(SEAT_CAP), { ...GP, label: ('seat:' + s.seat_id).slice(0, 56), phase: 'Specialists', schema: FINDINGS }).then(r => tag(r, s.seat_id, s.tradition))))
+roster.seats.forEach(s => { const cap = /^S-improvement-architect/.test(s.seat_id) ? IMPROVE_CAP : SEAT_CAP; seatTasks.push(() => cast('seat', promptRef('01_specialist_seat', { ...seatPaths, SEAT_JSON: s }) + capNote(cap), { ...GP, label: ('seat:' + s.seat_id).slice(0, 56), phase: 'Specialists', schema: FINDINGS }).then(r => tag(r, s.seat_id, s.tradition))) })
 roster.generalist_seats.forEach(g => seatTasks.push(() => cast('generalist', promptRef('02_generalist_seat', { ...seatPaths, FUNCTION: g.function }) + capNote(GEN_CAP), { ...GP, label: ('gen:' + g.function).slice(0, 56), phase: 'Specialists', schema: FINDINGS }).then(r => tag(r, g.seat_id, g.function + '-generalist'))))
 // desk-reject pre-mortem (verbatim, exempt from chair)
 // the workflow, not the agent, owns the kill-shot routing label: force-overwrite the
@@ -250,13 +274,14 @@ if (findings.length) {
   log('Quote-gate: ' + gr.filter(r => r.matched).length + '/' + gr.length + ' quotes verified')
 }
 // Absence gate: the deterministic rail for the quote-EXEMPT finding classes. Every
-// absence-class finding ('absence-silence' and 'contribution-undersell') carries an
-// absence_probe; helpers/absence_gate.py searches every probe term against the manuscript.
+// absence-class finding ('absence-silence', 'contribution-undersell', and the opt-in
+// 'improvement-proposal') carries an absence_probe; helpers/absence_gate.py searches every
+// probe term against the manuscript.
 // FAIL CLOSED, annotate-never-delete: anything but a clean 'absent' certificate (present,
 // thin-probe, no-probe, or a dropped relay row) degrades the finding's status to
 // needs-author-confirmation; the gate result rides on the finding so the panel's steelman
 // angle can adjudicate the semantic half with the hit snippets as evidence.
-const absenceClass = f => f.finding_type === 'absence-silence' || f.finding_type === 'contribution-undersell'
+const absenceClass = f => f.finding_type === 'absence-silence' || f.finding_type === 'contribution-undersell' || f.finding_type === 'improvement-proposal'
 const absenceFindings = findings.filter(absenceClass)
 if (absenceFindings.length && PATHS.absence_gate) {
   const agate = await cast('gate', 'Write this findings JSON to a temp file and run the deterministic absence gate against the manuscript text, then return its JSON result array verbatim.\nFINDINGS: ' + JSON.stringify({ findings: absenceFindings }) + '\nRun: python "' + PATHS.absence_gate + '" batch --source-file "' + carto.paper_txt_path + '" --findings <tempfile>\nNOTE: the script exits 2 whenever any finding is not certified absent; that exit code is expected output, not an error. Do not retry; return its JSON verbatim.\nDo NOT read the manuscript file into your context: the script reads it from disk; you only pass its path.\nReturn exactly the script\'s JSON output (array of {id, certified, terms_searched, hits}).', { ...GP, label: 'absence-gate', phase: 'Quote-gate', schema: { type: 'object', additionalProperties: false, properties: { results: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { id: { type: 'string' }, certified: { type: 'string' }, terms_searched: { type: 'integer' }, hits: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { term: { type: 'string' }, count: { type: 'integer' }, snippets: { type: 'array', items: { type: 'string' } } }, required: ['term', 'count'] } } }, required: ['id', 'certified'] } } }, required: ['results'] } })
@@ -428,7 +453,13 @@ const allDelivered = verified.filter(v => v.delivered).map(v => ({ ...v.finding,
 // needs-author-confirmation in code: the author ratifies any bolder claim (rule 14).
 const contributionFindings = allDelivered.filter(f => f.finding_type === 'contribution-undersell')
 contributionFindings.forEach(f => { f.verification_status = 'needs-author-confirmation' })
-const chairFindings = allDelivered.filter(f => f.finding_type !== 'contribution-undersell')
+// Improvement Mode (opt-in): improvement-proposal findings are non-blocking exactly like
+// contribution-undersell — their own chair channel, the mode-scaled improvement_memo only, never
+// the must-fix list, status forced to needs-author-confirmation (the author accepts/rejects each,
+// rule 14). Empty when the run is not in improvement mode (no such finding can exist).
+const improvementFindings = allDelivered.filter(f => f.finding_type === 'improvement-proposal')
+improvementFindings.forEach(f => { f.verification_status = 'needs-author-confirmation' })
+const chairFindings = allDelivered.filter(f => f.finding_type !== 'contribution-undersell' && f.finding_type !== 'improvement-proposal')
 // The chair also persists the heavy artifacts to disk (best-effort; field-grounded: a
 // large run's full return can exceed the notification channel, and the orchestrator
 // should read these files instead of the blob). The returned object remains the source
@@ -440,32 +471,38 @@ const artDir = (PATHS.session || '.') + '/round_artifacts'
 // is logged and the run proceeds (the chair still writes its own copy; the returned object
 // stays the source of truth). Reuses the 'carto' role key so casting/clamp/disclosure are
 // untouched. Touches no rail, no severity.
-const ledgerObj = { findings: chairFindings, contribution_findings: contributionFindings, rejected_in_panel: rejected, integration }
+const ledgerObj = { findings: chairFindings, contribution_findings: contributionFindings, improvement_findings: improvementFindings, rejected_in_panel: rejected, integration }
 const ledgerWrite = await cast('carto', 'Write this JSON object byte-faithfully to ' + artDir + '/findings_ledger.json (create the directory first; no commentary, no reformatting of values, just the object). Return the path written.\nJSON: ' + JSON.stringify(ledgerObj), { ...GP, label: 'persist-ledger', phase: 'Synthesis', schema: { type: 'object', additionalProperties: false, properties: { path: { type: 'string' } }, required: ['path'] } })
 log(ledgerWrite ? 'Resilience: verified ledger persisted before chair (' + artDir + '/findings_ledger.json)' : 'Resilience: pre-chair ledger persist FAILED (writer returned null); chair best-effort copy is the only on-disk ledger')
 const artifactNote = '\nALSO, before returning your StructuredOutput, write two byte-faithful JSON artifact files with your tools (create the directory first; no commentary inside the files): (1) ' + artDir + '/findings_ledger.json = {"findings": <the VERIFIED_FINDINGS_JSON you received, verbatim>, "contribution_findings": <the CONTRIBUTION_JSON you received, verbatim>, "rejected_in_panel": <the REJECTED_JSON you received, verbatim>, "integration": <the INTEGRATION_JSON you received, verbatim>}; (2) ' + artDir + '/synthesis_raw.json = exactly the synthesis object you return. These files are a convenience copy; your StructuredOutput remains the deliverable.'
-const synthesis = await cast('chair', promptRef('06_chair_synthesis', { VERIFIED_FINDINGS_JSON: chairFindings, CONTRIBUTION_JSON: contributionFindings, INTEGRATION_JSON: integration, PREMORTEM_JSON: premortemFindings, COVERAGE_JSON: coverage, REJECTED_JSON: rejected, REGISTER, RULES_PATH: PATHS.rules || '', RUBRIC_PATH: PATHS.rubric || '' }) + artifactNote, { ...GP, label: 'chair:synthesis', phase: 'Synthesis', schema: SYNTHESIS })
+const synthesis = await cast('chair', promptRef('06_chair_synthesis', { VERIFIED_FINDINGS_JSON: chairFindings, CONTRIBUTION_JSON: contributionFindings, IMPROVEMENT_JSON: improvementFindings, INTEGRATION_JSON: integration, PREMORTEM_JSON: premortemFindings, COVERAGE_JSON: coverage, REJECTED_JSON: rejected, REGISTER, RULES_PATH: PATHS.rules || '', RUBRIC_PATH: PATHS.rubric || '' }) + artifactNote, { ...GP, label: 'chair:synthesis', phase: 'Synthesis', schema: SYNTHESIS })
 // Enforce the non-blocking contract in code, not trust: an undersell id can never appear in
 // prioritized_findings, and the memo holds at most 3 items, each tracing to a DELIVERED
 // undersell finding (anything else is dropped, fail closed).
 const undersellIds = new Set(contributionFindings.map(f => f.id))
+const improvementIds = new Set(improvementFindings.map(f => f.id))
+const nonBlocking = id => undersellIds.has(id) || improvementIds.has(id) // non-blocking classes: never in the must-fix list
 // Correction-propagation guard (fail-closed): the chair may ONLY prioritize a finding that was
-// actually DELIVERED to it. chairFindings is the verified, panel-cleared, non-undersell set the
-// chair received as VERIFIED_FINDINGS_JSON; that is the whitelist. A finding the panel rejected
-// or downgraded out of the delivered set cannot reappear in the must-fix list even if the chair
-// echoes its id (the stale-claim leak this fixes). Code, not trust; the drop is logged.
+// actually DELIVERED to it. chairFindings is the verified, panel-cleared, non-undersell,
+// non-improvement set the chair received as VERIFIED_FINDINGS_JSON; that is the whitelist. A
+// finding the panel rejected or downgraded out of the delivered set cannot reappear in the
+// must-fix list even if the chair echoes its id (the stale-claim leak this fixes), nor can a
+// non-blocking undersell/improvement id. Code, not trust; the drop is logged.
 const deliveredChairIds = new Set(chairFindings.map(f => f.id))
-const droppedPriorIds = (synthesis.prioritized_findings || []).filter(p => !undersellIds.has(p.finding_id) && !deliveredChairIds.has(p.finding_id)).map(p => p.finding_id)
+const droppedPriorIds = (synthesis.prioritized_findings || []).filter(p => !nonBlocking(p.finding_id) && !deliveredChairIds.has(p.finding_id)).map(p => p.finding_id)
 if (droppedPriorIds.length) log('Correction-propagation guard: dropped ' + droppedPriorIds.length + ' prioritized id(s) not in the delivered verified set (' + droppedPriorIds.join(', ') + ')')
-synthesis.prioritized_findings = (synthesis.prioritized_findings || []).filter(p => !undersellIds.has(p.finding_id) && deliveredChairIds.has(p.finding_id))
+synthesis.prioritized_findings = (synthesis.prioritized_findings || []).filter(p => !nonBlocking(p.finding_id) && deliveredChairIds.has(p.finding_id))
 synthesis.contribution_memo = (synthesis.contribution_memo || []).filter(m => undersellIds.has(m.finding_id)).slice(0, 3)
-log('Synthesis: ' + synthesis.prioritized_findings.length + ' prioritized findings + ' + synthesis.contribution_memo.length + ' contribution-memo items (non-blocking)')
+// Improvement memo: opt-in, mode-scaled cap (0 when off, so it stays empty). Same code-enforced
+// non-blocking contract as the contribution memo.
+synthesis.improvement_memo = (synthesis.improvement_memo || []).filter(m => improvementIds.has(m.finding_id)).slice(0, IMPROVE_CAP)
+log('Synthesis: ' + synthesis.prioritized_findings.length + ' prioritized findings + ' + synthesis.contribution_memo.length + ' contribution-memo + ' + synthesis.improvement_memo.length + ' improvement-memo items (non-blocking)')
 
 return {
   tier: TIER, register: REGISTER,
   // The casting record: the orchestrator persists this to meta.json and, whenever mode is
   // not 'inherit', states the role-class cast in the report header (grounding rule 15).
-  casting: { mode: CASTING_MODE, session_model: A.session_model || 'not-passed', role_models: MODELS, degraded_casting: DEGRADED, span_diet: SPAN_DIET, seat_cap: SEAT_CAP, generalist_cap: GEN_CAP, verification_batch: BATCH },
+  casting: { mode: CASTING_MODE, session_model: A.session_model || 'not-passed', role_models: MODELS, degraded_casting: DEGRADED, span_diet: SPAN_DIET, seat_cap: SEAT_CAP, generalist_cap: GEN_CAP, verification_batch: BATCH, improvement: IMPROVE, improvement_seats: N_IMPROVE_SEATS, improvement_cap: IMPROVE_CAP },
   budget_actions: BUDGET_ACTIONS,
   // best-effort chair-written copies of the heavy arrays below; verify on disk before
   // relying on them — this returned object stays the source of truth either way
@@ -474,6 +511,7 @@ return {
   counts: { raw_findings: findings.length, delivered: deliveredFindings.length, rejected: rejected.length, seats_cast: seatTasks.length, seats_delivered: seatResults.length },
   findings: chairFindings,
   contribution_findings: contributionFindings,
+  improvement_findings: improvementFindings,
   rejected_in_panel: rejected,
   integration,
   coverage,

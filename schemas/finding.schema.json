@@ -16,7 +16,7 @@
         "framing-overclaim", "related-work", "citation-accuracy",
         "reproducibility", "ethics-integrity", "presentation", "clarity",
         "relevance", "understandability", "absence-silence",
-        "contribution-undersell"
+        "contribution-undersell", "improvement-proposal"
       ]
     },
     "location": {
@@ -32,12 +32,12 @@
     },
     "quote": {
       "type": "string",
-      "description": "Exact verbatim quote from the manuscript. MUST pass the deterministic quote-gate. May be empty ONLY if finding_type is 'absence-silence'. A 'contribution-undersell' finding MUST quote the under-leveraged result it builds from (its foothold), so it rides the quote-gate normally; its absence half rides absence_probe."
+      "description": "Exact verbatim quote from the manuscript. MUST pass the deterministic quote-gate. May be empty ONLY if finding_type is 'absence-silence'. A 'contribution-undersell' or opt-in 'improvement-proposal' finding MUST quote the result or passage it builds from (its foothold), so it rides the quote-gate normally; its absence half rides absence_probe."
     },
     "absence_probe": {
       "type": "object",
       "additionalProperties": false,
-      "description": "REQUIRED on absence-class findings ('absence-silence' and 'contribution-undersell'): the words and close paraphrases whose presence in the manuscript would REFUTE the claimed absence, searched deterministically by helpers/absence_gate.py. Supply at least 3 terms including paraphrases; fewer fails closed (the finding degrades to needs-author-confirmation, never to a silent pass).",
+      "description": "REQUIRED on absence-class findings ('absence-silence', 'contribution-undersell', and the opt-in 'improvement-proposal'): the words and close paraphrases whose presence in the manuscript would REFUTE the claimed absence, searched deterministically by helpers/absence_gate.py. Supply at least 3 terms including paraphrases; fewer fails closed (the finding degrades to needs-author-confirmation, never to a silent pass).",
       "properties": {
         "terms": { "type": "array", "items": { "type": "string" }, "minItems": 1 }
       },

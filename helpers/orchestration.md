@@ -54,8 +54,13 @@ budget), `session_model` (the session model recorded at kickoff — REQUIRED whe
 economy or `models` is on: it arms the engine's never-upgrade clamp), `span_diet: true`
 (experimental, economy-only; see
 `helpers/verification_panel.md`), `batch` (verification batch size, clamped to 30),
-`max_seat_findings` / `max_generalist_findings` (cap-note overrides), and `models` (a raw
-role→model map; custom casts are unvalidated and the run is labeled `custom`). On a Fable
+`max_seat_findings` / `max_generalist_findings` (cap-note overrides), `models` (a raw
+role→model map; custom casts are unvalidated and the run is labeled `custom`), and
+`improvement: true` (opt-in Improvement Mode: casts mode-scaled generative
+`S-improvement-architect` seat(s) and a separate non-blocking, mode-scaled `improvement_memo` of
+bolder substantive suggestions; default off and byte-identical when off, so it moves no default-on
+rail; set it when the author says "improvement" / "be bolder" / "improve it aggressively"; see
+SKILL.md). On a Fable
 session, do not launch Workshop-or-larger until `meta.json` records the economy offer and
 the user's answer (`economy_offered`; see `helpers/doctor.md`). The run
 result includes `casting` and `budget_actions`: persist both into `meta.json`, and
@@ -124,13 +129,20 @@ prefer the chair-written artifact files named in the result's `artifact_paths`
 they exist and parse before relying on them; they are best-effort copies and the returned
 object stays the source of truth), and fall back to the harness's task output file for
 the complete return rather than pasting the blob into context. Then render: verdict; validity verdict (dominates venue); the prioritized
-must-fix list (capped ~5–7, sorted by magnitude); the per-seat findings grouped by
+must-fix list (capped ~5–7, sorted by magnitude), marking any item whose finding is
+`needs-author-confirmation` as not-yet-panel-cleared (the chair flags these in `panel_summary`, so
+a comment whose checks did not fully resolve reads as "needs your confirmation", not as a settled
+must-fix); the per-seat findings grouped by
 seat; the cross-critique consolidation (clusters and crux notes — where rival seats
 collided and what evidence would move each side); the generalists' relevance and
 understandability findings; the **Contribution Memo** (its own clearly-labeled
 section: at most 3 verified, non-blocking ways the paper undersells its own results,
 each with the bolder claim, its quoted foothold, and the risk of overreach — labeled
-"suggestions, author's call", never mixed into the must-fix list); the verbatim
+"suggestions, author's call", never mixed into the must-fix list); the **Improvement Memo**
+(opt-in improvement mode only: its own clearly-labeled section of non-blocking, mode-scaled bolder
+substantive suggestions — additional analyses worth running, sharper framing, bolder defensible
+claims — each grounded in a quoted foothold, labeled "suggestions, author's call", never mixed into
+the must-fix list; empty/omitted when improvement mode is off); the verbatim
 kill-shots and minority report; the venue read (3-bucket, no number); the **coverage
 certificate**, rendered with the one-line caveat "Coverage means reviewed, not proven
 correct: a flaw can hide in a covered span"; and the rejected-suggestions list. If
@@ -200,7 +212,12 @@ never drops the panel. With no editable source tree but the manuscript TEXT avai
    optional knobs apply: `economy: true` (runner/triage/reconciler/package/panel at the
    Opus floor, intake/staging/disclosure on Sonnet, scribes ALWAYS at the session model),
    `session_model` (arms the never-upgrade clamp, as in Act I), `models`, `scribe_batch`
-   (default 5), `verify_batch` (default 12, clamped to 30); the
+   (default 5), `verify_batch` (default 12, clamped to 30), and `improvement: true` with `tier`
+   (opt-in Improvement Mode: the Triage agent ALSO drafts the ledger's `improvement-proposal`
+   findings as bold author-rejectable tracked changes, more at heavier tiers — every one
+   proposal-only + `author_signoff_required`, riding the same gates and the Execution-Provenance
+   Wall; pass it whenever Act I ran in improvement mode AND include the Act-I `improvement_findings`
+   in `ledger` so they are available to triage); the
    result's `casting` object is persisted and disclosed exactly as in Act I. It triages each
    finding into lanes A/B/C/D, drafts edits (`edit_spec.schema.json`), **stages a git working
    copy on branch `paper-workshop/phase2`** (the author's original is never touched), runs the

@@ -1,5 +1,59 @@
 # Changelog
 
+## v0.8.0 — 2026-06-19
+
+Improvement Mode (opt-in): an optional generative wing that proposes substantive strengthenings
+alongside the critique, plus two honesty-precision doc fixes. From owner field experience that the
+suggested edits were too few and limited, and the wish for a bolder, more substantively helpful
+tool whose proposals the author can accept or reject in track changes.
+
+The whole wing is OPT-IN and default OFF. With `improvement` off, every run is byte-identical to
+v0.7.6: no seat is cast, no `improvement-proposal` finding can exist, the memo is empty, and the
+Act-II triage directive is empty. So Improvement Mode moves no default-on rail (no detector,
+severity value, locked rubric, default panel-angle set, or default per-run cost changes for a
+normal run). It is governed exactly like the economy register and the contribution wing.
+
+Shipped (opt-in feature):
+- **A generative wing in Act I.** With `improvement: true`, the engine injects one or more
+  `S-improvement-architect` seats (1 at Roundtable/Workshop, 2 at Symposium, 3 at Summit), each on
+  a distinct lens (analyses worth running, sharper framing and bolder defensible claims,
+  defensible extensions). They PROPOSE, never prosecute, and file a new non-blocking finding type
+  `improvement-proposal`.
+- **The same rails, a separate non-blocking home.** `improvement-proposal` is an absence-class
+  finding: it rides the deterministic quote-gate (a foothold quote) AND the absence-gate (an
+  `absence_probe` for the un-made improvement), and the full verification panel, exactly like
+  `contribution-undersell`. It is code-routed out of the must-fix list, its status forced to
+  `needs-author-confirmation`, into a separate `improvement_memo` capped by mode (3 at Roundtable
+  up to 12 at Summit). It never raises a severity, never enters `prioritized_findings`, never moves
+  the verdict, all enforced in `phase1_tribunal.js`, not by instruction.
+- **Aggressive, author-rejectable Act-II drafting.** With `improvement: true` (and the Act-I
+  `improvement_findings` forwarded in the ledger), the Triage agent ALSO drafts the improvement
+  proposals as tracked-change edits, more of them at heavier tiers. Every improvement edit is
+  PROPOSAL-ONLY with `author_signoff_required: true` (the author accepts or rejects each in track
+  changes); a new analysis is lane C, a bolder claim is `claim-altering`, and any number still
+  rides the Execution-Provenance Wall and every edit still carries `fix-safety` + `integrity`.
+  Nothing auto-applies.
+- **Honesty.** Disclosed in `LIMITATIONS.md` as an opt-in, unvalidated generative wing (which
+  improvements surface is a same-model judgment with no measured improvement-recall yet), with an
+  improvement-recall / false-suggestion validation arm added to the roadmap. Documented in
+  `SKILL.md`, `README.md`, `helpers/orchestration.md`, and `helpers/verification_panel.md`.
+
+Also shipped (do-now honesty-precision, no rail):
+- **Chair marks what is not fully panel-cleared.** A delivered finding carrying
+  `needs-author-confirmation` (its quote or a panel angle did not fully resolve) is now flagged as
+  such in its `panel_summary`, so the author can tell a panel-cleared must-fix from one that still
+  needs their eye. Label only: it never moves a finding off the must-fix list and never changes a
+  severity (`06_chair_synthesis.md`, `helpers/orchestration.md`, `README.md`).
+- **Factual-literature tier carve-out surfaced.** `helpers/verification_panel.md` now states at the
+  angle table that the dedicated `factual-literature` verifier runs at Symposium/Summit only; at
+  the lighter tiers the cited works are still fetched and read by the seats, but that verifier angle
+  is not applied to the findings.
+
+All rituals green (7 helper selftests + 5 schema checks + JS syntax on both engines + both
+provenance proofs; SKILL.md at 0 em-dashes). New schema fields (`improvement-proposal` finding
+type, `improvement_memo` synthesis field) are additive and optional, so v0.7.6 outputs still
+validate.
+
 ## v0.7.6 — 2026-06-18
 
 Act-II over-concession and caveat-placement guards, from a second author's feedback in a
