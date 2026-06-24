@@ -11,6 +11,11 @@ authors:
     orcid: "https://orcid.org/0000-0002-0753-8124"
 version: 0.8.2
 date-released: "2026-06-19"
+doi: "10.5281/zenodo.20828996"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.20828996"
+    description: "Concept DOI (all versions; resolves to the latest release)"
 url: "https://github.com/tjhavranek/paper-workshop"
 repository-code: "https://github.com/tjhavranek/paper-workshop"
 license: CC-BY-4.0

@@ -1,6 +1,7 @@
 # CRUCIBLE: the `paper-workshop` skill
 
 [![ci](https://github.com/tjhavranek/paper-workshop/actions/workflows/ci.yml/badge.svg)](https://github.com/tjhavranek/paper-workshop/actions/workflows/ci.yml)
+[![DOI](https://zenodo.org/badge/1260729280.svg)](https://doi.org/10.5281/zenodo.20828996)
 
 Imagine a panel of the world's leading experts, assembled for your exact paper, arguing it out
 from rival schools and then rebuilding it themselves, re-running your own code so every revised number is regenerated, not retyped.
@@ -224,4 +225,4 @@ submission, or data release. The author remains the author.
 CC-BY-4.0 ([`LICENSE`](LICENSE)). If it helps your work, please cite:
 
 > Havranek, T. & Irsova, Z. (2026). *CRUCIBLE (`paper-workshop`): an adversarial multi-expert
-> workshop that stress-tests and rebuilds a research paper.* GitHub. https://github.com/tjhavranek/paper-workshop
+> workshop that stress-tests and rebuilds a research paper.* Zenodo. https://doi.org/10.5281/zenodo.20828996
