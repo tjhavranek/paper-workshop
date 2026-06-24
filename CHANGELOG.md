@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.8.2 — 2026-06-19
+
+Archival release: the first release captured by the Zenodo GitHub integration, so the project now
+has a citable DOI. No code, prompt, schema, or behavior change from v0.8.1.
+
 ## v0.8.1 — 2026-06-19
 
 Post-release housekeeping for v0.8.0 Improvement Mode, from an independent multi-agent stress test
