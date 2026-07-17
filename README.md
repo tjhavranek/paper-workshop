@@ -226,3 +226,10 @@ CC-BY-4.0 ([`LICENSE`](LICENSE)). If it helps your work, please cite:
 
 > Havranek, T. & Irsova, Z. (2026). *CRUCIBLE (`paper-workshop`): an adversarial multi-expert
 > workshop that stress-tests and rebuilds a research paper.* Zenodo. https://doi.org/10.5281/zenodo.20828996
+
+**Evaluated in:** Havranek, T. & Irsova, Z. (2026). *Does Multi-Agent Debate Improve AI Feedback
+on Research Papers?* arXiv:2607.14713, https://arxiv.org/abs/2607.14713 — a pre-registered
+experiment in which authors of 44 economics meta-analyses ranked blinded AI reports on their own
+papers. The plain single-pass baseline was ranked above the multi-agent tools, an against-interest
+result we report in full. Note the experiment ran the light desk-review configuration (Act I only,
+capped for cost); the full workshop and Act II were not evaluated.
