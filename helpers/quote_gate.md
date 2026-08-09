@@ -6,11 +6,13 @@ hallucination it is checking, so this is a **script**, and it fails **closed**.
 ## When it runs
 - At the barrier exiting Phase D (specialist findings), before anything enters
   cross-critique or synthesis.
-- Inside the verification panel, as the `quote-locator` angle.
 - In Act II, on every quotation an edit relies on.
 
-The `quote-locator` verifier subagent runs it via Bash and reports its JSON output;
-the subagent does not judge quote presence by eye.
+In Act I a relay subagent runs it via Bash at the Phase-D barrier and reports its JSON
+output; no subagent judges quote presence by eye. The panel does **not** run it a second
+time: the barrier result is authoritative and already enforced fail-closed there, so the
+workflow transcribes it into each finding's `panel_verdicts` as the `quote-locator` row
+(see `verification_panel.md`). In Act II the `quote-locator` angle is still an agent.
 
 ## Modes
 ```

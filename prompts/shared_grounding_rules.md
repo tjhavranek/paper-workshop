@@ -54,10 +54,12 @@ seems to conflict with this file, **this file wins**.
 8. **Multi-angle independent verification before delivery (the verification
    panel).** *Nothing* reaches the user — no comment in Act I, no implemented
    change in Act II — until it has been checked by **several independent
-   subagents, each from a different angle** (quote/locator, logical validity,
+   subagents, each from a different angle** (logical validity,
    factual/literature correctness, severity calibration, decision-relevance,
    fix-safety, charitable steelman, and — in Act II — numeric provenance,
-   consistency, and integrity). A finding or edit survives only if it clears the
+   consistency, and integrity), on top of the deterministic quote/locator and absence
+   gates, which are scripts run at the barrier before the panel and are never an
+   agent's judgment. A finding or edit survives only if it clears the
    panel's threshold. Verifiers are **blind to the proposer's rationale** and to
    each other. See `helpers/verification_panel.md`.
 

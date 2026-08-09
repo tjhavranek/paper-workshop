@@ -1,5 +1,73 @@
 # Changelog
 
+## v0.8.3 — 2026-08-09
+
+Act I costs less per run, and two things it used to assert are now actually true. Decided by two
+independent external reviews (Fable 5 and Codex `gpt-5.6-sol` at xhigh), a three-position debate
+(economy / rails / maintainer) and a fresh judge, adjudicated against **measured** per-agent
+telemetry from a completed 46-agent tribunal run rather than estimates. No rail moved: the
+deterministic gates, blind independence, one-angle-per-verifier, rival pairs, the panel's
+lower-only severity rule, and the Opus floor under the economy register are all untouched, and no
+role changed model or reasoning effort.
+
+- **The `quote-locator` verification angle no longer costs an agent.** It re-ran `quote_gate.py`
+  against the same `paper.txt` that the Phase-D barrier had already run and already enforced
+  fail-closed, and the panel aggregator never read its verdict — so it produced an audit row and
+  nothing else. The workflow now writes that row from the authoritative barrier result. It is a
+  *better* record than before: it separates "the gate cleared this" (`upheld`) from "the gate ran
+  and did not clear it" (`upheld-with-revision`) from "no gate result arrived" (`cant-tell`), a
+  distinction a relay agent could not draw, and it is now recorded at every tier rather than only
+  at `thorough` and above. `contribution-undersell` and `improvement-proposal` require BOTH a
+  matched foothold quote and a clean `absent` certificate; only `absence-silence` is quote-exempt.
+  New `workflow/selftest_gate_rows.js` extracts the shipped function and tests that mapping, so it
+  cannot drift; CI runs it on every push.
+- **The deterministic gates now receive only the fields their scripts read.** `quote_gate.py`
+  reads `id`, `finding_type`, `quote`; `absence_gate.py` reads `id`, `finding_type`,
+  `absence_probe`. Everything else in a finding was making the round trip into the relay prompt
+  and back out through its temp-file write for nothing. Lossless by construction — the scripts
+  cannot observe the omitted fields.
+- **The chair no longer rewrites `findings_ledger.json`.** A dedicated writer already persisted it
+  before the chair was cast, so the chair was serializing a 200-400 kB object a second time in the
+  run's most expensive output tokens. It was also a live bug surface: the chair's overwrite
+  template is what silently dropped `improvement_findings` in v0.8.1. The instruction survives
+  only as a fallback for the case it was written for — the pre-chair write having failed.
+- **A dead chair no longer destroys the run.** `cast()` returns `null` when an agent dies, and the
+  chair is deliberately absent from the casting map, so its null-retry never fired for it; the
+  next line dereferenced the null and threw, taking every seat result, every panel verdict and the
+  whole verified ledger with it — the exact loss the pre-chair writer exists to prevent. Act I now
+  returns the complete verified record with `synthesis: null` and `degraded: 'chair-returned-null'`,
+  and does not advertise artifact paths for files that were never written.
+- **Sentence coverage is no longer asserted where it was never measured.** Only Symposium and
+  Summit cast close-reader sweeps; below them nothing returns a per-range verdict. The auditor was
+  still handed the sentence map (~174 kB on a real run) and still produced a confident number — the
+  committed Roundtable self-audit reports 648 of 795 sentences covered on a run with zero
+  close-reader seats and zero returned ranges. That was an inference, not a measurement. The map is
+  now sent only when coverage data actually exists, and the counters are set in code otherwise.
+  **A `0` there means "not measured at this tier", not "not read"**: every seat reads the whole
+  manuscript in every mode. Documented in `coverage_rubric.md` and `LIMITATIONS.md`, including that
+  pre-v0.8.3 sentence counts at the three lighter tiers should be treated as unmeasured.
+- **Reading discipline in every agent prompt.** A measured run averaged ~27 assistant turns per
+  agent, and each turn re-sends the accumulated context, so serial file reads multiply cost. Agents
+  are now asked to read only what their role requires and to issue those reads in one parallel
+  turn. It asks for fewer round trips, never for less evidence.
+- **Per-role reasoning effort: plumbing only, deliberately inert.** `args.efforts` and a
+  `session_effort` never-upgrade clamp now exist, mirroring the model clamp, and both are disclosed
+  literally in the run's `casting` record. **No role's effort changes**: the map ships empty. The
+  obvious candidates are the gate relays, and lowering their effort is *not* safe today, because
+  the fail-closed handling catches a missing gate row but nothing catches a relay that reports
+  `matched: true` for a quote the script rejected. Capturing the gate's exit code and asserting it
+  against the returned rows is the precondition for that change; until then the guard exists and
+  the map stays empty.
+
+Not shipped, on purpose: no additional role moved to Sonnet (casting is a price lever, not a token
+lever, and every judgment class that can reject a finding, lower a severity or withhold a fix stays
+at the Opus floor until measured); angle-specific verification packets, `span_diet` promotion,
+compact panel reasons and the chair digest all remain opt-in or unbuilt, because they change what a
+judgment agent sees and the governance bar (reproduced across at least two papers in two domains)
+has not been met. The pre-chair ledger writer keeps its current shape: the proposed replacement
+raced two concurrent verifiers onto one filename at the redundant tiers and would have moved cost
+from a Sonnet writer onto 24-30 Opus verifiers.
+
 ## v0.8.2 — 2026-06-19
 
 Archival release: the first release captured by the Zenodo GitHub integration, so the project now

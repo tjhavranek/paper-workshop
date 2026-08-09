@@ -51,8 +51,9 @@ a corrected, reproducing manuscript.
   so the paper's claims about them are checked against the originals. What can't be verified is
   flagged *needs author confirmation* and never asserted. No acceptance-probability numbers, ever.
 - **Every comment is re-checked from many angles** (Roundtable and up) by independent blind
-  verifiers (does the quote exist, does the criticism actually follow, is the severity
-  calibrated, does the proposed fix break something) before it reaches you; a comment whose
+  verifiers (does the criticism actually follow, is the severity calibrated, does the proposed
+  fix break something, can the paper be defended) before it reaches you, on top of the
+  deterministic gate that checks whether the quote exists at all; a comment whose
   checks did not fully resolve arrives flagged *needs your confirmation*, not as a settled
   must-fix. Desk Review, the lightest mode, is a single-pass read with inline chair checks
   instead of the panel.

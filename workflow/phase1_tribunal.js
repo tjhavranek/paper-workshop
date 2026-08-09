@@ -72,11 +72,39 @@ const M = k => {
   }
   return { model: m }
 }
+// ---------- reasoning effort (scaffold only; NO role changes effort by default) ----------
+// The harness exposes a per-agent `effort` the way it exposes a per-agent `model`, so the same
+// discipline applies: a cast may only move effort DOWN from the session, never up. This ships as
+// PLUMBING ONLY — `EFFORTS` is empty unless a caller passes `args.efforts`, so every role
+// inherits the session's effort exactly as before and no default-on behavior changes.
+// Deliberately no default map: the obvious candidates are the deterministic-gate relays, and
+// lowering their effort is NOT safe today, because the fail-closed handling catches a MISSING
+// gate row but nothing catches a relay that reports `matched: true` for a quote the script
+// actually rejected. Capturing the gate's exit code and asserting it against the rows is the
+// precondition for that conversation; until then the guard exists and the map stays empty.
+const EFFORT_RANK = { low: 1, medium: 2, high: 3, xhigh: 4, max: 5 }
+const EFFORTS = A.efforts || {}
+const SESSION_EFFORT = String(A.session_effort || '').toLowerCase()
+const SESSION_EFFORT_RANK = EFFORT_RANK[SESSION_EFFORT] || 0
+const E = role => {
+  const e = EFFORTS[role]
+  if (!e || !EFFORT_RANK[e]) return {}
+  // Never-upgrade clamp, mirroring the model clamp above — including its limitation: with no
+  // `session_effort` passed there is nothing to clamp against, so a caller-supplied map could
+  // raise effort above the session. The orchestrator must pass session_effort whenever it
+  // passes efforts, exactly as it must pass session_model whenever it casts models.
+  if (SESSION_EFFORT_RANK && EFFORT_RANK[e] > SESSION_EFFORT_RANK) {
+    if (!DEGRADED.some(d => d.role === role && d.reason === 'effort-above-session')) DEGRADED.push({ role, label: role, tried: e, fell_back_to: 'inherit', reason: 'effort-above-session' })
+    return {}
+  }
+  return { effort: e }
+}
 async function cast(role, prompt, opts) {
   const m = M(role)
-  let r = await agent(prompt, { ...opts, ...m })
-  if (r === null && m.model) {
-    DEGRADED.push({ role, label: opts.label || role, tried: m.model, fell_back_to: 'inherit', reason: 'spawn-returned-null' })
+  const e = E(role)
+  let r = await agent(prompt, { ...opts, ...m, ...e })
+  if (r === null && (m.model || e.effort)) {
+    DEGRADED.push({ role, label: opts.label || role, tried: m.model || ('effort:' + e.effort), fell_back_to: 'inherit', reason: 'spawn-returned-null' })
     r = await agent(prompt, opts)
   }
   return r
@@ -99,6 +127,15 @@ const promptRef = (name, vars) =>
   'fails, glob for **/' + name + '.md and read the match. It contains {{TOKEN}} placeholders ' +
   '— substitute these values (and read any path given as a file):\n' +
   JSON.stringify(vars || {}, null, 2) +
+  // Round-trip discipline. A real run measured ~27 assistant turns per agent, and every turn
+  // re-sends the whole accumulated context, so serial file reads multiply an agent's cost.
+  // Deliberately says nothing about reading FEWER files: an earlier wording ("read only the
+  // files your role actually requires") invited a seat to skip the staged primary sources,
+  // which are exactly what backs the check-against-originals-not-memory rail. Batch the reads,
+  // never trim them.
+  '\nREADING DISCIPLINE: issue the file reads your role needs in ONE turn as parallel tool ' +
+  'calls rather than one at a time. This is about round trips, NOT about reading less: read ' +
+  'every file your instructions name, and never substitute a guess for a read.' +
   '\nYou MUST finish by returning the required structured output via the StructuredOutput tool — do NOT reply in prose, and do not stop until you have called it.'
 const GP = { agentType: 'general-purpose' } // full tool access (Read/Write/Bash)
 
@@ -132,8 +169,9 @@ const COVERAGE = { type: 'object', additionalProperties: false, properties: { cl
 const SYNTHESIS = { type: 'object', additionalProperties: false, properties: { verdict: { type: 'string' }, top_strengths: { type: 'array', items: { type: 'string' } }, prioritized_findings: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { finding_id: { type: 'string' }, priority: { type: 'string', enum: ['must', 'should', 'nice'] }, one_line: { type: 'string' }, panel_summary: { type: 'string' } }, required: ['finding_id', 'priority', 'one_line', 'panel_summary'] } }, contribution_memo: { type: 'array', maxItems: 3, items: { type: 'object', additionalProperties: false, properties: { finding_id: { type: 'string' }, bolder_claim: { type: 'string' }, grounded_in: { type: 'string' }, risk_of_overreach: { type: 'string' } }, required: ['finding_id', 'bolder_claim', 'grounded_in', 'risk_of_overreach'] } }, improvement_memo: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { finding_id: { type: 'string' }, improvement: { type: 'string' }, kind: { type: 'string', enum: ['bolder-claim', 'new-analysis', 'reframing', 'extension'] }, grounded_in: { type: 'string' }, risk_of_overreach: { type: 'string' } }, required: ['finding_id', 'improvement', 'kind', 'grounded_in', 'risk_of_overreach'] } }, kill_shots: { type: 'array', items: { type: 'string' } }, referee_verdicts: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { seat_id: { type: 'string' }, verdict: { type: 'string' } }, required: ['seat_id', 'verdict'] } }, venue_verdict: { type: 'object', additionalProperties: false, properties: { bucket: { type: 'string', enum: ['desk-reject-risk', 'major-revision', 'competitive'] }, objections: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { objection: { type: 'string' }, quote: { type: 'string' } }, required: ['objection', 'quote'] } }, swing_factor: { type: 'string' } }, required: ['bucket', 'objections', 'swing_factor'] }, validity_verdict: { type: 'string' }, minority_report: { type: 'string' }, rejected_suggestions: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { suggestion: { type: 'string' }, why_rejected: { type: 'string' } }, required: ['suggestion', 'why_rejected'] } }, coverage_certificate: COVERAGE }, required: ['verdict', 'top_strengths', 'prioritized_findings', 'contribution_memo', 'kill_shots', 'referee_verdicts', 'venue_verdict', 'validity_verdict', 'minority_report', 'rejected_suggestions', 'coverage_certificate'] }
 
 // ---------- verification angles ----------
+// No 'quote-locator' entry: that check is the deterministic Phase-D gate, never an agent (see
+// anglesFor below). Leaving a question here would imply an LLM still runs it.
 const ANGLE_Q = {
-  'quote-locator': 'Does the quote exist verbatim at the stated location? Run the deterministic quote gate via Bash and report its result.',
   'logical-validity': 'Does the criticism actually FOLLOW from the quoted text? A real quote with an invalid inference must be rejected.',
   'factual-literature': 'Is the norm/method/citation the finding appeals to actually correct, checked against staged sources (never memory)?',
   'severity-calibration': 'Is the severity calibrated under the locked rubric? State a revision as Current->Target (e.g. High->Medium). Panel calibration can only LOWER a severity (most-conservative rule); flag an under-rated finding in reason text for the chair.',
@@ -141,10 +179,17 @@ const ANGLE_Q = {
   'fix-safety': 'Would the proposed fix introduce a NEW error or break a correct passage?',
   'steelman-charity': 'Try hard to DEFEND the paper. Does it already address this elsewhere, or is the criticism mistaken?',
 }
+// NOTE: 'quote-locator' is deliberately NOT in these lists. It is not an LLM angle any more.
+// The deterministic quote/absence gates already run at the Phase-D barrier and their result is
+// already ENFORCED there in code (fail closed). A panel agent re-running the same script against
+// the same file added no judgment: decide() never reads a quote-locator verdict (see the
+// aggregator below), so its only product was an audit row. That row is now transcribed from the
+// authoritative gate results in code (see 'deterministic quote-locator audit rows' below), which
+// is both cheaper and a more faithful record than an LLM relaying a script.
 function anglesFor(tier) {
   if (tier === 'quick') return ['logical-validity', 'fix-safety', 'steelman-charity']
-  if (tier === 'thorough') return ['quote-locator', 'logical-validity', 'severity-calibration', 'decision-relevance', 'fix-safety', 'steelman-charity']
-  return ['quote-locator', 'logical-validity', 'factual-literature', 'severity-calibration', 'decision-relevance', 'fix-safety', 'steelman-charity']
+  if (tier === 'thorough') return ['logical-validity', 'severity-calibration', 'decision-relevance', 'fix-safety', 'steelman-charity']
+  return ['logical-validity', 'factual-literature', 'severity-calibration', 'decision-relevance', 'fix-safety', 'steelman-charity']
 }
 const REDUNDANCY = (TIER === 'exhaustive' || TIER === 'monumental') ? 2 : 1
 
@@ -266,10 +311,17 @@ log('Specialists: ' + findings.length + ' raw findings from ' + seatResults.leng
 
 // ---------- Quote-gate ----------
 phase('Quote-gate')
+// Gate payloads carry ONLY the fields the deterministic script actually reads:
+// quote_gate.py's cmd_batch reads id / finding_type / quote and nothing else, so shipping the
+// whole finding (issue, why_it_matters, proposed_fix, risk_of_fix, ...) through the relay's
+// prompt AND back out through its temp-file write was pure transport cost. The script cannot
+// observe the omitted fields, so this is lossless by construction, not a judgment call.
+const quoteGateById = {}
 if (findings.length) {
-  const gate = await cast('gate', 'Write this findings JSON to a temp file and run the deterministic quote gate against the manuscript text, then return its JSON result array verbatim.\nFINDINGS: ' + JSON.stringify({ findings }) + '\nRun: python "' + (PATHS.quote_gate || '') + '" batch --source-file "' + carto.paper_txt_path + '" --findings <tempfile>\nNOTE: the script exits 2 whenever any finding fails to match; that exit code is expected output, not an error. Do not retry; return its JSON verbatim.\nDo NOT read the manuscript file into your context: the script reads it from disk; you only pass its path.\nReturn exactly the script\'s JSON output (array of {id, matched, match_level, severity_hint}).', { ...GP, label: 'quote-gate', phase: 'Quote-gate', schema: { type: 'object', additionalProperties: false, properties: { results: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { id: { type: 'string' }, matched: { type: 'boolean' }, match_level: { type: 'string' }, severity_hint: { type: 'string' } }, required: ['id', 'matched', 'match_level'] } } }, required: ['results'] } })
-  const byId = {}
-  ;((gate && gate.results) || []).forEach(r => { byId[r.id] = r })
+  const quoteGatePayload = findings.map(f => ({ id: f.id, finding_type: f.finding_type, quote: f.quote }))
+  const gate = await cast('gate', 'Write this findings JSON to a temp file and run the deterministic quote gate against the manuscript text, then return its JSON result array verbatim.\nFINDINGS: ' + JSON.stringify({ findings: quoteGatePayload }) + '\nRun: python "' + (PATHS.quote_gate || '') + '" batch --source-file "' + carto.paper_txt_path + '" --findings <tempfile>\nNOTE: the script exits 2 whenever any finding fails to match; that exit code is expected output, not an error. Do not retry; return its JSON verbatim.\nDo NOT read the manuscript file into your context: the script reads it from disk; you only pass its path.\nReturn exactly the script\'s JSON output (array of {id, matched, match_level, severity_hint}).', { ...GP, label: 'quote-gate', phase: 'Quote-gate', schema: { type: 'object', additionalProperties: false, properties: { results: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { id: { type: 'string' }, matched: { type: 'boolean' }, match_level: { type: 'string' }, severity_hint: { type: 'string' } }, required: ['id', 'matched', 'match_level'] } } }, required: ['results'] } })
+  ;((gate && gate.results) || []).forEach(r => { quoteGateById[r.id] = r })
+  const byId = quoteGateById
   // FAIL CLOSED: a finding the gate result does not cover (a dropped/truncated relay row)
   // is treated as unverified, exactly like a non-match - never a silent keep of the seat's
   // self-reported status (per rubric.md, status annotates; severity is untouched).
@@ -288,7 +340,10 @@ if (findings.length) {
 const absenceClass = f => f.finding_type === 'absence-silence' || f.finding_type === 'contribution-undersell' || f.finding_type === 'improvement-proposal'
 const absenceFindings = findings.filter(absenceClass)
 if (absenceFindings.length && PATHS.absence_gate) {
-  const agate = await cast('gate', 'Write this findings JSON to a temp file and run the deterministic absence gate against the manuscript text, then return its JSON result array verbatim.\nFINDINGS: ' + JSON.stringify({ findings: absenceFindings }) + '\nRun: python "' + PATHS.absence_gate + '" batch --source-file "' + carto.paper_txt_path + '" --findings <tempfile>\nNOTE: the script exits 2 whenever any finding is not certified absent; that exit code is expected output, not an error. Do not retry; return its JSON verbatim.\nDo NOT read the manuscript file into your context: the script reads it from disk; you only pass its path.\nReturn exactly the script\'s JSON output (array of {id, certified, terms_searched, hits}).', { ...GP, label: 'absence-gate', phase: 'Quote-gate', schema: { type: 'object', additionalProperties: false, properties: { results: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { id: { type: 'string' }, certified: { type: 'string' }, terms_searched: { type: 'integer' }, hits: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { term: { type: 'string' }, count: { type: 'integer' }, snippets: { type: 'array', items: { type: 'string' } } }, required: ['term', 'count'] } } }, required: ['id', 'certified'] } } }, required: ['results'] } })
+  // Same projection rule as the quote gate: absence_gate.py's certify() reads only
+  // finding_type, absence_probe and id, so nothing else needs to make the round trip.
+  const absenceGatePayload = absenceFindings.map(f => ({ id: f.id, finding_type: f.finding_type, absence_probe: f.absence_probe }))
+  const agate = await cast('gate', 'Write this findings JSON to a temp file and run the deterministic absence gate against the manuscript text, then return its JSON result array verbatim.\nFINDINGS: ' + JSON.stringify({ findings: absenceGatePayload }) + '\nRun: python "' + PATHS.absence_gate + '" batch --source-file "' + carto.paper_txt_path + '" --findings <tempfile>\nNOTE: the script exits 2 whenever any finding is not certified absent; that exit code is expected output, not an error. Do not retry; return its JSON verbatim.\nDo NOT read the manuscript file into your context: the script reads it from disk; you only pass its path.\nReturn exactly the script\'s JSON output (array of {id, certified, terms_searched, hits}).', { ...GP, label: 'absence-gate', phase: 'Quote-gate', schema: { type: 'object', additionalProperties: false, properties: { results: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { id: { type: 'string' }, certified: { type: 'string' }, terms_searched: { type: 'integer' }, hits: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { term: { type: 'string' }, count: { type: 'integer' }, snippets: { type: 'array', items: { type: 'string' } } }, required: ['term', 'count'] } } }, required: ['id', 'certified'] } } }, required: ['results'] } })
   const aById = {}
   ;((agate && agate.results) || []).forEach(r => { aById[r.id] = r })
   let absent = 0
@@ -349,8 +404,9 @@ const batches = []
 groups.forEach(g => { for (let i = 0; i < g.items.length; i += BATCH) batches.push({ items: g.items.slice(i, i + BATCH), angles: g.angles }) })
 // Span-diet (experimental, opt-in inside economy): the local-judgment angles read a
 // per-batch excerpt (each finding's quote plus its surrounding context) and the precis
-// instead of re-reading the full manuscript. quote-locator keeps the full path (the
-// deterministic gate reads the file itself, never the agent); steelman-charity ALWAYS
+// instead of re-reading the full manuscript. The quote/locator check is unaffected either way:
+// it is the deterministic Phase-D gate, which reads the full file itself and never rides an
+// agent at all (its audit row is transcribed in code above); steelman-charity ALWAYS
 // keeps the full text — its question is whether the paper addresses the point elsewhere.
 // Fail-safe: a missing excerpt file falls back to the full text for that batch.
 const DIET_ANGLES = new Set(['logical-validity', 'severity-calibration', 'decision-relevance', 'fix-safety', 'factual-literature'])
@@ -373,9 +429,61 @@ batches.forEach((b, bi) => b.angles.forEach(ang => {
 }))
 const panelResults = (await parallel(panelTasks)).filter(Boolean)
 const verdictsById = {}
+// ---- deterministic quote-locator audit rows (no agent runs this angle) ----
+// Transcribe the AUTHORITATIVE Phase-D gate results into the panel record, mirroring exactly
+// the polarity the engine already enforced above: a finding is quote-clean if the quote gate
+// matched it, or if it is 'absence-silence' (quote-exempt); it is absence-clean if it is not an
+// absence-class finding, or if its certificate is exactly 'absent'. Both must hold - the
+// contribution-undersell and improvement-proposal classes ride BOTH gates (their foothold quote
+// is NOT exempt), so a clean absence certificate alone must never read as a clean quote row.
+// A missing gate row still asks for needs-author-confirmation, exactly as the enforcement above
+// does, but it is recorded as cant-tell rather than as a verdict that was never obtained.
+// A row is recorded at EVERY tier, including quick (where no quote-locator agent ever ran):
+// the deterministic gates are not tier-conditional, so the audit record should show their
+// result everywhere. It changes no decision at any tier - the aggregator below never reads
+// this angle.
+// The row builder is a PURE function between the sentinels below so that
+// workflow/selftest_gate_rows.js can extract and exercise THIS code rather than a copy of it
+// that would drift. Do not rename the sentinels or add closures over outer scope.
+// <gate-row-fn>
+function gateRow(f, qr) {
+  // mirrors absence_gate.py ABSENCE_CLASSES (the selftest asserts the two lists agree)
+  const ABSENCE_TYPES = ['absence-silence', 'contribution-undersell', 'improvement-proposal']
+  const isAbsence = ABSENCE_TYPES.indexOf(f.finding_type) >= 0
+  // 'absence-silence' is the only quote-EXEMPT class. contribution-undersell and
+  // improvement-proposal ride BOTH gates: their foothold quote is gated normally, so a clean
+  // absence certificate alone must never read as a clean quote row.
+  const quoteExempt = f.finding_type === 'absence-silence'
+  const quoteOK = (qr && qr.matched === true) || quoteExempt
+  const absenceOK = !isAbsence || !!(f.absence_gate && f.absence_gate.certified === 'absent')
+  const ok = quoteOK && absenceOK
+  // Distinguish "the gate ran and did not match" from "no gate result ever arrived". Both
+  // degrade the finding identically (fail closed), but they are different epistemic states and
+  // the audit record must not blur them: a missing result is cant-tell, never a verdict we did
+  // not actually obtain.
+  const quoteMissing = !quoteExempt && !qr
+  const absenceMissing = isAbsence && (!f.absence_gate || f.absence_gate.certified === 'no-result')
+  const missing = quoteMissing || absenceMissing
+  // Report what the gate ACTUALLY said whenever it said anything. quote_gate.py only stamps
+  // 'exempt-absence' when the quote normalizes to empty, so an absence-silence finding that
+  // carried a non-empty quote was really checked and may have failed: the engine still does not
+  // degrade it on quote grounds (see the barrier above, which exempts the whole class), and this
+  // row mirrors that outcome - but the reason must not claim an exemption the gate never issued.
+  const detail = 'quote_gate=' + ((qr && qr.match_level) || (quoteExempt ? 'exempt-absence' : 'no-result')) +
+    (isAbsence ? '; absence_gate=' + ((f.absence_gate && f.absence_gate.certified) || 'no-result') : '')
+  return {
+    target_id: f.id,
+    angle: 'quote-locator',
+    verdict: missing ? 'cant-tell' : (ok ? 'upheld' : 'upheld-with-revision'),
+    reason: 'deterministic gate result recorded by the workflow, not an LLM verdict (' + detail + ')',
+    suggested_revision: (ok && !missing) ? null : 'set verification_status=needs-author-confirmation',
+  }
+}
+// </gate-row-fn>
+findings.forEach(f => { (verdictsById[f.id] = verdictsById[f.id] || []).push(gateRow(f, quoteGateById[f.id])) })
 panelResults.forEach(r => (r.verdicts || []).forEach(v => { (verdictsById[v.target_id] = verdictsById[v.target_id] || []).push(v) }))
 const verified = findings.map(f => decide(f, verdictsById[f.id] || []))
-log('Verification: ' + panelTasks.length + ' batched verifier agents over ' + batches.length + ' batches' + (REDUNDANCY > 1 ? ' x' + REDUNDANCY : '') + (groups.length > 1 ? ' (severity-tiered: Lows get the 3-angle quick set)' : ''))
+log('Verification: ' + panelTasks.length + ' batched verifier agents over ' + batches.length + ' batches' + (REDUNDANCY > 1 ? ' x' + REDUNDANCY : '') + (groups.length > 1 ? ' (severity-tiered: Lows get the quick gate set plus severity-calibration)' : ''))
 
 // Conservative tally per angle. Only EXPLICIT verdicts count as votes (cant-tell is
 // recorded, never a pass); a reject that ties the upholds wins (fail closed at even
@@ -441,8 +549,46 @@ phase('Completeness')
 // the auditor keys dimensions off the delivered findings (type/seat/severity), the
 // seats' jurisdictions, and the locations — not location strings alone (a field run
 // produced false NOT-COVERED flags on dimensions that had verified findings)
-const coverage = await cast('completeness', promptRef('07_completeness_audit', { CLAIM_INVENTORY_PATH: carto.inventory_path, SENTENCE_MAP_PATH: carto.sentence_map_path, COVERED_LOCATIONS_JSON: { covered_ranges: coveredRanges, delivered_findings: deliveredFindings.map(f => ({ id: f.id, seat_id: f.seat_id, finding_type: f.finding_type, severity: f.severity, location: f.location })) }, SEAT_JURISDICTIONS_JSON: roster.seats.map(s => ({ seat_id: s.seat_id, role_title: s.role_title, jurisdiction: s.jurisdiction })), COVERAGE_RUBRIC_PATH: PATHS.coverage_rubric || '' }), { ...GP, label: 'completeness', phase: 'Completeness', schema: COVERAGE })
-log('Completeness: claims ' + coverage.claims_covered + '/' + coverage.claims_total + ', sentences ' + coverage.sentences_covered + '/' + coverage.sentences_total + ', reopen=' + coverage.reopen.length)
+// The sentence-coverage ledger is only INSTRUMENTED when something actually returned per-range
+// coverage, which in practice means the close-reader sweeps at exhaustive/monumental. Below
+// that nothing returns a verdict for any range, so there is nothing for the auditor to count -
+// yet it was still handed the sentence map (~174 kB on a real run) and still produced a
+// confident-looking number: the committed quick-tier self-audit reports sentences_covered
+// 648/795 with zero close-reader seats cast and zero findings carrying covered_ranges. That
+// number was inferred, not measured. So: send the map ONLY when coverage data exists, and set
+// both counters in code otherwise. Cheaper, and it stops the certificate asserting a
+// measurement nobody took.
+// Gate on what was ACTUALLY returned, not on the tier. The FINDINGS schema lets any seat return
+// covered_ranges and the collector accumulates from all of them, so "no close-reader sweeps were
+// cast" and "no coverage data exists" are not the same condition - keying off the tier alone
+// would throw away real coverage a volunteering seat had reported.
+const sentenceCoverageInstrumented = coveredRanges.length > 0
+const coverageVars = { CLAIM_INVENTORY_PATH: carto.inventory_path, COVERED_LOCATIONS_JSON: { covered_ranges: coveredRanges, delivered_findings: deliveredFindings.map(f => ({ id: f.id, seat_id: f.seat_id, finding_type: f.finding_type, severity: f.severity, location: f.location })) }, SEAT_JURISDICTIONS_JSON: roster.seats.map(s => ({ seat_id: s.seat_id, role_title: s.role_title, jurisdiction: s.jurisdiction })), COVERAGE_RUBRIC_PATH: PATHS.coverage_rubric || '' }
+if (sentenceCoverageInstrumented) coverageVars.SENTENCE_MAP_PATH = carto.sentence_map_path
+else coverageVars.SENTENCE_COVERAGE_NOTE = 'No seat returned any per-range coverage on this run (close-reader sweeps run only at the exhaustive and monumental tiers), so sentence coverage is NOT instrumented here: do not read a sentence map and do not estimate sentences_total or sentences_covered. Return 0 for both; the workflow then sets the real sentence total from the cartographer count and leaves covered at 0. Audit the CLAIM and DIMENSION coverage as normal - those are unaffected.'
+let coverage = await cast('completeness', promptRef('07_completeness_audit', coverageVars), { ...GP, label: 'completeness', phase: 'Completeness', schema: COVERAGE })
+// FAIL SOFT on a dead completeness auditor, for the same reason as the chair below: this runs
+// BEFORE the pre-chair ledger write, so throwing here would destroy every seat finding and every
+// panel verdict the fleet produced - the worst possible place to die. The coverage certificate is
+// an audit of the workshop's own coverage, not a finding, so an honest empty certificate that
+// says the audit did not run is strictly better than losing the run.
+if (!coverage) {
+  coverage = { claims_total: 0, claims_covered: 0, sentences_total: carto.n_sentences || 0, sentences_covered: 0, dimension_coverage: [], reopen: [], not_covered: ['completeness auditor returned no result: coverage was NOT audited on this run'] }
+  log('Completeness: auditor returned no result. Substituting an empty certificate that records the audit did not run (the run continues; findings are unaffected).')
+}
+// Code owns the sentence counters when they were not instrumented: sentences_total is the
+// cartographer's measured count, sentences_covered is 0 because nothing returned a per-range
+// verdict. 0 here means "not measured on this run", NOT "unread" - every seat reads the whole
+// manuscript in every mode. coverage_rubric.md and LIMITATIONS.md state that distinction.
+// NOTE: do NOT add a marker field here. Both COVERAGE (inline) and the published
+// synthesis.schema.json coverage_certificate are additionalProperties:false, and the chair
+// echoes this object into its own StructuredOutput - an extra key would fail its validation.
+// The not-instrumented fact travels in the log line below, coverage_rubric.md and LIMITATIONS.md.
+if (coverage && !sentenceCoverageInstrumented) {
+  coverage.sentences_total = carto.n_sentences || 0
+  coverage.sentences_covered = 0
+}
+log('Completeness: claims ' + coverage.claims_covered + '/' + coverage.claims_total + ', sentences ' + coverage.sentences_covered + '/' + coverage.sentences_total + (sentenceCoverageInstrumented ? ' (measured from returned close-reader coverage)' : ' (sentence coverage NOT instrumented on this run: no seat returned covered_ranges, so 0 means unmeasured, not unread)') + ', reopen=' + coverage.reopen.length)
 
 // ---------- PHASE H: Synthesis ----------
 phase('Synthesis')
@@ -478,8 +624,60 @@ const artDir = (PATHS.session || '.') + '/round_artifacts'
 const ledgerObj = { findings: chairFindings, contribution_findings: contributionFindings, improvement_findings: improvementFindings, rejected_in_panel: rejected, integration }
 const ledgerWrite = await cast('carto', 'Write this JSON object byte-faithfully to ' + artDir + '/findings_ledger.json (create the directory first; no commentary, no reformatting of values, just the object). Return the path written.\nJSON: ' + JSON.stringify(ledgerObj), { ...GP, label: 'persist-ledger', phase: 'Synthesis', schema: { type: 'object', additionalProperties: false, properties: { path: { type: 'string' } }, required: ['path'] } })
 log(ledgerWrite ? 'Resilience: verified ledger persisted before chair (' + artDir + '/findings_ledger.json)' : 'Resilience: pre-chair ledger persist FAILED (writer returned null); chair best-effort copy is the only on-disk ledger')
-const artifactNote = '\nALSO, before returning your StructuredOutput, write two byte-faithful JSON artifact files with your tools (create the directory first; no commentary inside the files): (1) ' + artDir + '/findings_ledger.json = {"findings": <the VERIFIED_FINDINGS_JSON you received, verbatim>, "contribution_findings": <the CONTRIBUTION_JSON you received, verbatim>, "improvement_findings": <the IMPROVEMENT_JSON you received, verbatim>, "rejected_in_panel": <the REJECTED_JSON you received, verbatim>, "integration": <the INTEGRATION_JSON you received, verbatim>}; (2) ' + artDir + '/synthesis_raw.json = exactly the synthesis object you return. These files are a convenience copy; your StructuredOutput remains the deliverable.'
+// The chair no longer re-emits the ledger on the healthy path. The dedicated writer above
+// already persisted it, so asking the chair to serialize the same 200-400 kB object a second
+// time bought nothing and cost the run's most expensive output tokens. It was also a live bug
+// surface: the chair's overwrite template is what silently dropped improvement_findings from
+// the on-disk ledger (fixed in v0.8.1). The instruction survives ONLY as a fallback for the
+// case it was written for - the pre-chair writer having failed - so a failed write plus a
+// truncated return channel still cannot lose the verified ledger.
+const artifactNote = '\nALSO, before returning your StructuredOutput, write ' + artDir + '/synthesis_raw.json = exactly the synthesis object you return (create the directory first; no commentary inside the file). It is a convenience copy; your StructuredOutput remains the deliverable.' +
+  (ledgerWrite
+    ? '\nDo NOT write or modify ' + artDir + '/findings_ledger.json: it was persisted before you were cast and is the authoritative pre-chair record.'
+    : '\nALSO, because the pre-chair ledger write FAILED, your copy is the only on-disk ledger: write ' + artDir + '/findings_ledger.json = {"findings": <the VERIFIED_FINDINGS_JSON you received, verbatim>, "contribution_findings": <the CONTRIBUTION_JSON you received, verbatim>, "improvement_findings": <the IMPROVEMENT_JSON you received, verbatim>, "rejected_in_panel": <the REJECTED_JSON you received, verbatim>, "integration": <the INTEGRATION_JSON you received, verbatim>}, byte-faithfully, no commentary.')
 const synthesis = await cast('chair', promptRef('06_chair_synthesis', { VERIFIED_FINDINGS_JSON: chairFindings, CONTRIBUTION_JSON: contributionFindings, IMPROVEMENT_JSON: improvementFindings, INTEGRATION_JSON: integration, PREMORTEM_JSON: premortemFindings, COVERAGE_JSON: coverage, REJECTED_JSON: rejected, REGISTER, RULES_PATH: PATHS.rules || '', RUBRIC_PATH: PATHS.rubric || '' }) + artifactNote, { ...GP, label: 'chair:synthesis', phase: 'Synthesis', schema: SYNTHESIS })
+// The run record, assembled independently of the chair. Everything below the chair is prose
+// synthesis; everything in here is what the fleet actually produced and verified.
+const runRecord = {
+  tier: TIER, register: REGISTER,
+  // The casting record: the orchestrator persists this to meta.json and, whenever mode is
+  // not 'inherit', states the role-class cast in the report header (grounding rule 15).
+  // role_efforts is {} on every normal run: the effort scaffold ships with no default map, so
+  // every role inherits the session's effort. Disclosed literally rather than described.
+  casting: { mode: CASTING_MODE, session_model: A.session_model || 'not-passed', role_models: MODELS, role_efforts: EFFORTS, session_effort: A.session_effort || 'not-passed', degraded_casting: DEGRADED, span_diet: SPAN_DIET, seat_cap: SEAT_CAP, generalist_cap: GEN_CAP, verification_batch: BATCH, improvement: IMPROVE, improvement_seats: N_IMPROVE_SEATS, improvement_cap: IMPROVE_CAP },
+  budget_actions: BUDGET_ACTIONS,
+  // findings_ledger.json is written before the chair runs; synthesis_raw.json is the chair's
+  // own copy. Verify on disk before relying on either — this returned object stays the source
+  // of truth.
+  artifact_paths: { findings_ledger: artDir + '/findings_ledger.json', synthesis_raw: artDir + '/synthesis_raw.json' },
+  roster: { paper_type: roster.paper_type, seats: roster.seats.length, generalists: roster.generalist_seats.length, central_tensions: roster.central_tensions, not_staffed: roster.not_staffed },
+  counts: { raw_findings: findings.length, delivered: deliveredFindings.length, rejected: rejected.length, seats_cast: seatTasks.length, seats_delivered: seatResults.length },
+  findings: chairFindings,
+  contribution_findings: contributionFindings,
+  improvement_findings: improvementFindings,
+  rejected_in_panel: rejected,
+  integration,
+  coverage,
+}
+// FAIL SOFT on a dead chair. cast() returns null when an agent dies, and the chair is
+// deliberately absent from the casting map, so cast()'s retry-without-override never fires for
+// it. Dereferencing a null synthesis below would throw and take the ENTIRE run down with it -
+// every seat, every panel verdict, the whole verified ledger - which is the exact loss the
+// pre-chair writer exists to prevent. Return what the fleet produced and let the orchestrator
+// re-run the chair alone (or read findings_ledger.json) instead.
+if (!synthesis) {
+  // Do not advertise artifacts that cannot exist. synthesis_raw.json is written BY the chair, so
+  // a dead chair never wrote it; findings_ledger.json exists only if the pre-chair writer
+  // succeeded, because the chair's fallback write never ran either. A resilience path that
+  // points at missing files is worse than one that admits they are missing.
+  log('Synthesis: the chair returned no result. Returning the verified ledger WITHOUT a chair report (degraded run); re-run the chair against the returned findings rather than re-running the fleet.')
+  return {
+    ...runRecord,
+    artifact_paths: { findings_ledger: ledgerWrite ? artDir + '/findings_ledger.json' : null, synthesis_raw: null },
+    synthesis: null,
+    degraded: 'chair-returned-null',
+  }
+}
 // Enforce the non-blocking contract in code, not trust: an undersell id can never appear in
 // prioritized_findings, and the memo holds at most 3 items, each tracing to a DELIVERED
 // undersell finding (anything else is dropped, fail closed).
@@ -502,22 +700,4 @@ synthesis.contribution_memo = (synthesis.contribution_memo || []).filter(m => un
 synthesis.improvement_memo = (synthesis.improvement_memo || []).filter(m => improvementIds.has(m.finding_id)).slice(0, IMPROVE_CAP)
 log('Synthesis: ' + synthesis.prioritized_findings.length + ' prioritized findings + ' + synthesis.contribution_memo.length + ' contribution-memo + ' + synthesis.improvement_memo.length + ' improvement-memo items (non-blocking)')
 
-return {
-  tier: TIER, register: REGISTER,
-  // The casting record: the orchestrator persists this to meta.json and, whenever mode is
-  // not 'inherit', states the role-class cast in the report header (grounding rule 15).
-  casting: { mode: CASTING_MODE, session_model: A.session_model || 'not-passed', role_models: MODELS, degraded_casting: DEGRADED, span_diet: SPAN_DIET, seat_cap: SEAT_CAP, generalist_cap: GEN_CAP, verification_batch: BATCH, improvement: IMPROVE, improvement_seats: N_IMPROVE_SEATS, improvement_cap: IMPROVE_CAP },
-  budget_actions: BUDGET_ACTIONS,
-  // best-effort chair-written copies of the heavy arrays below; verify on disk before
-  // relying on them — this returned object stays the source of truth either way
-  artifact_paths: { findings_ledger: artDir + '/findings_ledger.json', synthesis_raw: artDir + '/synthesis_raw.json' },
-  roster: { paper_type: roster.paper_type, seats: roster.seats.length, generalists: roster.generalist_seats.length, central_tensions: roster.central_tensions, not_staffed: roster.not_staffed },
-  counts: { raw_findings: findings.length, delivered: deliveredFindings.length, rejected: rejected.length, seats_cast: seatTasks.length, seats_delivered: seatResults.length },
-  findings: chairFindings,
-  contribution_findings: contributionFindings,
-  improvement_findings: improvementFindings,
-  rejected_in_panel: rejected,
-  integration,
-  coverage,
-  synthesis,
-}
+return { ...runRecord, synthesis }

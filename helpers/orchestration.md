@@ -55,7 +55,11 @@ economy or `models` is on: it arms the engine's never-upgrade clamp), `span_diet
 (experimental, economy-only; see
 `helpers/verification_panel.md`), `batch` (verification batch size, clamped to 30),
 `max_seat_findings` / `max_generalist_findings` (cap-note overrides), `models` (a raw
-role→model map; custom casts are unvalidated and the run is labeled `custom`), and
+role→model map; custom casts are unvalidated and the run is labeled `custom`), `efforts`
+(a raw role→reasoning-effort map, `low`|`medium`|`high`|`xhigh`|`max`; **empty by default —
+no role's effort is set unless you pass one**, and if you do you MUST also pass
+`session_effort` so the never-upgrade clamp has something to clamp against, exactly as
+`models` requires `session_model`; both are echoed into the run's `casting` record), and
 `improvement: true` (opt-in Improvement Mode: casts mode-scaled generative
 `S-improvement-architect` seat(s) and a separate non-blocking, mode-scaled `improvement_memo` of
 bolder substantive suggestions; default off and rail-/decision-identical when off, so it moves no
@@ -82,7 +86,7 @@ rival pair always in the floor) → ground the load-bearing cited sources + the
 related-literature scout → fan out the seats (`01`/`02`/`03`) as parallel Agent
 calls in one message → run the deterministic quote-gate AND absence-gate (attach each
 absence-gate result row to its finding as `absence_gate` before the panel or chair sees
-it — the panel's quote-locator and steelman angles read that field) → integrate
+it — the transcribed quote-locator row and the steelman angle read that field) → integrate
 (`04`) → batch the verification panel (`05`) by angle → completeness (`07`) → synthesize
 (`06`, feeding verified `contribution-undersell` findings ONLY through
 `CONTRIBUTION_JSON`, and capping `contribution_memo` at 3 yourself — in the fallback YOU
@@ -108,8 +112,11 @@ quote-gate).
   contract to the author, then launch `phase1_tribunal.js` with the approved contract
   as `args.roster` (and the cartography paths in `args.paths`) — the script skips its
   own Roster phase when `roster` is supplied.
-- The deterministic quote-gate (`helpers/quote_gate.py`) is run by the `quote-locator`
-  verifier via Bash at the barrier exiting Phase D and in the panel; absence-class
+- The deterministic quote-gate (`helpers/quote_gate.py`) is run by a relay subagent via
+  Bash at the barrier exiting Phase D, once; the panel does not re-run it, and the
+  workflow transcribes the barrier result into each finding's `quote-locator`
+  verdict row. On the subagent-fallback path, do the same by hand: run the gate once at
+  the barrier and record its result; do not spawn a quote-locator verifier. Absence-class
   findings (`absence-silence`, `contribution-undersell`) are quote-exempt but ride the
   deterministic absence-gate (`helpers/absence_gate.py`) at the same barrier instead.
 - **Deepening loop (Symposium and Summit).** After the workflow returns, apply
@@ -124,10 +131,17 @@ quote-gate).
 From the result (the synthesis plus `findings` — each carrying its
 `panel_verdicts` — `integration`, and `rejected_in_panel`), render the human-facing
 **report bundle**. On a large run the full return can exceed the notification channel:
-prefer the chair-written artifact files named in the result's `artifact_paths`
-(`round_artifacts/findings_ledger.json`, `round_artifacts/synthesis_raw.json` — verify
+prefer the artifact files named in the result's `artifact_paths`
+(`round_artifacts/findings_ledger.json`, written by a dedicated writer BEFORE the chair runs;
+`round_artifacts/synthesis_raw.json`, written by the chair — verify
 they exist and parse before relying on them; they are best-effort copies and the returned
-object stays the source of truth), and fall back to the harness's task output file for
+object stays the source of truth; either path may be `null`, which means that file was never
+written and must not be looked for). **If the result carries `synthesis: null` and
+`degraded: 'chair-returned-null'`, the chair died**: every seat finding, panel verdict,
+integration and coverage result in the return is intact and complete, and only the prose
+synthesis is missing. Do NOT re-run the fleet. Re-run the chair alone against the returned
+`findings` (or `findings_ledger.json` if it was written), and if you present anything before
+doing so, label it plainly as a verified-findings ledger without a chair report. Fall back to the harness's task output file for
 the complete return rather than pasting the blob into context. Then render: verdict; validity verdict (dominates venue); the prioritized
 must-fix list (capped ~5–7, sorted by magnitude), marking any item whose finding is
 `needs-author-confirmation` as not-yet-panel-cleared (the chair flags these in `panel_summary`, so

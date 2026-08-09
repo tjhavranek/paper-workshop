@@ -62,3 +62,16 @@ certifies that **every range was examined** (coverage of *attention*), **not** t
 was *correctly* reviewed — a flaw can still hide inside a "covered" range. It is an
 auditable assignment ledger, not a correctness guarantee. Any gap re-spawns a sweep for
 exactly that gap.
+
+**When nothing returns per-range coverage, the counter is not instrumented, and the certificate
+now says so.** In practice that means Desk Review, Roundtable and Workshop, which cast no
+close-reader sweeps — but the rule the code applies is about the DATA, not the tier: if no seat
+returned any covered range, there is nothing to count, and equally, a heavy-tier run whose sweeps
+all died is honestly reported as uninstrumented rather than as full coverage. The workflow
+reports `sentences_covered: 0` from code and does not hand the auditor a sentence map to read.
+**A 0 there means "not measured on this run", never "not read"** — every seat reads the
+whole manuscript in every mode, and claim coverage and dimension coverage are unaffected.
+This replaces earlier behavior in which the auditor was given the map and supplied a
+sentence count anyway: the committed Roundtable self-audit reports 648 of 795 sentences
+covered on a run with zero close-reader seats and zero returned ranges, which was an
+inference, not a measurement.

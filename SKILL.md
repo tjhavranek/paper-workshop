@@ -150,9 +150,12 @@ almost nothing, and are never traded away for scale.
 - **Multi-angle independent verification before delivery.** At Roundtable and above,
   *nothing* reaches the
   user until several blind subagents, **each from a different angle**, have checked
-  it (quote/locator, logical validity, severity calibration, decision-relevance,
+  it (logical validity, severity calibration, decision-relevance,
   fix-safety, charitable steelman; factual/literature added at the deeper tiers; Act
-  II adds numeric provenance, consistency, integrity). Desk Review, the lightest mode, runs
+  II adds numeric provenance, consistency, integrity). The quote/locator check is not in
+  that list because it is not a judgment: it is the deterministic gate that runs at the
+  barrier before the panel, and its result is recorded into the panel record by the
+  workflow rather than relayed by an agent. Desk Review, the lightest mode, runs
   no panel: its chair applies logical-validity and steelman inline and labels itself a
   single-pass read. See `helpers/verification_panel.md`.
 - **Ground, don't recall; never fabricate.** Exact quote + locator on every
@@ -178,9 +181,11 @@ casts within it), and seats are the dominant driver. **Findings:** each seat ret
 most 8 findings (a standing budget note in the seat prompt; 5 under the economy register
 below), and the verification panel is *batched by angle* (panel agents ≈
 `angles × ceil(#findings / batch) × redundancy`): three
-angles at Roundtable, six at Workshop, seven with two agents per angle at
+angles at Roundtable, five at Workshop, six with two agents per angle at
 Symposium/Summit, over batches of 20–30 findings, default 25 (see
-`helpers/verification_panel.md`).
+`helpers/verification_panel.md`). The quote/locator check adds no agent at any tier: the
+deterministic gate has already run at the barrier, so the workflow records its result
+directly instead of paying an agent to run the same script again.
 **Paper length:** it enters only at Symposium and Summit, which add close-reader sweeps
 over ~40-sentence blocks; the script bounds the sweep fan-out, and the lighter modes'
 cost is set by the tier whatever the paper's length. As one measured anchor, the
@@ -292,6 +297,16 @@ deliverable states plainly what was and was not done. Specifically:
   cast-vs-delivered seat count (`seats_cast` / `seats_delivered` in the run output and
   `meta.json`), so a missing seat is visible, never silent. A missing result stays missing;
   nothing is fabricated to fill it.
+- **The chair dies.** Act I returns the complete verified record with `synthesis: null` and
+  `degraded: chair-returned-null` instead of failing the run, so a single dead agent can no
+  longer destroy every seat finding and panel verdict the fleet produced. The verified ledger
+  was already written to disk before the chair was cast. The orchestrator re-runs the chair
+  alone, and anything presented before that is labeled a verified-findings ledger with no chair
+  report.
+- **The completeness auditor dies.** The run continues with an empty coverage certificate whose
+  `not_covered` says the audit did not run. Coverage is an audit of the workshop's own reading,
+  not a finding, so it is reported as not done rather than silently assumed or fabricated, and
+  the findings are unaffected.
 - **The Workflow engine is off.** Symposium and Summit fall back to Workshop depth and
   the report says so. The fallback engine changes speed and scale only; every rule
   still applies.

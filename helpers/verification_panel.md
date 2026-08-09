@@ -22,11 +22,11 @@ adversarial findings). The panel *audits* candidate outputs — findings and edi
   to *defend the paper* — to show the criticism is wrong because the paper already
   handles it. A finding that cannot survive a determined defense should not ship.
 - **Code where code is possible.** Several angles are backed by real deterministic,
-  fail-closed scripts — not eyeballed judgments: `quote-locator` runs
-  `helpers/quote_gate.py` and reports its result; for the quote-exempt absence classes
-  (`absence-silence`, `contribution-undersell`) the verifier READS the certificate that
-  `helpers/absence_gate.py` produced at the Phase-D barrier (attached to each finding as
-  `absence_gate`; its hit snippets feed the steelman angle); and in Act II, `numeric-provenance` by
+  fail-closed scripts — not eyeballed judgments. In Act I the quote/locator check is not an
+  agent at all: `helpers/quote_gate.py` and, for the quote-exempt absence classes,
+  `helpers/absence_gate.py` run at the Phase-D barrier, their result is enforced there, and the
+  workflow transcribes it into each finding's `quote-locator` row (the `absence_gate` result also
+  rides on the finding, and its hit snippets feed the steelman angle). In Act II, `numeric-provenance` by
   `helpers/provenance.py` (re-hash the output artifact + confirm the value is in it),
   `consistency` by `helpers/consistency.py` (run-match every token value + flag orphans), the
   reproduction predicate by `helpers/reproduces.py` (per-class float tolerance), the
@@ -47,7 +47,7 @@ adversarial findings). The panel *audits* candidate outputs — findings and edi
 
 | Angle | The question it asks | Hard gate? |
 |---|---|---|
-| `quote-locator` | Does the quote exist verbatim in the manuscript? (runs `quote_gate.py`, which checks 1:1 existence in paper.txt, not that the quote sits at the finding's stated locator, see `LIMITATIONS.md`; absence-class findings are instead certified by `absence_gate.py`, the probe-term search) | **Enforced by the standalone Quote-gate phase, not the panel aggregator** — fail (unmatched quote, or anything but a clean `absent` certificate) ⇒ status forced to `needs-author-confirmation`; the finding is **not** dropped |
+| `quote-locator` **(no agent — a transcribed script result)** | Does the quote exist verbatim in the manuscript? (`quote_gate.py`, which checks 1:1 existence in paper.txt, not that the quote sits at the finding's stated locator, see `LIMITATIONS.md`; absence-class findings are instead certified by `absence_gate.py`, the probe-term search) | **Enforced by the standalone Quote-gate phase, not the panel aggregator** — fail (unmatched quote, or anything but a clean `absent` certificate) ⇒ status forced to `needs-author-confirmation`; the finding is **not** dropped |
 | `logical-validity` | Does the criticism actually *follow* from the quoted text? (catches a real quote + an invalid inference) | **Yes** — fail ⇒ reject |
 | `factual-literature` | Is the norm/method/citation the finding appeals to actually correct? (checked against fetched sources, never memory) — **runs at Symposium/Summit only**; at Desk Review / Roundtable / Workshop the cited works are still fetched and the seats read them, but this dedicated verifier angle is not applied to the findings (see the batching note below) | No — fail ⇒ revise or reject |
 | `severity-calibration` | Is the severity calibrated under `rubric.md` — neither inflated nor deflated? | No — fail ⇒ revise severity (never silently; recorded) |
@@ -78,8 +78,21 @@ which would explode with paper length. The batch size defaults to 25 (20 at `exh
 where the doubled redundancy already doubles each batch's reads; `args.batch` overrides,
 clamped at 30 against attention dilution — field-validated at 25 on a real thorough run).
 `quick` runs three angles (logical-validity,
-fix-safety, steelman-charity); `thorough` runs six; `exhaustive`/`monumental` run all
-seven with two redundant agents per angle (majority within an angle). The angle's
+fix-safety, steelman-charity); `thorough` runs five; `exhaustive`/`monumental` run all
+six with two redundant agents per angle (majority within an angle).
+
+**`quote-locator` costs no agent, at any tier.** It used to be cast as an LLM angle at
+`thorough` and above, where it wrote the findings to a temp file and ran `quote_gate.py`
+against `paper.txt` — the same script, on the same file, that the standalone Quote-gate
+phase had already run and already ENFORCED fail-closed at the Phase-D barrier. The panel
+aggregator never read its verdict (it still does not), so the second execution produced an
+audit row and nothing else. The workflow now writes that row itself from the authoritative
+barrier results: `upheld` on a clean gate, `upheld-with-revision` when the gate ran and did
+not clear it, and `cant-tell` when no gate result arrived at all — a distinction an LLM
+relay could not make. `contribution-undersell` and `improvement-proposal` rows require BOTH
+a matched foothold quote and a clean `absent` certificate; only `absence-silence` is
+quote-exempt. The mapping is unit-tested in `workflow/selftest_gate_rows.js`, which extracts
+the shipped function so the test cannot drift from it, and CI runs it on every push. The angle's
 independence is preserved (one agent owns one angle, blind to the others); only the
 wasteful one-agent-per-finding-per-angle fan-out is removed. The same shape applies in
 Act II since v0.7.0: edit verification is batched by angle ACROSS edits
@@ -101,9 +114,9 @@ logical-validity gate and the steelman defense stay on every finding in every mo
 decision-relevance, fix-safety, factual-literature) read a per-batch EXCERPT file (each
 finding's quote plus its surrounding context, copied verbatim by a slicer agent) and the
 neutral precis instead of re-reading the full manuscript — the largest single input
-saving on a long paper. The rails do not move: `quote-locator` still runs the
-deterministic gate against the FULL paper.txt (the script reads the file, never the
-agent), and `steelman-charity` ALWAYS receives the full manuscript in every mode, because
+saving on a long paper. The rails do not move: the quote/locator check is unaffected in
+either mode, because it is the deterministic gate reading the FULL paper.txt from disk and
+never an agent at all, and `steelman-charity` ALWAYS receives the full manuscript in every mode, because
 its question — does the paper already address this elsewhere? — is unanswerable from an
 excerpt. A diet verifier that cannot adjudicate confidently from its excerpt is
 instructed to return `cant-tell`, which the aggregator treats as fail-closed (never a

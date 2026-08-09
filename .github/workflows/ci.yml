@@ -29,6 +29,9 @@ jobs:
           node --check workflow/phase1_tribunal.js
           node --check workflow/phase2_atelier.js
           node --check examples/parse_selfaudit.js
+          node --check workflow/selftest_gate_rows.js
+      - name: Deterministic quote-locator audit row
+        run: node workflow/selftest_gate_rows.js
       - name: Provenance proofs verify (reader-reproducible)
         run: |
           python helpers/provenance.py verify --token examples/incentives-workshop/phase2_true/provenance/token_lab.json --artifact-dir examples/incentives-workshop/phase2_true/run_results

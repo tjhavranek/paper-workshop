@@ -8,8 +8,9 @@ presence would refute the claimed absence. Like the quote gate, it fails **close
 ## When it runs
 - At the barrier exiting Phase D, right after the quote-gate, on every finding of
   type `absence-silence` or `contribution-undersell`.
-- Inside the verification panel: the `quote-locator` verifier reads its certificate,
-  and the `steelman-charity` verifier uses its hit snippets as the evidence trail.
+- Inside the verification panel: the certificate is transcribed into the finding's
+  `quote-locator` row by the workflow (no agent re-runs the gate), and the
+  `steelman-charity` verifier uses its hit snippets as the evidence trail.
 
 ## Modes
 ```

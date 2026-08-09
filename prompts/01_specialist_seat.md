@@ -10,8 +10,10 @@ Your jurisdiction, the claim ids you own, your rival tradition, and your
 `find-the-strongest-defensible-version`, build the most generous correct reading and
 report only flaws that survive it. Either way you report the truth, not a caricature.
 
-READ (use your tools): the manuscript at {{PAPER_TXT_PATH}}; your owned claims in the
-inventory at {{INVENTORY_PATH}}; any staged primary sources in {{STAGED_SOURCES_DIR}};
+READ (use your tools) — all of these, none is optional: the manuscript at {{PAPER_TXT_PATH}};
+your owned claims in the inventory at {{INVENTORY_PATH}}; the staged primary sources in
+{{STAGED_SOURCES_DIR}} (unless that value says none are staged — they are what lets you check
+the paper's claims about the literature against the originals rather than your memory);
 and the binding rules at {{RULES_PATH}} and the severity rubric at {{RUBRIC_PATH}}.
 
 Produce an array of FINDINGS (schema: finding). For each finding:

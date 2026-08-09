@@ -57,6 +57,17 @@ adversarial cross-review during development.
 - **Coverage means attention, not correctness.** The sentence-coverage ledger certifies every
   range was *examined*, not that each was *correctly* reviewed; a flaw can hide in a
   "covered" range.
+- **Sentence coverage is only instrumented when close-reader sweeps actually return coverage.**
+  In practice that means Symposium and Summit, the tiers that cast sweeps; below them nothing
+  returns a per-range verdict. The code keys off the returned data rather than the tier, so a
+  heavy run whose sweeps all died is also reported as uninstrumented instead of as full coverage.
+  The certificate then reports `sentences_covered: 0`, set by code, meaning *not measured on this
+  run* — not *not read*. Every seat reads the whole manuscript in every mode, and claim and dimension
+  coverage are unaffected. Before v0.8.3 the auditor was handed the sentence map at every tier
+  and supplied a count regardless: the committed Roundtable self-audit shows 648 of 795
+  sentences "covered" on a run with zero close-reader seats and zero returned ranges. That
+  number was an inference. Treat sentence counts in run records produced before v0.8.3 at
+  Desk Review, Roundtable or Workshop as unmeasured.
 - **Act II is now demonstrated end-to-end once, but not broadly field-proven.**
   `helpers/reproduces.py` decides "reproduces" per artifact class (float tolerance + fixed
   seeds; see its `classes` table), so the baseline gate and the package clean-room check are
