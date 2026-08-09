@@ -6,7 +6,7 @@ export const meta = {
     { title: 'Triage', detail: 'sort each finding into lane A/B/C/D and draft the edit spec' },
     { title: 'Baseline', detail: 'reproduce the current paper numbers before any edit' },
     { title: 'Stage', detail: 'create the git working copy + branch the Scribe edits (never the original)' },
-    { title: 'Implement', detail: 'Runner re-runs code, Scribe transcribes — never invents' },
+    { title: 'Implement', detail: 'Runner re-runs code, Scribe transcribes, never invents' },
     { title: 'Verify', detail: 'multi-angle panel clears every edit (fix/provenance/consistency/integrity)' },
     { title: 'Reconcile', detail: 'prove every number in the revised paper is true and consistent' },
     { title: 'Package', detail: 'assemble + clean-room replicate the package' },
@@ -27,7 +27,7 @@ const TIER = A.tier || 'thorough'
 // Wall): nothing auto-applies, nothing skips a rail. OFF by default → the triage prompt receives an
 // empty directive and behaves identically to a normal run (rail- and decision-identical; no-op).
 const IMPROVE = A.improvement === true
-const IMPROVE_TARGET = TIER === 'monumental' ? 'as many as the ledger genuinely supports — this is the most exhaustive mode, so be thorough'
+const IMPROVE_TARGET = TIER === 'monumental' ? 'as many as the ledger genuinely supports, this is the most exhaustive mode, so be thorough'
   : TIER === 'exhaustive' ? 'a generous set'
   : 'a focused, high-value set'
 const IMPROVE_NOTE = IMPROVE
@@ -85,9 +85,9 @@ const promptRef = (name, vars) =>
   'Your task instructions are in the file: ' + PROMPTS_DIR + '/' + name + '.md\n' +
   'READ that file with your tools and follow it EXACTLY as your role. If that exact path ' +
   'fails, glob for **/' + name + '.md and read the match. It contains {{TOKEN}} placeholders ' +
-  '— substitute these values (and read any path given as a file):\n' +
+  ', substitute these values (and read any path given as a file):\n' +
   JSON.stringify(vars || {}, null, 2) +
-  '\nYou MUST finish by returning the required structured output via the StructuredOutput tool — do NOT reply in prose, and do not stop until you have called it.'
+  '\nYou MUST finish by returning the required structured output via the StructuredOutput tool, do NOT reply in prose, and do not stop until you have called it.'
 
 // ---------- schemas ----------
 const SCOPE = { type: 'object', additionalProperties: false, properties: { achievable_scope: { type: 'array', items: { type: 'string' } }, degraded: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { finding_id: { type: 'string' }, missing_input: { type: 'string' }, consequence: { type: 'string' } }, required: ['finding_id', 'missing_input', 'consequence'] } }, blocking_gaps: { type: 'array', items: { type: 'string' } }, request_list: { type: 'array', items: { type: 'object', additionalProperties: false, properties: { input: { type: 'string' }, reason: { type: 'string' } }, required: ['input', 'reason'] } } }, required: ['achievable_scope', 'degraded', 'blocking_gaps', 'request_list'] }
@@ -118,7 +118,7 @@ const scope = await cast('intake', promptRef('phase2/10_intake', { LEDGER_PATH: 
 log('Intake: ' + scope.achievable_scope.length + ' achievable, ' + scope.degraded.length + ' degraded, ' + scope.blocking_gaps.length + ' blocking')
 if (scope.blocking_gaps.length) {
   // FAIL CLOSED: surface every blocking gap for the author to fill (or to accept the
-  // degraded scope) BEFORE any edit — never proceed silently just because some source exists.
+  // degraded scope) BEFORE any edit, never proceed silently just because some source exists.
   return { halted: 'blocking_gaps', scope, casting: CASTING() }
 }
 
@@ -137,7 +137,7 @@ phase('Baseline')
 let baseline = { run_id: 'baseline', status: 'ok', command: '(skipped: no code/data provided)', provenance_tokens: [], log_excerpt: '' }
 let baselineRan = false
 if (INPUTS.code && INPUTS.data) {
-  baseline = await cast('runner', promptRef('phase2/13_runner_rerun', { FINDING_JSON: { note: 'BASELINE REPRODUCTION GATE — run the master script unchanged and confirm the current headline numbers reproduce. Take the paper\'s current numbers from the manuscript source below; record exactly which numbers you anchored.', manuscript_source: INPUTS.source || '(none provided — anchor on the code\'s own published-output comparison if available, and record that no manuscript anchor existed)' }, EDIT_JSON: {}, CODE_DIR: INPUTS.code, DATA_DIR: INPUTS.data, RUN_DIR: (PATHS.session || '.') + '/phase2/runs/baseline', SANDBOX_NOTES_PATH: PATHS.sandbox_notes || '', HELPERS_DIR }), { ...GP, label: 'baseline-gate', phase: 'Baseline', schema: RUNREC })
+  baseline = await cast('runner', promptRef('phase2/13_runner_rerun', { FINDING_JSON: { note: 'BASELINE REPRODUCTION GATE, run the master script unchanged and confirm the current headline numbers reproduce. Take the paper\'s current numbers from the manuscript source below; record exactly which numbers you anchored.', manuscript_source: INPUTS.source || '(none provided, anchor on the code\'s own published-output comparison if available, and record that no manuscript anchor existed)' }, EDIT_JSON: {}, CODE_DIR: INPUTS.code, DATA_DIR: INPUTS.data, RUN_DIR: (PATHS.session || '.') + '/phase2/runs/baseline', SANDBOX_NOTES_PATH: PATHS.sandbox_notes || '', HELPERS_DIR }), { ...GP, label: 'baseline-gate', phase: 'Baseline', schema: RUNREC })
   baselineRan = true
   log('Baseline: ' + baseline.status)
   // FAIL CLOSED on ANY non-ok status: 'baseline-failed' (numbers diverge) and 'failed'
@@ -156,7 +156,7 @@ const WORK_BRANCH = 'paper-workshop/phase2'
 let workDir = INPUTS.source || INPUTS.manuscript_text || ''
 if (INPUTS.source) {
   const staged = await cast('stage',
-    'Create the Act-II working copy the Scribe will edit — NEVER touch the author\'s original. Using Bash:\n' +
+    'Create the Act-II working copy the Scribe will edit, NEVER touch the author\'s original. Using Bash:\n' +
     '1) mkdir -p "' + (PATHS.session || '.') + '/phase2/work"\n' +
     '2) copy the ENTIRE manuscript source tree from "' + INPUTS.source + '" into that work dir, preserving the \\input/child-file structure (use cp -a / robocopy / xcopy as the OS requires).\n' +
     '3) cd into the work dir and run: git init -q && git add -A && git commit -q -m "act2 baseline (verbatim author source)" && git checkout -q -b ' + WORK_BRANCH + '\n' +
@@ -211,15 +211,14 @@ function decideEdit(e, run, scribe, verdicts) {
   if (scribe && /blocked/.test(scribe.status || '')) return { ...wrap(e, run, scribe, verdicts), status: 'blocked', reason: scribe.status }
   if (failed.length) return { ...wrap(e, run, scribe, verdicts), status: 'blocked', reason: failed.map(f => f.angle + ': ' + f.reason).join('; ') }
   // FAIL CLOSED: every hard-gate angle this edit REQUIRES must have come back present AND
-  // upheld. A missing verdict (a dropped verifier) or a 'cant-tell' is NOT a free pass —
-  // such an edit may never auto-apply; it routes to author sign-off instead.
+  // upheld. A missing verdict (a dropped verifier) or a 'cant-tell' is NOT a free pass, // such an edit may never auto-apply; it routes to author sign-off instead.
   const requiredHard = anglesForEdit(e).filter(a => hard.includes(a))
   const upheld = a => verdicts.some(v => v.angle === a && (v.verdict === 'upheld' || v.verdict === 'upheld-with-revision'))
   const unresolved = requiredHard.filter(a => !upheld(a))
   // record-touching edits always wait for the human, even when clean
   const mustSignoff = e.author_signoff_required || ['numeric', 'result-suppressing', 'claim-altering'].includes(e.edit_class)
   if (e.lane === 'C-new-analysis' || e.lane === 'D-author-decision') return { ...wrap(e, run, scribe, verdicts), status: 'proposal' }
-  if (unresolved.length) return { ...wrap(e, run, scribe, verdicts), status: 'queued-for-signoff', reason: 'unverified hard-gate angle(s) — not auto-applied: ' + unresolved.join(', ') }
+  if (unresolved.length) return { ...wrap(e, run, scribe, verdicts), status: 'queued-for-signoff', reason: 'unverified hard-gate angle(s), not auto-applied: ' + unresolved.join(', ') }
   return { ...wrap(e, run, scribe, verdicts), status: mustSignoff ? 'queued-for-signoff' : 'applied' }
 }
 function wrap(e, run, scribe, verdicts) { return { edit: e, run, scribe, verdicts } }
@@ -248,7 +247,7 @@ const scribeById = {}
 for (let i = 0; i < scribeEdits.length; i += SCRIBE_BATCH) {
   const b = scribeEdits.slice(i, i + SCRIBE_BATCH)
   const sb = await cast('scribe',
-    promptRef('phase2/12_scribe_implementer', { EDIT_JSON: '(BATCH MODE — see EDITS_BATCH_JSON appended below; apply the full prompt procedure to EACH edit, in order)', SOURCE_FILE_PATH: workDir + '  (each edit names its own file; resolve as <this work dir>/<edit.file>)', WORKING_BRANCH: WORK_BRANCH, RULES_PATH: PATHS.rules || '' }) +
+    promptRef('phase2/12_scribe_implementer', { EDIT_JSON: '(BATCH MODE, see EDITS_BATCH_JSON appended below; apply the full prompt procedure to EACH edit, in order)', SOURCE_FILE_PATH: workDir + '  (each edit names its own file; resolve as <this work dir>/<edit.file>)', WORKING_BRANCH: WORK_BRANCH, RULES_PATH: PATHS.rules || '' }) +
     '\nBATCH MODE (orchestrator instruction): you are implementing ' + b.length + ' edits in ONE session, IN ORDER, on the SAME working copy. For EACH edit follow the prompt file\'s procedure completely (locate the exact span, apply, one git commit per edit, capture the per-edit unified diff). If one edit\'s old_text cannot be located, mark THAT edit blocked-span-not-found and continue with the rest.\nEDITS_BATCH_JSON:\n' + JSON.stringify(b, null, 2) +
     '\nReturn {results:[{edit_id, status, diff, commit, new_text}]} with one entry PER edit via StructuredOutput.',
     { ...GP, label: 'scribe:batch' + Math.floor(i / SCRIBE_BATCH), phase: 'Implement', schema: SCRIBE_BATCH_SCHEMA })
@@ -291,8 +290,7 @@ phase('Reconcile')
 const runArtifacts = results.map(r => r.run).filter(Boolean).flatMap(r => r.provenance_tokens || [])
 // Consumed-token split (field-grounded): the deterministic run-match must run over the
 // tokens a scribed edit actually transcribed; tokens a run produced but no edit consumed
-// (raw IRF points, unrounded intermediates) are documented byproducts, never failures —
-// without this split, every descriptive run that computes more than it inserts dirties
+// (raw IRF points, unrounded intermediates) are documented byproducts, never failures, // without this split, every descriptive run that computes more than it inserts dirties
 // the reconcile. Orphan detection is unaffected: it works off the manuscript-vs-baseline
 // diff, so a number that changed without a consumed token behind it still blocks.
 const consumedTokens = results.filter(r => r.scribe && !/blocked/.test(r.scribe.status || '')).map(r => r.run).filter(Boolean).flatMap(r => r.provenance_tokens || [])

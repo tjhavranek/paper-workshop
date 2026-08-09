@@ -108,7 +108,7 @@ pre-release self-audit caught real overclaims and a quote-gate bug, both fixed
 *(Symposium/Summit also scale with paper length and are best run with dynamic workflows enabled; without them they fall back to Workshop depth.)*
 
 **Running it often is fine.** Desk Review and Roundtable are light (single-digit to ~30 agents)
-and the default Workshop is a few dozen — cheap enough to re-run as you revise a paper. Reserve
+and the default Workshop is a few dozen, cheap enough to re-run as you revise a paper. Reserve
 Symposium/Summit for a major pre-submission pass.
 
 **Engine.** The workshop runs on subagents (helper Claude sessions your main session spawns),
@@ -119,19 +119,22 @@ and CRUCIBLE tells you rather than downgrading silently. Engine detection, model
 inheritance, and the 1M-context account caveat and its remedies live in the pre-flight,
 [`helpers/doctor.md`](helpers/doctor.md).
 
-**Running on Claude Fable 5 (mythos-class).** In the default mode the fleet inherits the
-session model, so starting the session on Claude Fable 5 (Anthropic's mythos-class tier, the
-class above Opus) lifts every seat, verifier, and chair to that capability with no
-configuration; `/model best` (Claude Code v2.1.170+) picks Fable where your plan has it and
-the latest Opus where it does not. Anthropic's Fable 5 prompting guidance favors separate
-fresh-context verifier subagents over self-critique, which matches CRUCIBLE's verification
-panel: a design endorsement, not a measured gain. For biology- or security-flavored papers,
-start on Opus deliberately, because a safety classifier can reroute Fable to Opus 4.8 mid-run;
-starting on Opus keeps the run on one model. The run records which model actually served, and
-the report discloses it. Fable's other June 2026 constraints (30-day input retention with no
-zero-data-retention, twice Opus pricing) are in [`helpers/doctor.md`](helpers/doctor.md) and
-[`helpers/safety_notes.md`](helpers/safety_notes.md). The workshop runs unchanged on Opus and
-Sonnet; the methodology does not depend on the model tier.
+**Which model to run it on.** The current Claude generation, as of August 2026, is the Claude 5
+family (Opus 5, Sonnet 5, Fable 5) alongside Haiku 4.5. In the default mode the fleet inherits
+your session model, so whatever you start the session on is what every seat, verifier, and chair
+runs on, with no configuration. `/model best` (Claude Code v2.1.170+) picks the strongest model
+your plan carries. Anthropic's Fable 5 prompting guidance favors separate fresh-context verifier
+subagents over self-critique, which matches CRUCIBLE's verification panel. Treat that as a design
+endorsement rather than a measured gain.
+
+For biology- or security-flavored papers, pick your model deliberately and stay on it: a safety
+classifier can reroute a Fable session to a different model mid-run (observed dropping to Opus 4.8
+in June 2026). The run records which model actually served, and the report discloses it. Fable 5's
+other June 2026 constraints (30-day input retention with no zero-data-retention, and a base rate
+twice that of the then-current Opus), which have not been re-verified since, are in
+[`helpers/doctor.md`](helpers/doctor.md) and
+[`helpers/safety_notes.md`](helpers/safety_notes.md). The workshop runs unchanged across the
+tiers. The methodology does not depend on which one you pick.
 
 **Running on a usage-constrained plan: the economy register.** A default Workshop inherits the
 session model into every agent, and on Fable that can exhaust a usage-capped plan's window
@@ -216,10 +219,10 @@ you want, rebuilds it: one is built for proposals, the other for papers.
 
 ## What it deliberately will not do
 
-No fabricated citations, numbers, quotes, data, or results. No confidence or acceptance-odds
-numbers. No silent edits; changes arrive as tracked redlines on copies for you to accept. No
-number in the revised paper that a logged re-run didn't produce. No automatic merge,
-submission, or data release. The author remains the author.
+It fabricates no citations, numbers, quotes, data, or results, and it reports no confidence or
+acceptance-odds numbers. Nothing is edited silently: changes arrive as tracked redlines on copies
+for you to accept, and a number reaches the revised paper only if a logged re-run produced it. It
+never merges, submits, or releases data on its own. The author remains the author.
 
 ## License & citation
 
@@ -229,7 +232,7 @@ CC-BY-4.0 ([`LICENSE`](LICENSE)). If it helps your work, please cite:
 > workshop that stress-tests and rebuilds a research paper.* Zenodo. https://doi.org/10.5281/zenodo.20828996
 
 **Evaluated in:** Havranek, T. & Irsova, Z. (2026). *Does Multi-Agent Debate Improve AI Feedback
-on Research Papers?* arXiv:2607.14713, https://arxiv.org/abs/2607.14713 — a pre-registered
+on Research Papers?* arXiv:2607.14713, https://arxiv.org/abs/2607.14713. It reports a pre-registered
 experiment in which authors of 44 economics meta-analyses ranked blinded AI reports on their own
 papers. The plain single-pass baseline was ranked above the multi-agent tools, an against-interest
 result we report in full. Note the experiment ran the light desk-review configuration (Act I only,

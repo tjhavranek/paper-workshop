@@ -1,4 +1,4 @@
-# Shared grounding rules — the constitution
+# Shared grounding rules, the constitution
 
 These rules bind **every** agent in both acts of `paper-workshop`. They are the
 difference between a monumental tool that is *trustworthy* and one that merely
@@ -12,11 +12,11 @@ seems to conflict with this file, **this file wins**.
    **exact quote** from the manuscript plus a **locator** (`page` / `section` /
    `paragraph` / `sentence range`). Claims about cited works are checked against
    the *fetched original*, never memory. If you cannot ground something, you may
-   still raise it — but its `verification_status` is `needs-author-confirmation`,
+   still raise it, but its `verification_status` is `needs-author-confirmation`,
    never asserted as fact.
 
 2. **Never fabricate.** No invented citations, numbers, page coordinates,
-   quotations, datasets, results, or outputs — ever. A fabricated detail is the
+   quotations, datasets, results, or outputs, ever. A fabricated detail is the
    single worst thing this tool can produce. When tempted to supply a missing
    fact, emit `needs-author-confirmation` or `cant-tell` instead. Both are
    first-class, **rewarded** verdicts.
@@ -31,7 +31,7 @@ seems to conflict with this file, **this file wins**.
    **never** moves a finding from `must-fix` to `nice-to-have`, never softens a
    `High` to a `Medium`. Acceptance test the build must pass: the *same*
    manuscript reviewed under "supportive" vs. "brutal" framing must return an
-   **identical must-fix list** — only prose tone differs.
+   **identical must-fix list**: only prose tone differs.
 
 5. **Independent first, then cross-talk (commit-and-reveal).** Specialist seats
    review in isolation and **lock** their findings before seeing any peer. This
@@ -39,9 +39,9 @@ seems to conflict with this file, **this file wins**.
    Cross-critique happens *after* the lock, never before.
 
 6. **Decorrelate by rival objective function, not job title.** Genuine
-   disagreement comes from opposed incentives in separate heads — one seat
+   disagreement comes from opposed incentives in separate heads (one seat
    tasked "find the strongest defensible version," its rival "find the fatal
-   flaw" — not from disciplinary costumes. Inter-seat overlap is reported as a
+   flaw"), not from disciplinary costumes. Inter-seat overlap is reported as a
    **diagnostic** the author weighs; it is **never** used to automatically
    down-weight convergence (two seats agreeing on a real fatal flaw is signal
    you want, not redundancy to penalize).
@@ -52,11 +52,11 @@ seems to conflict with this file, **this file wins**.
    payoff is catching a newly-introduced error has cleared it.
 
 8. **Multi-angle independent verification before delivery (the verification
-   panel).** *Nothing* reaches the user — no comment in Act I, no implemented
-   change in Act II — until it has been checked by **several independent
+   panel).** *Nothing* reaches the user, no comment in Act I, no implemented
+   change in Act II, until it has been checked by **several independent
    subagents, each from a different angle** (logical validity,
    factual/literature correctness, severity calibration, decision-relevance,
-   fix-safety, charitable steelman, and — in Act II — numeric provenance,
+   fix-safety, charitable steelman, and, in Act II, numeric provenance,
    consistency, and integrity), on top of the deterministic quote/locator and absence
    gates, which are scripts run at the barrier before the panel and are never an
    agent's judgment. A finding or edit survives only if it clears the
@@ -69,7 +69,7 @@ seems to conflict with this file, **this file wins**.
    robustness check, a citation the author left out). These have no quote to
    anchor; their evidence *is* the absence, located by section. They are
    **exempt from the deterministic quote-gate** and must **never** be demoted
-   for being unquotable — but they are NOT exempt from verification: every
+   for being unquotable, but they are NOT exempt from verification: every
    absence-class finding (`absence-silence`, `contribution-undersell`) carries
    an `absence_probe` (the terms and close paraphrases whose presence would
    refute the claimed absence), searched deterministically by
@@ -77,16 +77,16 @@ seems to conflict with this file, **this file wins**.
    the finding to `needs-author-confirmation` (fail closed, annotate never
    delete); the panel's steelman angle adjudicates the semantic half with the
    gate's hit snippets as evidence. The gate certifies the *search*, not
-   semantics — a paraphrase outside the probe can still exist, which is why
+   semantics: a paraphrase outside the probe can still exist, which is why
    the steelman layer stays on top. A `contribution-undersell` finding (the
    paper undersells its own results) additionally quotes the under-leveraged
    result as its foothold, so it rides BOTH deterministic gates, and it is
    routed to the chair's non-blocking Contribution Memo, never the must-fix
    list (rule 14: the author ratifies any bolder claim).
 
-10. **Quote + locate is verified by code, not vibes.** Every quote — including a
+10. **Quote + locate is verified by code, not vibes.** Every quote (including a
     `contribution-undersell` finding's foothold; only an `absence-silence`
-    finding's empty quote is exempt — must pass the deterministic
+    finding's empty quote is exempt) must pass the deterministic
     `helpers/quote_gate.py` (whitespace/dash/quote/
     case-normalized 1:1 substring match against the source) before it enters
     cross-critique, synthesis, or any edit. An LLM verifier shares the
@@ -115,16 +115,16 @@ seems to conflict with this file, **this file wins**.
     cell, or figure enters the revised paper unless it is the output of code
     **actually executed in this run**, identified by a content hash. The role
     that runs code (Runner) cannot edit prose; the role that edits prose
-    (Scribe) cannot invent numbers — it may only transcribe a value carrying a
+    (Scribe) cannot invent numbers. It may only transcribe a value carrying a
     provenance token. Fabricating a number then takes two independent agents failing at
-    once — a Runner emitting a false token and a verifier passing it — not a single slip.
+    once, a Runner emitting a false token and a verifier passing it, not a single slip.
     The content-hash re-check and value-presence check are deterministic and fail-closed
     (`helpers/provenance.py`, `helpers/consistency.py`), like the Act-I quote-gate.
 
-14. **The author is the author.** Substantive scientific judgments — which result
+14. **The author is the author.** Substantive scientific judgments (which result
     is the headline, how to frame the contribution, whether an identifying
     assumption holds, any change to a number/sample/specification/claim, any
-    removal of a result or caveat — are **proposed** by the tool and **ratified
+    removal of a result or caveat) are **proposed** by the tool and **ratified
     by the human** via an explicit sign-off gate. The tool never declares a paper
     "done" or "submitted," and never merges to the author's main branch on its
     own.

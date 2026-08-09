@@ -104,7 +104,7 @@ def check(manuscript_text, tokens, baseline_text=None):
             continue
         lits = value_literals(str(v))
         tok_lits.update(lits)
-        # every numeric literal in the value must appear as a STANDALONE literal in the text —
+        # every numeric literal in the value must appear as a STANDALONE literal in the text,
         # NO substring fallback (so 0.08 does not "match" inside 0.083, nor 12 inside 120).
         present = bool(lits) and all(l in rev_set for l in lits)
         (reconciled if present else run_mismatches).append(norm_num(str(v)))

@@ -1,8 +1,8 @@
-# absence_gate.py — usage
+# absence_gate.py, usage
 
 Deterministic absence certificate (grounding rule 9). Absence-class findings ("the
 paper never says X") have no quote to gate, so this **script** searches the manuscript
-for every term in the finding's `absence_probe` — the words and close paraphrases whose
+for every term in the finding's `absence_probe`, the words and close paraphrases whose
 presence would refute the claimed absence. Like the quote gate, it fails **closed**.
 
 ## When it runs
@@ -26,19 +26,19 @@ python helpers/absence_gate.py batch --source-file input/paper.txt --findings ro
 only (the quote gate owns everything else).
 
 ## Certificates
-- `absent` — at least 3 distinct probe terms supplied (deduped on their normalized
+- `absent`: at least 3 distinct probe terms supplied (deduped on their normalized
   form), none found. The search ladder is the quote gate's canonicalization PLUS
   deliberately looser hyphen and spacing rungs: the two gates have opposite failure
   polarities, so a match the quote gate would conservatively miss must still count
   here (a miss would fail OPEN as a false certificate; over-matching only ever
   degrades a finding, never certifies one). The clean pass.
-- `present` — at least one probe term occurs; `hits` carries the term, count, and up
+- `present`: at least one probe term occurs; `hits` carries the term, count, and up
   to 3 context snippets per term. The claimed absence is suspect: status forced to
   `needs-author-confirmation`; the steelman verifier judges whether the paper really
   already says it.
-- `thin-probe` — fewer than 3 non-empty terms. A narrow probe invites a rigged
+- `thin-probe`: fewer than 3 non-empty terms. A narrow probe invites a rigged
   search; **fail closed**, status forced to `needs-author-confirmation`.
-- `no-probe` — no usable terms at all. Fail closed, same handling.
+- `no-probe`: no usable terms at all. Fail closed, same handling.
 
 ## Exit codes
 `0` if every absence-class finding certified `absent`, `2` otherwise.

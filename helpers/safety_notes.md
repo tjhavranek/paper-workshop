@@ -1,4 +1,4 @@
-# Safety notes — read before sending data anywhere or running code
+# Safety notes, read before sending data anywhere or running code
 
 ## Data never leaves the machine without consent
 - Act I and Act II run on Claude (the model already in your session) and locally.
@@ -17,11 +17,10 @@
 
 ## The optional external dissent leg
 - Off by default. One lower-weight, **separate-provider** voice asking only "what
-  assumption / citation / alternative explanation did **all** the Claude seats miss?" —
-  a tiebreaker, never a co-equal judge. The provider is the user's choice and is
+  assumption / citation / alternative explanation did **all** the Claude seats miss?", a tiebreaker, never a co-equal judge. The provider is the user's choice and is
   configured locally; the skill ships no provider wiring.
 - Route only through a **no-train / retention-disabled** endpoint. If none is
-  configured, **skip the leg and disclose it** — never fall back to a training-eligible
+  configured, **skip the leg and disclose it**, never fall back to a training-eligible
   free tier, and never imply cross-model coverage that did not happen.
 
 ## The scientific-integrity failure modes Act II must not commit
@@ -43,7 +42,7 @@ touches the record.
   only); a new specification is proposed only as a *labeled robustness check reported
   alongside the original* (lane C, proposal-only), never a silent swap; and the LLM
   `integrity` angle flags hypothesis-drift-toward-the-data. This one is **LLM-judged, not a
-  deterministic ledger** — see `LIMITATIONS.md`.
+  deterministic ledger**, see `LIMITATIONS.md`.
 - **Unreproducible numbers** → `helpers/reproduces.py` defines "reproduces" as code (per
   artifact class: float tolerance, fixed seeds), so the baseline gate and the package
   clean-room check are decided by a deterministic predicate, not an LLM's say-so.
@@ -57,7 +56,7 @@ The run auto-generates an **AI-involvement disclosure** from the audit trail
 (everything the tool did: edits applied and queued, analyses re-run, proposals and
 blocks), in a long form and a paste-able short form. Filing it per the venue's policy is part of
 the deliverable. Substantive scientific judgments are **proposed** by the tool and
-**ratified by the human** — the author remains the accountable author.
+**ratified by the human**: the author remains the accountable author.
 
 ## Labeling
 If inputs were missing, a source could not be fetched, the baseline did not reproduce,

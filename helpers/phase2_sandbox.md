@@ -1,4 +1,4 @@
-# Act II — running the author's code safely
+# Act II. Running the author's code safely
 
 This is where a paper tool becomes a research-integrity instrument or a catastrophe.
 The rules here implement the Execution-Provenance Wall (grounding rule 13) and the
@@ -23,17 +23,17 @@ integrity rails.
    A broken baseline is itself the most important finding; never "improve" numbers on
    top of a pipeline that never reproduced.
 
-**Calibrate the gate ex ante — both defaults are field-grounded (a full baseline attempt
+**Calibrate the gate ex ante: both defaults are field-grounded (a full baseline attempt
 was once lost to a blanket tolerance):**
 - **Precision-matched tolerances.** A prose anchor's tolerance is half a unit of its last
   stated digit: "approximately 2.5%" ⇒ ±0.05; "about 2%" ⇒ ±0.5. Never pin an
-  integer-precision claim at one-decimal tolerance — that manufactures a spurious gate
+  integer-precision claim at one-decimal tolerance, that manufactures a spurious gate
   failure the author never claimed to survive. Record each anchor's tolerance with the
   anchor BEFORE the comparison runs.
 - **One consistent horizon convention (LP/IRF papers).** When prose anchors reference
   horizons ("the effect after five years"), the gate passes if ALL anchors pass under ONE
   consistent horizon mapping (e.g. trough vs endpoint, year-indexed vs lag-indexed).
-  Record the chosen mapping and flag it `needs-author-confirmation` — the figure-producing
+  Record the chosen mapping and flag it `needs-author-confirmation`. The figure-producing
   code is often not in the package, so no edit may assert the convention as fact. An
   anchor that matches a neighboring horizon is a real finding about the prose, not a
   reproduction failure.
@@ -41,7 +41,7 @@ was once lost to a blanket tolerance):**
 ## Runner / Scribe separation
 - The **Runner** subagent executes code and captures artifacts. It **cannot edit the
   manuscript.**
-- The **Scribe** subagent edits prose/tables. It **cannot invent a number** — it may
+- The **Scribe** subagent edits prose/tables. It **cannot invent a number**; it may
   only transcribe a value that carries a **provenance token**.
 - A **provenance token** = `{ value, script, line_or_chunk, run_id, input_data_hash,
   output_file, output_hash }` (every field required). Hashes are computed and re-verified by
@@ -72,7 +72,7 @@ was once lost to a blanket tolerance):**
 Record the environment you actually ran in (`sessionInfo()`, `pip freeze`,
 `conda list`, Stata version banner); pin via `renv`/`requirements`/`conda` where
 possible; offer (do not impose) a `Dockerfile`. If the author's original environment
-is unknown, say "reproduced under captured environment X" — never imply you matched an
+is unknown, say "reproduced under captured environment X", never imply you matched an
 environment you did not have.
 
 ## Clean-room replication (final gate)
@@ -80,4 +80,4 @@ A Replication-Verifier subagent re-executes the assembled package **from scratch
 fresh, seeded, network-off environment and confirms the manuscript's numbers reproduce. The
 reproduce-or-fail decision is the deterministic `helpers/reproduces.py` predicate (per
 artifact class: float tolerance, fixed seeds), not an LLM judgment. A package that cannot
-reproduce its own outputs is **not** marked final — it is reported as failing.
+reproduce its own outputs is **not** marked final. It is reported as failing.

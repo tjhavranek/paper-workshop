@@ -223,7 +223,7 @@ custom role-to-model map), so dynamic
 workflows do not bypass the 1M-context credit caveat: a 1M-context session may need usage
 credits enabled for that tier, or run the orchestrator on a standard-context model. In the
 default mode that inheritance means the session model sets the workshop's capability: a
-session on Claude Fable 5 (Anthropic's mythos-class tier) runs every seat, verifier, and
+session on the strongest model your plan carries runs every seat, verifier, and
 chair at that level. `helpers/doctor.md` covers this pre-flight, the Fable safety-classifier
 domain routing, and the model-disclosure rule.
 
@@ -317,7 +317,7 @@ deliverable states plainly what was and was not done. Specifically:
   numbers and the run log are reported as the first finding.
 - **Always.** `meta.json` records every check and degradation, and the report header
   carries the run's actual mode and the serving model, recorded at kickoff and
-  re-checked at the end (a Fable session can silently migrate to Opus 4.8; see
+  re-checked at the end (a Fable session can silently migrate to another model mid-run; see
   `helpers/doctor.md`).
 
 ## Session storage

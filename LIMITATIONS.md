@@ -6,11 +6,11 @@ on its own design (see [`examples/self-audit/`](examples/self-audit/)) and from
 adversarial cross-review during development.
 
 ## What is genuinely enforced
-- **Quote grounding** is a real, deterministic, fail-closed script (`helpers/quote_gate.py`)
-  — not an LLM checking itself. An unverifiable quote is flagged, never asserted.
+- **Quote grounding** is a real, deterministic, fail-closed script (`helpers/quote_gate.py`).
+  It is not an LLM checking itself. An unverifiable quote is flagged, never asserted.
 - **No untraced number** can enter a revised paper: a value is either an author-reviewed
   text edit or the output of a logged re-run of the author's own code (the Runner/Scribe
-  split), now re-checked deterministically — `helpers/provenance.py` re-hashes the output
+  split), now re-checked deterministically. `helpers/provenance.py` re-hashes the output
   artifact and confirms the value is in it, and `helpers/consistency.py` flags any changed
   number with no run behind it. This is a strong control.
 - **Severity is firewalled from tone**: the register (`supportive`/`brutal`) is passed only
@@ -49,8 +49,8 @@ adversarial cross-review during development.
   the cited cell or row stays LLM-judged, and the input-data hash is checked only when a data
   file is supplied. `helpers/consistency.py` run-matches every token
   value and flags orphans, `helpers/reproduces.py` defines the reproduction predicate, and
-  `helpers/integrity_diff.py` flags net result-removals — all fail-closed, like the quote-gate.
-  What stays LLM-judged (and is labeled as such): the *semantic* half — does a quantity match
+  `helpers/integrity_diff.py` flags net result-removals, all fail-closed, like the quote-gate.
+  What stays LLM-judged (and is labeled as such): the *semantic* half, i.e. does a quantity match
   across the abstract/table/appendix by meaning, and is an edit HARKing or spin. The numeric
   extractors are best-effort (they read the source text), so a number written in unusual markup
   can still need the human eye.
@@ -62,7 +62,7 @@ adversarial cross-review during development.
   returns a per-range verdict. The code keys off the returned data rather than the tier, so a
   heavy run whose sweeps all died is also reported as uninstrumented instead of as full coverage.
   The certificate then reports `sentences_covered: 0`, set by code, meaning *not measured on this
-  run* — not *not read*. Every seat reads the whole manuscript in every mode, and claim and dimension
+  run*, not *not read*. Every seat reads the whole manuscript in every mode, and claim and dimension
   coverage are unaffected. Before v0.8.3 the auditor was handed the sentence map at every tier
   and supplied a count regardless: the committed Roundtable self-audit shows 648 of 795
   sentences "covered" on a run with zero close-reader seats and zero returned ranges. That
@@ -77,12 +77,12 @@ adversarial cross-review during development.
   intermediate byte-identically to the shipped one, closing the chain raw data → Stata → R →
   manuscript); `helpers/provenance.py` tied the headline (0.0724) to a content-hashed run artifact
   and hashed input; `helpers/consistency.py` was clean on the run host (recorded from the run);
-  and the manuscript was redlined against its real LaTeX source — the headline reproduced.
+  and the manuscript was redlined against its real LaTeX source, and the headline reproduced.
   Caveats, so this is a demonstration and not independent validation: one paper, from the
   authors' own group, in a single run; the numbers already reproduced, so the redline stayed
   prose-only and the path where a re-run value replaces a stale number was never exercised; and
   environment capture is not yet container-pinned. Treat Act II as *built, [unit-tested](.github/workflows/ci.yml), and
-  demonstrated once* — and re-derive any number yourself before trusting it.
+  demonstrated once*, and re-derive any number yourself before trusting it.
 - **The Contribution Memo's selection is a same-model judgment with no measured
   undersell-recall yet.** The gates verify each memo item's anchors (the foothold quote is
   real; no probe term for the bolder claim occurs in the paper, which certifies the
@@ -117,7 +117,7 @@ adversarial cross-review during development.
   session model) matches one real Workshop-band run that delivered a strong verified ledger
   (60 findings, 11 High, full claim and sentence coverage); that run's record shows 3.70M
   subagent tokens and 55 minutes for its 37-agent tribunal workflow, 39 Act I agents in
-  total. That is evidence of plan survival with output strength preserved on ONE paper — not
+  total. That is evidence of plan survival with output strength preserved on ONE paper, not
   measured recall/false-positive parity with the full-power default. Open validation arms, none
   of which becomes a default or is documented safe before its arm passes: a Sonnet verification
   panel (full and per-angle variants), Sonnet generalists, Haiku gate relays (a deterministic
@@ -183,5 +183,5 @@ than estimated.
    the claimed range, degrading a mismatch to needs-author-confirmation (annotate, never
    delete).
 
-If any of these matter to your decision, weigh the output accordingly — and tell us what
+If any of these matter to your decision, weigh the output accordingly, and tell us what
 breaks.

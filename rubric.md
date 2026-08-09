@@ -4,7 +4,7 @@
 run time. The synthesizer and the verification panel apply it; they do not
 change it. It contains **no numeric scores** by design (see grounding rule 3).
 
-Severity measures a finding's effect on the paper's **validity and acceptance** —
+Severity measures a finding's effect on the paper's **validity and acceptance**,
 *not* the reviewer's tone, confidence, or eloquence (grounding rule 4).
 
 ## The three levels
@@ -44,14 +44,14 @@ and **never** keep the discovery loop alive (see `helpers/stopping_rule.md`).
 
 ## Severity is orthogonal to two other tags
 
-- **`magnitude`** — does fixing it move *a number*, *a conclusion*, or *only
+- **`magnitude`**: does fixing it move *a number*, *a conclusion*, or *only
   presentation*? The chair sorts the must-fix list by magnitude, not by seat
   seniority or eloquence.
-- **`verification_status`** — has the finding been quote-verified, logic-checked,
+- **`verification_status`**: has the finding been quote-verified, logic-checked,
   grounded against a source, or is it `needs-author-confirmation` / `cant-tell`?
   **Verification status annotates a finding; it never vetoes its severity.** A
   structural/absence finding can be `High` *and* `needs-author-confirmation` at
-  the same time — surface it loudly **and** flag it unconfirmed. Never demote a
+  the same time, surface it loudly **and** flag it unconfirmed. Never demote a
   finding for being unquotable.
 
 ## The overall verdict
@@ -59,7 +59,7 @@ and **never** keep the discovery loop alive (see `helpers/stopping_rule.md`).
 - The **validity verdict** ("is the central claim actually supported?")
   **dominates** the **venue verdict** ("would referees accept it?"). The tool
   never trades truth for acceptance odds.
-- The venue read is a **coarse three-bucket** signal — `desk-reject-risk` /
-  `major-revision` / `competitive` — accompanied by the two or three specific
+- The venue read is a **coarse three-bucket** signal (`desk-reject-risk` /
+  `major-revision` / `competitive`), accompanied by the two or three specific
   objections most likely to trigger rejection, each tied to a quote, and the
   decisive swing factor. **No acceptance probability, ever.**

@@ -12,21 +12,21 @@ and revise to a `clean` verdict before returning (glob for `**/style_gate.py` if
 missing; if no baseline is available the gate's advisory `no-baseline` verdict still flags any
 banned token or antithesis).
 
-INPUT — the audit trail (the auto-applied tracked-change edits with lane and
+INPUT: the audit trail (the auto-applied tracked-change edits with lane and
 justification, the edits queued for author sign-off, the lane-C/D proposals, the
 blocked edits with reasons, every re-run id, the reconciliation result, and the
 package reproduction verdict): {{AUDIT_TRAIL_JSON}}
 
 Produce two forms, both strictly factual (no marketing, no overclaim, no
 underclaim):
-- `long_form` — a paragraph enumerating exactly what the tool did: how many writing
+- `long_form`: a paragraph enumerating exactly what the tool did: how many writing
   edits were applied and of what kind; which analyses were re-run and against what data;
   which figures/tables were regenerated; what was auto-applied as tracked changes (every
   one still subject to the author's acceptance); what awaits the author's per-item
   sign-off; and what was left to the author. Name the tool
   ("paper-workshop / CRUCIBLE") and note that all substantive scientific judgments were
   proposed by the tool and ratified by the human author.
-- `short_form` — 2–3 sentences suitable for a methods/acknowledgements section or cover
+- `short_form`: 2–3 sentences suitable for a methods/acknowledgements section or cover
   letter.
 
 Do not infer activity that is not in the trail. If something was proposed but not

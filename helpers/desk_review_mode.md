@@ -1,8 +1,8 @@
-# Desk Review mode — the minimal-setup path (no fleet, no Workflow)
+# Desk Review mode, the minimal-setup path (no fleet, no Workflow)
 
 Desk Review is the lightest mode: it needs neither dynamic workflows nor a large fleet,
 so it runs on any setup (including the leanest plan/usage). The orchestrator drives it
-directly with a handful of sequential subagent calls (Agent tool) — or, on the very
+directly with a handful of sequential subagent calls (Agent tool), or, on the very
 lightest setups, inline. It reuses the **same prompts, rubric, and grounding rules** as
 the full workshop; it just skips the roster, the cross-critique, and the big verification
 panel to keep cost at ~1–6 agents.
@@ -11,9 +11,8 @@ panel to keep cost at ~1–6 agents.
 1. **Cartography (simplified).** Read the PDF; extract `input/paper.txt` (verbatim) and a
    short list of the main load-bearing claims. Skip the full sentence-tiling map and the
    source manifest unless the user wants citation checks.
-2. **1–3 specialist passes.** Call `prompts/01_specialist_seat.md` with a broad seat —
-   `objective_function: neutral-audit`, jurisdiction "validity, identification/method, and
-   overclaim across the whole paper" — and, if the budget allows two more, one
+2. **1–3 specialist passes.** Call `prompts/01_specialist_seat.md` with a broad seat, `objective_function: neutral-audit`, jurisdiction "validity, identification/method, and
+   overclaim across the whole paper", and, if the budget allows two more, one
    `find-the-fatal-flaw` seat and one paper-type-bound specialist (e.g. publication-bias for
    a meta-analysis). Each returns findings in the standard `finding` schema.
 3. **Generalist pass.** Call `prompts/02_generalist_seat.md` once for each of
@@ -24,7 +23,7 @@ panel to keep cost at ~1–6 agents.
    absence-class (`absence-silence`, `contribution-undersell`), also run
    `helpers/absence_gate.py batch`; anything but a clean `absent` certificate forces
    `needs-author-confirmation`, and each result row is attached to its finding as
-   `absence_gate` so the chair's inline checks can read it. This is the one step Desk Review never skips — it is
+   `absence_gate` so the chair's inline checks can read it. This is the one step Desk Review never skips. It is
    the trust anchor.
 5. **Synthesis.** Call `prompts/06_chair_synthesis.md` once to produce the report (verdict,
    prioritized must-fix capped ~5–7, venue read, minority report, rejected suggestions).
@@ -37,7 +36,7 @@ panel to keep cost at ~1–6 agents.
    and `COVERAGE_JSON: { claims_total: <count from step 1>, claims_covered: <claims
    touched by findings>, sentences_total: 0, sentences_covered: 0, dimension_coverage:
    [], reopen: [], not_covered: [] }` with the report labeled "coverage audit not run
-   (Desk Review)" — `sentences_total: 0` means *not run*, never full coverage.
+   (Desk Review)", `sentences_total: 0` means *not run*, never full coverage.
    There is no separate verification panel in Desk Review; instead the chair is instructed
    to apply the `logical-validity` and `steelman-charity` checks inline before it keeps a
    finding, and to fill each prioritized finding's `panel_summary` with

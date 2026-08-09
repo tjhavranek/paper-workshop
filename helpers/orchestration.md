@@ -1,37 +1,37 @@
-# Orchestration — how to actually run a workshop
+# Orchestration, how to actually run a workshop
 
 The orchestrating Claude does only four things: **scope, launch, gate, assemble.**
 All heavy reasoning lives in fresh subagents that read the shared on-disk brief.
 This file is the operational checklist.
 
-## Step 0 — Pre-flight (`helpers/doctor.md`)
+## Step 0, Pre-flight (`helpers/doctor.md`)
 Confirm the input is readable. For Act II, also confirm interpreters (R/Python/Stata
 as relevant), a sandbox, and `latexmk`/the `docx` skill are available. If anything is
 missing, say so and offer the degraded scope rather than failing silently.
 
-## Step 1 — Create the session
+## Step 1, Create the session
 Make `<cwd>/paper_workshop_sessions/<YYYYMMDD-HHMM-slug>/` with `input/`,
 `brief.md`, `round_artifacts/`, `verification/`, and (Act II) `phase2/`. **Copy**
-the PDF (and later the source/data/code) into `input/` — never read or mutate the
+the PDF (and later the source/data/code) into `input/`. Never read or mutate the
 author's originals in place. Write `meta.json` (session id, timestamp, session model, input
 hashes, tier, register supportive|brutal, codex/external availability).
 
-## Step 2 — Choose the mode and register
-Modes (depth) and their internal tier keys: **Desk Review** (no fleet/workflow — Step
+## Step 2, Choose the mode and register
+Modes (depth) and their internal tier keys: **Desk Review** (no fleet/workflow, Step
 4c), **Roundtable** = `quick`, **Workshop** = `thorough` (default), **Symposium** =
 `exhaustive`, **Summit** = `monumental`. The user may name a mode, give a tier key, or
-just say "lighter"/"deeper". Register is `supportive` (default) or `brutal` — it changes
+just say "lighter"/"deeper". Register is `supportive` (default) or `brutal`. It changes
 the chair's delivery only; severity is tone-invariant (grounding rule 4). Record the
 mode→tier and register in `meta.json` and the brief.
 
-## Step 3 — Write the brief
+## Step 3. Write the brief
 `brief.md` is read by every subagent and contains: the mission, the absolute path to
 the copied PDF and any staged sources, the tier, the register, and a pointer to
 `prompts/shared_grounding_rules.md`, `rubric.md`, and `coverage_rubric.md`. Keep the
 heavy rules in those files; the brief just points to them and states the run's
 specifics.
 
-## Step 4 — Run ACT I (pick the engine first)
+## Step 4. Run ACT I (pick the engine first)
 **Engine choice.** Strongly prefer the **Workflow** engine: it runs the same phases far more
 efficiently, spawns its own agents, and is how the tool reaches full scale (default on Max; on
 Pro, enable it in `/config`). If the Workflow tool is off, say so and **recommend enabling it**
@@ -42,22 +42,21 @@ the economy register or a custom `models` map; see `helpers/doctor.md`), so the 
 credit caveat is engine-independent. **Desk Review** uses neither a fleet nor
 workflows (Step 4c).
 
-**4a — Workflow engine.** Launch `workflow/phase1_tribunal.js` with `args` = `{ pdf_path,
+**4a, Workflow engine.** Launch `workflow/phase1_tribunal.js` with `args` = `{ pdf_path,
 tier, register, paths: { session, prompts_dir, helpers_dir, rules, rubric,
-coverage_rubric, quote_gate, absence_gate, brief, staged_sources } }` — pass `tier` as the
+coverage_rubric, quote_gate, absence_gate, brief, staged_sources } }`. Pass `tier` as the
 internal key for the chosen mode, and `absence_gate` as the path to
 `helpers/absence_gate.py` (omit it and every absence-class finding fails closed to
 `needs-author-confirmation`). (The script parses `args` defensively whether it arrives as
 an object or a JSON string.) Optional knobs: `economy: true` (the disclosed economy
 register; a harness token budget auto-enables it; `economy: false` opts out under a
-budget), `session_model` (the session model recorded at kickoff — REQUIRED whenever
+budget), `session_model` (the session model recorded at kickoff, REQUIRED whenever
 economy or `models` is on: it arms the engine's never-upgrade clamp), `span_diet: true`
 (experimental, economy-only; see
 `helpers/verification_panel.md`), `batch` (verification batch size, clamped to 30),
 `max_seat_findings` / `max_generalist_findings` (cap-note overrides), `models` (a raw
 role→model map; custom casts are unvalidated and the run is labeled `custom`), `efforts`
-(a raw role→reasoning-effort map, `low`|`medium`|`high`|`xhigh`|`max`; **empty by default —
-no role's effort is set unless you pass one**, and if you do you MUST also pass
+(a raw role→reasoning-effort map, `low`|`medium`|`high`|`xhigh`|`max`; **empty by default, no role's effort is set unless you pass one**, and if you do you MUST also pass
 `session_effort` so the never-upgrade clamp has something to clamp against, exactly as
 `models` requires `session_model`; both are echoed into the run's `casting` record), and
 `improvement: true` (opt-in Improvement Mode: casts mode-scaled generative
@@ -79,26 +78,26 @@ that **reports** coverage gaps; deepening (re-fanning the `reopen` list) is orch
 per `helpers/stopping_rule.md`, not baked into the script. It writes every artifact to the
 session and returns the `synthesis.schema.json` object.
 
-**4b — Subagent fallback (no Workflow).** Drive the same phases yourself, in the same
+**4b, Subagent fallback (no Workflow).** Drive the same phases yourself, in the same
 order the Workflow runs them, with the Agent tool: cartography (also write the report-only
 `injection_scan.md` as the Workflow path does) → Scout (`00`, contribution
 rival pair always in the floor) → ground the load-bearing cited sources + the
 related-literature scout → fan out the seats (`01`/`02`/`03`) as parallel Agent
 calls in one message → run the deterministic quote-gate AND absence-gate (attach each
 absence-gate result row to its finding as `absence_gate` before the panel or chair sees
-it — the transcribed quote-locator row and the steelman angle read that field) → integrate
+it, the transcribed quote-locator row and the steelman angle read that field) → integrate
 (`04`) → batch the verification panel (`05`) by angle → completeness (`07`) → synthesize
 (`06`, feeding verified `contribution-undersell` findings ONLY through
-`CONTRIBUTION_JSON`, and capping `contribution_memo` at 3 yourself — in the fallback YOU
-are the enforcement layer). Same prompts, same schemas, same artifacts — slower,
+`CONTRIBUTION_JSON`, and capping `contribution_memo` at 3 yourself, in the fallback YOU
+are the enforcement layer). Same prompts, same schemas, same artifacts, slower,
 identical in substance. The economy register carries over: the Agent tool documents the
 same per-agent `model` option, so apply the identical role→model map when spawning
 (judgment roles at the Opus floor, mechanical roles on Sonnet, scout/chair inherited),
 record the identical `casting` object in `meta.json`, and where a role cannot be pinned
-let it inherit and log it under `degraded_casting` — the disclosure contract is
+let it inherit and log it under `degraded_casting`. The disclosure contract is
 engine-independent.
 
-**4c — Desk Review (lightest).** Skip the fleet. The orchestrator (optionally with 2–3
+**4c, Desk Review (lightest).** Skip the fleet. The orchestrator (optionally with 2–3
 sequential subagents) reads the paper, applies a handful of expert lenses + the three
 generalist checks, runs the deterministic quote-gate, and produces a prioritized, grounded
 findings list (and, if asked, an Act-II redline). No Workflow, minimal subagents. **See
@@ -110,7 +109,7 @@ quote-gate).
   for the author to approve before the fleet runs. Operationally: run the cartography
   step first (as in 4b), call the Scout (`00`) on its outputs, show the returned
   contract to the author, then launch `phase1_tribunal.js` with the approved contract
-  as `args.roster` (and the cartography paths in `args.paths`) — the script skips its
+  as `args.roster` (and the cartography paths in `args.paths`); the script then skips its
   own Roster phase when `roster` is supplied.
 - The deterministic quote-gate (`helpers/quote_gate.py`) is run by a relay subagent via
   Bash at the barrier exiting Phase D, once; the panel does not re-run it, and the
@@ -127,13 +126,13 @@ quote-gate).
   both dry conditions hold or the budget cap is hit, and log the yield curve plus
   anything left open.
 
-## Step 5 — Assemble and present the Act-I report
-From the result (the synthesis plus `findings` — each carrying its
-`panel_verdicts` — `integration`, and `rejected_in_panel`), render the human-facing
+## Step 5, Assemble and present the Act-I report
+From the result (the synthesis plus `findings` (each carrying its
+`panel_verdicts`), `integration`, and `rejected_in_panel`), render the human-facing
 **report bundle**. On a large run the full return can exceed the notification channel:
 prefer the artifact files named in the result's `artifact_paths`
 (`round_artifacts/findings_ledger.json`, written by a dedicated writer BEFORE the chair runs;
-`round_artifacts/synthesis_raw.json`, written by the chair — verify
+`round_artifacts/synthesis_raw.json`, written by the chair. Verify
 they exist and parse before relying on them; they are best-effort copies and the returned
 object stays the source of truth; either path may be `null`, which means that file was never
 written and must not be looked for). **If the result carries `synthesis: null` and
@@ -147,15 +146,15 @@ must-fix list (capped ~5–7, sorted by magnitude), marking any item whose findi
 `needs-author-confirmation` as not-yet-panel-cleared (the chair flags these in `panel_summary`, so
 a comment whose checks did not fully resolve reads as "needs your confirmation", not as a settled
 must-fix); the per-seat findings grouped by
-seat; the cross-critique consolidation (clusters and crux notes — where rival seats
+seat; the cross-critique consolidation (clusters and crux notes, where rival seats
 collided and what evidence would move each side); the generalists' relevance and
 understandability findings; the **Contribution Memo** (its own clearly-labeled
 section: at most 3 verified, non-blocking ways the paper undersells its own results,
-each with the bolder claim, its quoted foothold, and the risk of overreach — labeled
+each with the bolder claim, its quoted foothold, and the risk of overreach, labeled
 "suggestions, author's call", never mixed into the must-fix list); the **Improvement Memo**
 (opt-in improvement mode only: its own clearly-labeled section of non-blocking, mode-scaled bolder
-substantive suggestions — additional analyses worth running, sharper framing, bolder defensible
-claims — each grounded in a quoted foothold, labeled "suggestions, author's call", never mixed into
+substantive suggestions. Additional analyses worth running, sharper framing, bolder defensible
+claims, each grounded in a quoted foothold, labeled "suggestions, author's call", never mixed into
 the must-fix list; empty/omitted when improvement mode is off); the verbatim
 kill-shots and minority report; the venue read (3-bucket, no number); the **coverage
 certificate**, rendered with the one-line caveat "Coverage means reviewed, not proven
@@ -167,26 +166,26 @@ given, note it in the report header as a report-only scope-disclosure flag and s
 `supplement_cited_not_provided` in `meta.json` (grounding rule 15). This flag is DISCLOSURE
 ONLY: it records that the review did not see cited supplementary material so the author reads
 the report with that scope in mind. It NEVER licenses deferring or downgrading a finding whose
-evidence is in the main text — a real main-text finding is delivered in full regardless of any
+evidence is in the main text, a real main-text finding is delivered in full regardless of any
 un-provided supplement. The report header carries the run's mode,
 the serving model (kickoff and end), and, whenever `casting.mode` is not `inherit`, one
 sentence stating the role-class cast (for example: "seats and verifiers ran at the Opus
-floor, mechanical phases on Sonnet, scout and chair at the session model — the disclosed
+floor, mechanical phases on Sonnet, scout and chair at the session model, the disclosed
 economy register"). Save the bundle as `report.md`, persist the per-finding panel verdicts under
 `verification/` (the auditable record), and show the highlights.
 
-## Step 6 — The GATE
+## Step 6, The GATE
 Stop. Offer Act II explicitly:
 
-> "I can now *implement* these findings — revise your manuscript with tracked
+> "I can now *implement* these findings, revise your manuscript with tracked
 > changes, re-run the affected analyses against your data, regenerate figures/tables,
 > and assemble a reproducing replication package. This needs your source files and
 > is gated on your sign-off for anything that touches a number, sample, claim, or
 > result. **Status, so you opt in with eyes open:** Act II's rails are deterministic and
 > unit-tested; it has run end-to-end once on a real accepted paper (one paper, from the
-> authors' own group — a demonstration, not independent validation; see
+> authors' own group, a demonstration, not independent validation; see
 > `examples/incentives-workshop/phase2_true/`), and there are **no
-> measured recall/false-positive numbers** yet — treat the output as one very thorough
+> measured recall/false-positive numbers** yet. Treat the output as one very thorough
 > opinion and re-derive any regenerated number yourself. Proceed? (full / only the writing
 > edits / let me pick which findings / not now)"
 
@@ -205,7 +204,7 @@ safe (grounding rules 7, 8, 12). A degraded run (no source, or no code/data) NAR
 never drops the panel. With no editable source tree but the manuscript TEXT available, pass it as
 `inputs.manuscript_text` so the Atelier still produces the writing-lane redline through the guards.
 
-## Step 7 — Run ACT II via the Workflow tool (only on opt-in)
+## Step 7. Run ACT II via the Workflow tool (only on opt-in)
 1. **Intake** (`prompts/phase2/10_intake.md`): request source/data/code/.bib/figure
    sources/venue style/env, each with its reason (or, in a referee / PDF-only context, the
    manuscript `manuscript_text` so the writing-lane redline still runs through the Atelier);
@@ -215,7 +214,7 @@ never drops the panel. With no editable source tree but the manuscript TEXT avai
    (a broken baseline is the first finding).
 3. Launch `workflow/phase2_atelier.js` with `args` = `{ ledger, inputs, paths: { session,
    prompts_dir, helpers_dir, rules, rubric, quote_gate, style_gate, sandbox_notes,
-   staged_sources, ledger_path } }` — `helpers_dir`
+   staged_sources, ledger_path } }`. `helpers_dir`
    lets the Runner / reconciler / package agents call the deterministic checkers
    (`provenance.py`, `consistency.py`, `reproduces.py`, `integrity_diff.py`); `style_gate`
    (optional; falls back to `<helpers_dir>/style_gate.py`) is the deterministic author-voice
@@ -228,7 +227,7 @@ never drops the panel. With no editable source tree but the manuscript TEXT avai
    `session_model` (arms the never-upgrade clamp, as in Act I), `models`, `scribe_batch`
    (default 5), `verify_batch` (default 12, clamped to 30), and `improvement: true` with `tier`
    (opt-in Improvement Mode: the Triage agent ALSO drafts the ledger's `improvement-proposal`
-   findings as bold author-rejectable tracked changes, more at heavier tiers — every one
+   findings as bold author-rejectable tracked changes, more at heavier tiers, every one
    proposal-only + `author_signoff_required`, riding the same gates and the Execution-Provenance
    Wall; pass it whenever Act I ran in improvement mode AND include the Act-I `improvement_findings`
    in `ledger` so they are available to triage); the
@@ -243,7 +242,7 @@ never drops the panel. With no editable source tree but the manuscript TEXT avai
    queue of numeric/result-suppressing/claim-altering edits and lane-C/D proposals
    awaiting per-item approval. Walk the author through them.
 
-## Step 8 — Final assembly and labeling
+## Step 8, Final assembly and labeling
 Produce (the names prompt 15 and the engine's return object actually use): the revised
 manuscript `revised_clean.(tex|docx)` (+ compiled `revised_clean.pdf`), the auditable
 redline (`revised_redline.pdf` via latexdiff, or `revised_tracked.docx` for Word), the
@@ -252,13 +251,13 @@ redline (`revised_redline.pdf` via latexdiff, or `revised_tracked.docx` for Word
 report, the replication package, and the
 auto-generated **AI-involvement disclosure**. State plainly what was and was not done
 (missing inputs, unreproduced baseline, skipped external leg). The terminal state is
-"here is a reviewable branch + tracked changes + a reproducing package — accept what
+"here is a reviewable branch + tracked changes + a reproducing package, accept what
 you want." Never merge, submit, or release data.
 
 ## Degradation policy
 If a phase's subagent fails, retry once, then record the gap in `meta.json` and the
 report rather than fabricating a result. If Act II inputs are missing, narrow scope
-and say so — never invent a number, a citation, or a reproduction that did not happen.
+and say so, never invent a number, a citation, or a reproduction that did not happen.
 
 **Resume is the best cost containment in practice.** After any fail-closed halt (a
 baseline gate failure, a blocking-gap return, a usage-limit interruption), relaunch the

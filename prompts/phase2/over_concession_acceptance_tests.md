@@ -1,4 +1,4 @@
-# Acceptance tests — Act-II over-concession & caveat-placement guards
+# Acceptance tests, Act-II over-concession & caveat-placement guards
 
 These are the binding regression scenarios for the do-now guards added in v0.7.6
 (prompt/spec edits #17–#21): the Scribe's symmetric anti-over-concession clause and
@@ -15,12 +15,12 @@ test. Test 3 and the conditional in test 1 also have a deterministic surface (th
 `edit_spec` schema), checked by `python -m json.tool` in CI and by the inline schema
 self-check recorded with this change.
 
-If any guard removes or buries a data-compelled caveat, it is mis-built — stop and fix it
+If any guard removes or buries a data-compelled caveat, it is mis-built. Stop and fix it
 before shipping.
 
 ---
 
-## T1 — A data-compelled headline caveat must SURVIVE the anti-over-concession guard
+## T1, A data-compelled headline caveat must SURVIVE the anti-over-concession guard
 
 **Scenario.** Construct a fixture where a TRUE limitation bears on a headline claim (stating
 it plainly would change what the abstract can assert).
@@ -36,7 +36,7 @@ silently dropped or weakened. A caveat the data compel is `more-correct` and shi
 labels a data-compelled limitation "over-conceding." The validity floor binds: a caveat that,
 stated plainly, would change a headline conclusion STAYS.
 
-## T2 — The placement EXCEPTION keeps a true Abstract-omission fix IN the Abstract
+## T2, The placement EXCEPTION keeps a true Abstract-omission fix IN the Abstract
 
 **Scenario.** A finding that is itself about the Abstract: either an omission (a required fact
 the Abstract leaves out) or an overstatement of a claim the Abstract makes.
@@ -49,7 +49,7 @@ place. Placement logic does not banish it to a Discussion subsection.
 **Fail condition.** #18 moves a genuine Abstract-omission/overstatement fix out of the
 Abstract, i.e. the EXCEPTION fails to fire.
 
-## T3 — `edit_intent` must never flip a finding's existence or severity
+## T3, `edit_intent` must never flip a finding's existence or severity
 
 **Scenario.** Any edit carrying `edit_intent` (`defect-fix` / `proportional-caveat` /
 `presentation`).
@@ -66,7 +66,7 @@ engine's `anglesForEdit`/`decideEdit` never consult it).
 change of a finding. That would cross into detection/rail territory and is forbidden by the
 field's own description.
 
-## T4 — Tone-invariance still holds after the Chair concession-placement clause
+## T4, Tone-invariance still holds after the Chair concession-placement clause
 
 **Scenario.** The same manuscript run under `supportive` and under `brutal` register.
 
@@ -79,7 +79,7 @@ it, never by register or by how a reviewer might feel.
 **Fail condition.** The must-fix set differs between registers, or a concession's placement
 depends on register.
 
-## T5 — Regression: the detector is not dulled (must-fix still ships)
+## T5, Regression: the detector is not dulled (must-fix still ships)
 
 **Scenario.** A constructed, domain-neutral fixture carrying a representative high-severity
 detection pattern of the kind these guards must never dull: a mechanism-level claim the
@@ -88,7 +88,7 @@ the outcome it is said to drive, an inference resting on a single non-robust rea
 specification, or a missing control the conclusion depends on). Build the fixture; do not
 describe any real manuscript.
 
-**Guards under test.** All of #17–#21, jointly — they bind on the Act-II edit-writing surface
+**Guards under test.** All of #17–#21, jointly. They bind on the Act-II edit-writing surface
 only and must not leak "be less harsh" back into Act-I.
 
 **Expected.** The finding still ships as a `must-fix` (High) with full severity. None of the
@@ -98,7 +98,7 @@ new guards lowers its tier or softens its delivery.
 corrective signal from this feedback was about edit register and placement, never about
 detection or severity.
 
-## T6 — Every Act-II redline is produced through the Atelier, never hand-rolled
+## T6, Every Act-II redline is produced through the Atelier, never hand-rolled
 
 **Scenario.** An operator under time pressure is asked for an Act-II tracked-changes redline or
 "improved manuscript," including in a referee / PDF-only context with no author source.
@@ -113,10 +113,10 @@ subagent fallback running those prompts. With no source tree, the manuscript tex
 panel. The over-concession guards therefore execute on the path the edit actually travels.
 
 **Fail condition.** Any Act-II edit reaches a deliverable without passing the Scribe and the
-panel — e.g. the orchestrator hand-rolls a redline with a find/replace script outside the
+panel, e.g. the orchestrator hand-rolls a redline with a find/replace script outside the
 Atelier. That is the exact bypass that produced the original failure; it is forbidden.
 
-## T7 — An author-conceded numeric/count inconsistency stays must-fix at full severity
+## T7, An author-conceded numeric/count inconsistency stays must-fix at full severity
 
 **Scenario.** A cross-section count or numeric value that is irreconcilable across the
 manuscript (and the author concedes it), of the kind a real reviewer would also flag.

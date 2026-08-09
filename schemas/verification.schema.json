@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "paper-workshop/verification",
   "title": "VerificationVerdict",
-  "description": "One independent verifier's verdict on ONE finding (Act I) or ONE edit (Act II), from ONE angle. Many of these — from different angles, by blind subagents — must clear before a finding/edit is delivered (grounding rule 8). Aggregation is done in code, not by an LLM.",
+  "description": "One independent verifier's verdict on ONE finding (Act I) or ONE edit (Act II), from ONE angle. Many of these, from different angles, by blind subagents, must clear before a finding/edit is delivered (grounding rule 8). Aggregation is done in code, not by an LLM.",
   "type": "object",
   "additionalProperties": false,
   "properties": {

@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.8.3 — 2026-08-09
+## v0.8.3 (2026-08-09)
 
 Act I costs less per run, and two things it used to assert are now actually true. Decided by two
 independent external reviews (Fable 5 and Codex `gpt-5.6-sol` at xhigh), a three-position debate
@@ -12,7 +12,7 @@ role changed model or reasoning effort.
 
 - **The `quote-locator` verification angle no longer costs an agent.** It re-ran `quote_gate.py`
   against the same `paper.txt` that the Phase-D barrier had already run and already enforced
-  fail-closed, and the panel aggregator never read its verdict — so it produced an audit row and
+  fail-closed, and the panel aggregator never read its verdict, so it produced an audit row and
   nothing else. The workflow now writes that row from the authoritative barrier result. It is a
   *better* record than before: it separates "the gate cleared this" (`upheld`) from "the gate ran
   and did not clear it" (`upheld-with-revision`) from "no gate result arrived" (`cant-tell`), a
@@ -24,22 +24,22 @@ role changed model or reasoning effort.
 - **The deterministic gates now receive only the fields their scripts read.** `quote_gate.py`
   reads `id`, `finding_type`, `quote`; `absence_gate.py` reads `id`, `finding_type`,
   `absence_probe`. Everything else in a finding was making the round trip into the relay prompt
-  and back out through its temp-file write for nothing. Lossless by construction — the scripts
+  and back out through its temp-file write for nothing. Lossless by construction: the scripts
   cannot observe the omitted fields.
 - **The chair no longer rewrites `findings_ledger.json`.** A dedicated writer already persisted it
   before the chair was cast, so the chair was serializing a 200-400 kB object a second time in the
   run's most expensive output tokens. It was also a live bug surface: the chair's overwrite
   template is what silently dropped `improvement_findings` in v0.8.1. The instruction survives
-  only as a fallback for the case it was written for — the pre-chair write having failed.
+  only as a fallback for the case it was written for, the pre-chair write having failed.
 - **A dead chair no longer destroys the run.** `cast()` returns `null` when an agent dies, and the
   chair is deliberately absent from the casting map, so its null-retry never fired for it; the
   next line dereferenced the null and threw, taking every seat result, every panel verdict and the
-  whole verified ledger with it — the exact loss the pre-chair writer exists to prevent. Act I now
+  whole verified ledger with it. That is the exact loss the pre-chair writer exists to prevent. Act I now
   returns the complete verified record with `synthesis: null` and `degraded: 'chair-returned-null'`,
   and does not advertise artifact paths for files that were never written.
 - **Sentence coverage is no longer asserted where it was never measured.** Only Symposium and
   Summit cast close-reader sweeps; below them nothing returns a per-range verdict. The auditor was
-  still handed the sentence map (~174 kB on a real run) and still produced a confident number — the
+  still handed the sentence map (~174 kB on a real run) and still produced a confident number: the
   committed Roundtable self-audit reports 648 of 795 sentences covered on a run with zero
   close-reader seats and zero returned ranges. That was an inference, not a measurement. The map is
   now sent only when coverage data actually exists, and the counters are set in code otherwise.
@@ -68,12 +68,12 @@ has not been met. The pre-chair ledger writer keeps its current shape: the propo
 raced two concurrent verifiers onto one filename at the redundant tiers and would have moved cost
 from a Sonnet writer onto 24-30 Opus verifiers.
 
-## v0.8.2 — 2026-06-19
+## v0.8.2 (2026-06-19)
 
 Archival release: the first release captured by the Zenodo GitHub integration, so the project now
 has a citable DOI. No code, prompt, schema, or behavior change from v0.8.1.
 
-## v0.8.1 — 2026-06-19
+## v0.8.1 (2026-06-19)
 
 Post-release housekeeping for v0.8.0 Improvement Mode, from an independent multi-agent stress test
 (6 review lanes, each finding adversarially refuted, then synthesis) that confirmed 0 blocking
@@ -97,7 +97,7 @@ issues and all five owner invariants holding in code. Four non-blocking follow-u
 All rituals green: 7 helper selftests + 5 schema checks + JS syntax on both engines + both
 provenance proofs; SKILL.md at 0 em-dashes.
 
-## v0.8.0 — 2026-06-19
+## v0.8.0 (2026-06-19)
 
 Improvement Mode (opt-in): an optional generative wing that proposes substantive strengthenings
 alongside the critique, plus two honesty-precision doc fixes. From owner field experience that the
@@ -152,7 +152,7 @@ provenance proofs; SKILL.md at 0 em-dashes). New schema fields (`improvement-pro
 type, `improvement_memo` synthesis field) are additive and optional, so v0.7.6 outputs still
 validate.
 
-## v0.7.6 — 2026-06-18
+## v0.7.6 (2026-06-18)
 
 Act-II over-concession and caveat-placement guards, from a second author's feedback in a
 different domain (oncology / cancer cell biology). On that run the Scribe wrote a
@@ -222,7 +222,7 @@ run on it. Three fixes close that, none a rail:
   edit the author's original in place), and the package step produces the referee redline over the
   text substrate rather than assuming a LaTeX/Word source.
 
-Added: `prompts/phase2/over_concession_acceptance_tests.md` — binding regression scenarios so the
+Added: `prompts/phase2/over_concession_acceptance_tests.md`, binding regression scenarios so the
 guards cannot become a yes-man (a data-compelled headline caveat must survive; a true
 Abstract-omission fix stays in the Abstract; `edit_intent` never flips a finding; tone-invariance
 holds; the protected detection pattern still ships as must-fix; every redline routes through the
@@ -237,13 +237,13 @@ over-concession edit false or indefensible by operator re-check (not merely unst
 rubric on an author's negotiation strategy). Also bumped the CITATION.cff version, which had
 been stale at 0.7.0 since the 0.7.0 release.
 
-## v0.7.5 — 2026-06-17
+## v0.7.5 (2026-06-17)
 
 Triaged response to one author's feedback on one biology run (Divin et al.; the tool's
 detection was right on ~6 of 7 contested items, the author's two strongest rebuttals refuted
-on his own tables). Two independent audits of the decision — a paper-workshop Roundtable on a
+on his own tables). Two independent audits of the decision, a paper-workshop Roundtable on a
 decision memo, and a mad-research pass (Claude streams + cross-critique + a Codex synthesis
-judge on an abstracted packet) — converged, then a two-voice subpanel verified each edit is
+judge on an abstracted packet), converged, then a two-voice subpanel verified each edit is
 safe. The discipline held: only cheap, generalizable fixes that touch no rail and no severity
 shipped; the centerpiece ask was rejected; everything rail-touching stays staged under the
 project's own >=2-papers-in->=2-domains rule (n=1 here).
@@ -262,7 +262,7 @@ Shipped (no rail or severity touched):
 - **Defect-vs-discretionary placement in the chair.** A `must` entry must trace to a verified
   defect; a discretionary suggestion ("add a Limitations paragraph") goes under should/nice as
   the author's call. Placement only, keyed off whether a verified defect backs the item, never
-  off how a reviewer might feel — it changes no severity and no must-fix set.
+  off how a reviewer might feel, it changes no severity and no must-fix set.
 - **Supplement-disclosure banner.** Cartography scans for cited supplementary material not
   provided to the review and the report header discloses it; disclosure only, with an explicit
   rule that it never defers or softens a main-text finding.
@@ -280,7 +280,7 @@ absence/credit-the-text gate to statistical finding types; a steelman-quote-the-
 supplement-deferral clause; an artifact-guard; an experiment->dataset ontology; a causal
 classifier. Record: `workshop/_michal_revision_audit_20260616/`.
 
-## v0.7.4 — 2026-06-16
+## v0.7.4 (2026-06-16)
 
 Fixes from running CRUCIBLE on its own repo (Roundtable, Opus 4.8; 33 agents, 58 verified
 findings, verdict major-revision). The audit's must-fix cluster sat on load-bearing trust
@@ -321,7 +321,7 @@ byte-identical, so the replace-a-stale-number path is unit-tested not yet exerci
 confirmed already covered in LIMITATIONS and left as-is. Run record:
 `paper_workshop_sessions/selfaudit-roundtable-20260616-1613/`.
 
-## v0.7.3 — 2026-06-16
+## v0.7.3 (2026-06-16)
 
 Multi-pass voice-baseline rule (doc/prompt only, no code), from a field post-mortem. On a
 real paper whose author used zero em-dashes, a multi-pass Act II run let em-dashes compound
@@ -343,7 +343,7 @@ gap but not this one.
   `original_manuscript` path into the engine so the gate baselines against it automatically
   on a detected re-run. The doc rule closes the realistic exposure now.
 
-## v0.7.2 — 2026-06-12
+## v0.7.2 (2026-06-12)
 
 Voice hardening, triaged by a brief subagent debate (3 grounded auditors + a fresh judge)
 after the author observed AI-style artifacts surviving an Act II run. The author-voice
@@ -378,7 +378,7 @@ prose had no voice instruction at all.
   named in the scribe standard and the `human-voice` angle so an additive edit never defaults
   to the model's own voice.
 
-## v0.7.1 — 2026-06-12
+## v0.7.1 (2026-06-12)
 
 Trust hardening from two further external reviews, triaged by a three-checker subagent pass
 under an explicit high bar (the validation harness, both reviewers' top strategic ask, stays
@@ -425,7 +425,7 @@ deferred by owner decision; it remains Roadmap item 1).
   rails signal flaky), an environment lock-file format, a fallback enforcement-report
   artifact, and the "verified research-change pipeline" reframing.
 
-## v0.7.0 — 2026-06-12
+## v0.7.0 (2026-06-12)
 
 The economy register: the workshop now fits a usage-capped plan without trading away a single
 rail. Motivated by a real failure (a default all-Fable Workshop exhausted a Max-20 window in
@@ -447,13 +447,13 @@ records for re-adjudication once blind-validation data exists.
   minutes, 60 delivered findings (11 High), full claim and
   sentence coverage.
 - **Fail-safe casting, in code.** A spawn that returns nothing under a model override (a
-  terminal API death, or a user skip — the engine cannot distinguish the two, so a skipped
+  terminal API death, or a user skip, the engine cannot distinguish the two, so a skipped
   cast agent is re-run once at the session model and logged) retries once WITHOUT
-  the override and logs the fallback (`casting.degraded_casting`) — a plan missing a mapped
+  the override and logs the fallback (`casting.degraded_casting`), a plan missing a mapped
   tier completes the run instead of crashing. A never-upgrade clamp guards the other
   direction: the orchestrator passes `session_model` in the args (the doctor mandates it
   whenever casting is on) and a mapped model ranked above the session tier inherits
-  instead, logged to the casting record — so requesting economy on a Sonnet session cannot
+  instead, logged to the casting record, so requesting economy on a Sonnet session cannot
   silently raise the run's cost; without the arg the map is applied as given and the
   doctor flags economy as not recommended on sub-Opus sessions. A raw
   `models` role→map remains as a power-user escape hatch; such runs are labeled `custom` and
@@ -467,12 +467,12 @@ records for re-adjudication once blind-validation data exists.
   covers the effective casting of inherited roles after a mid-run model migration.
 - **The doctor now actively offers economy.** Pre-flight pairs the existing agent-count cost
   preview with a one-line economy offer before any Workshop-or-larger launch on a
-  usage-capped Fable session — a locked-out run delivers zero findings, so the lockout becomes
+  usage-capped Fable session, a locked-out run delivers zero findings, so the lockout becomes
   an informed choice rather than a surprise. Plus an availability note for mapped tiers and a
   notation-heavy-paper heuristic (keep cartography at the session model when extraction
   fidelity is load-bearing, since the quote gate matches against paper.txt).
 - **Structural defaults tightened inside already-published claims (both modes).** The
-  verification batch defaults to 25 (20 at exhaustive; `args.batch` clamped at 30) — the
+  verification batch defaults to 25 (20 at exhaustive; `args.batch` clamped at 30), the
   documented 15–25 range's upper end, field-validated; each seat now carries a standing
   findings-budget note making the long-published "at most ~8 findings" real (8 seats / 6
   generalists; 5/4 under economy; premortem and close-readers exempt); under economy the scout
@@ -480,8 +480,8 @@ records for re-adjudication once blind-validation data exists.
   contribution floor never trimmed.
 - **Act II restructured (every mode): Runners parallel, Scribes sequential, verification
   batched by angle across edits.** The original per-edit pipeline ran scribes concurrently
-  against ONE working copy on ONE git branch — a real race on the file and the commit
-  history, caught and fixed in the owner's field patch and now the engine default — and
+  against ONE working copy on ONE git branch, a real race on the file and the commit
+  history, caught and fixed in the owner's field patch and now the engine default, and
   fanned verifiers out per edit (edits × angles agents). Verification now costs
   angles × ceil(edits/`verify_batch`) with identical fail-closed `decideEdit()` gating;
   scribes apply edits in ordered batches (`scribe_batch`, default 5), one commit per edit.
@@ -493,8 +493,8 @@ records for re-adjudication once blind-validation data exists.
   cant-tell (fail-closed), and a missing excerpt falls back to the full text. Unvalidated, so
   off by default and listed as a validation arm in LIMITATIONS.
 - **Budget-target integration.** A harness token target (a "+500k"-style budget) auto-enables
-  economy plus a small deterministic ladder — tighten the findings caps, raise the batch
-  toward the clamp — with every action logged to `budget_actions`; the ladder never
+  economy plus a small deterministic ladder, tighten the findings caps, raise the batch
+  toward the clamp, with every action logged to `budget_actions`; the ladder never
   model-downgrades judgment layers below the economy floor. `economy: false` opts out.
 - **Gate relays stop reading the manuscript.** Both relay prompts now state what was always
   the design: the Python gate reads the source file from disk; the agent passes paths and
@@ -503,14 +503,14 @@ records for re-adjudication once blind-validation data exists.
   (Act I + Act II end to end, ~6.1M subagent tokens including two baseline-gate retries)
   while this release was being built, and its orchestrating session left a grounded
   memo; its remaining recommendations landed here. (a) Severity-tiered panel under
-  economy: Low findings get the quick three-angle set — safe because calibration only
+  economy: Low findings get the quick three-angle set, safe because calibration only
   lowers, Lows never drive the verdict, and the hard logical-validity gate plus the
   steelman stay on every finding. (b) Findings word diet: seat prompts now cap
   issue/why/fix wording (~80/60/60 words), since findings bytes are re-read by every
   integrator and verifier downstream. (c) The chair persists `findings_ledger.json` and
   `synthesis_raw.json` to the session (best-effort, disclosed; the returned object stays
   the source of truth), and orchestration now tells the orchestrator to read files, not
-  the blob — a large run's full return exceeds the notification channel. (d) Act II
+  the blob, a large run's full return exceeds the notification channel. (d) Act II
   dependency pre-flight in the doctor: grep do-files for SSC commands and R sources for
   library() calls BEFORE any launch; a missing package becomes one consented question at
   kickoff instead of failed baseline attempts against a network-off sandbox. (e) Gate
@@ -518,7 +518,7 @@ records for re-adjudication once blind-validation data exists.
   the anchor's last stated digit) and the consistent-horizon-mapping rule for LP/IRF
   papers, both of which a field attempt was lost to. (f) Consumed-token reconcile split:
   the deterministic run-match covers only tokens a scribed edit transcribed; unconsumed
-  run byproducts are documented, never failures — orphan detection still sees every
+  run byproducts are documented, never failures, orphan detection still sees every
   changed number. (g) Premortem dedup (the scout no longer casts a seat the engine
   already runs) and a completeness auditor keyed off delivered finding types and seat
   jurisdictions, not location strings (a field run produced false NOT-COVERED flags that
@@ -534,7 +534,7 @@ records for re-adjudication once blind-validation data exists.
   validation arms rather than defaults, and the blind-validation harness remains the
   project's top queued item.
 
-## v0.6.0 — 2026-06-11
+## v0.6.0 (2026-06-11)
 
 The contribution wing: the workshop now argues FOR the paper as rigorously as it argues
 against it, with the same fail-closed discipline. Designed through a three-layer adversarial
@@ -619,7 +619,7 @@ undersell-recall yet.
   enforced-vs-instructed overclaims ("certifies the claim is absent", "guarantees",
   "every run"), each rewritten to the mechanism actually shipped.
 
-## v0.5.0 — 2026-06-11
+## v0.5.0 (2026-06-11)
 
 The tool run on itself, at scale: a Roundtable self-review on Claude Fable 5 (the fleet inherits
 the session model), with 76 quote-gated findings from 11 blind seats (two rival pairs, a
@@ -699,7 +699,7 @@ committed provenance proofs.
   mixed, and auto-applied edits remain tracked changes awaiting the author. Roadmap item 1
   (the measured recall/false-positive validation run) remains the most important open work.
 
-## v0.4.0 — 2026-06-10
+## v0.4.0 (2026-06-10)
 Mythos-class (Claude Fable 5) support pass. Researched against primary sources and decided through
 three adversarial subagent debates (fact verification, design, pre-push stress test). No workflow
 code changed; the fleet's path to Fable is the session-model inheritance the skill already has.
@@ -734,13 +734,13 @@ code changed; the fleet's path to Fable is the session-model inheritance the ski
   An audit confirmed the prompts contain no reasoning-echo phrasing (the `reasoning_extraction`
   refusal hazard).
 
-## v0.3.4 — 2026-06-08
+## v0.3.4 (2026-06-08)
 - **Stronger opening hook:** "Imagine a panel of the world's leading experts, assembled for your
   exact paper, arguing it out from rival schools and then rebuilding it themselves, re-running your
   own code so the numbers are real." (also the launch line). Dropped the "Every paper leaves changed."
   tagline and de-em-dashed the value sentence.
 
-## v0.3.3 — 2026-06-08
+## v0.3.3 (2026-06-08)
 Showcase polish for the incentives example (reviewed by an adversarial fleet; presentation only, no
 new claims).
 
@@ -753,7 +753,7 @@ new claims).
 - Reconciled the 2,193 vs 1,252 estimate figures (1,252 is the BMA subsample of the full 2,193) and
   trimmed a few em-dashes. The honest scope and every caveat are unchanged.
 
-## v0.3.2 — 2026-06-08
+## v0.3.2 (2026-06-08)
 Completed the Stata path of the incentives end-to-end example.
 
 - **Ran the authors' `incentives.do` in Stata 15.1** on the raw `incentives.xlsx` (a copy; the
@@ -769,7 +769,7 @@ Completed the Stata path of the incentives end-to-end example.
   described as one end-to-end demonstration with **both the Stata and R paths re-run**, still honestly
   scoped (one paper, the authors' own group, a single run, not independent validation).
 
-## v0.3.1 — 2026-06-07
+## v0.3.1 (2026-06-07)
 Reconciliation pass (reviewed via a small adversarial debate): merge a pending fix and correct two
 inaccuracies that had crept in.
 
@@ -784,13 +784,12 @@ inaccuracies that had crept in.
   full power on Max; on Pro, enable usage credits for the 1M tier or run the session on a
   standard-context model (`/model sonnet`). Neither remedy weakens the tool.
 - **Reconciled the "field-proven" claims** with the shipped end-to-end demo: Act II has now been
-  demonstrated end-to-end once on a real accepted paper (`examples/incentives-workshop/phase2_true/`
-  — R/BMA path re-executed, provenance + consistency verified, headline reproduced). README and
+  demonstrated end-to-end once on a real accepted paper (`examples/incentives-workshop/phase2_true/`, R/BMA path re-executed, provenance + consistency verified, headline reproduced). README and
   LIMITATIONS now say "demonstrated once, with caveats" (one paper, the authors' own group, R-path
   only) instead of "not yet field-proven," and roadmap item 2 is re-scoped to independent
   third-party and Stata-path runs.
 
-## v0.3.0 — 2026-06-06
+## v0.3.0 (2026-06-06)
 README / pitch overhaul, plus a Roundtable self-stress-test pass (the skill run on its own
 package: 42 agents, 69 delivered findings, 11 panel-rejected).
 
@@ -810,12 +809,12 @@ package: 42 agents, 69 delivered findings, 11 panel-rejected).
   the README "always runs via subagents" vs SKILL "uses workflows instead" engine description; and
   relabeled `examples/self-audit/` as a development self-audit, not a "validation run."
 
-## v0.2.0 — 2026-06-06
-Act II finishing pass — deterministic rails + wiring fixes.
+## v0.2.0 (2026-06-06)
+Act II finishing pass, deterministic rails + wiring fixes.
 
 - **Deterministic Act-II checkers added** (stdlib-only, fail-closed, like the quote-gate;
   each ships a `selftest`): `helpers/provenance.py` (re-hash output artifacts + confirm the
-  transcribed value is in them — the Execution-Provenance Wall), `helpers/consistency.py`
+  transcribed value is in them, the Execution-Provenance Wall), `helpers/consistency.py`
   (run-match every token value + flag orphans), `helpers/reproduces.py` (the reproduction
   predicate: per-artifact-class float tolerance + fixed seeds), and `helpers/integrity_diff.py`
   (deterministic net-removal diff of {coefficients, N, samples, caveats}).
@@ -823,11 +822,11 @@ Act II finishing pass — deterministic rails + wiring fixes.
   working copy on branch `paper-workshop/phase2` (never the author's original); the reconciler
   and packager receive resolvable paths; the package return surfaces the redline / clean
   version / changes-map / MAP paths; `decideEdit()` is fail-closed (a missing or `cant-tell`
-  hard-gate verdict no longer auto-applies — it routes to author sign-off); the provenance
+  hard-gate verdict no longer auto-applies, it routes to author sign-off); the provenance
   token requires all seven fields; the baseline gate runs whenever code+data exist and a run
   with no baseline anchor reports `reproduced: "n/a"`; blocking intake gaps always halt.
 - **Docs reconciled to the artifacts:** `helpers/safety_notes.md` no longer claims an
-  unimplemented "specification ledger / analysis-lock / HARKing detector" apparatus — it names
+  unimplemented "specification ledger / analysis-lock / HARKing detector" apparatus, it names
   the scripts that exist and labels the HARKing judgment as LLM-audited; `LIMITATIONS.md`,
   `helpers/verification_panel.md`, and `helpers/phase2_sandbox.md` updated to match.
 - **README / brand + UX honesty pass:** restored CRUCIBLE as a consistent brand (brand-led
@@ -837,7 +836,7 @@ Act II finishing pass — deterministic rails + wiring fixes.
   and at the Act-I→II gate; added a Windows `py` install note, an explicit engine-fallback
   announcement, and a per-mode agent-count cost preview.
 
-## v0.1.0 — 2026-06-05
+## v0.1.0 (2026-06-05)
 Initial release.
 
 - **Act I (Tribunal):** topic-adaptive roster generation; competing-traditions
@@ -865,7 +864,7 @@ Initial release.
 - **Atelier redline:** tracked-changes / latexdiff **redline** + a **clean accepted
   version** + a `changes_map.md` tying every change to the reviewer concern it answers.
 - **Dogfooded on itself** before release: a real brutal Act I run on its own design. It caught
-  genuine overclaims in the design **and a fail-open bug in its own quote-gate** — both fixed in
+  genuine overclaims in the design **and a fail-open bug in its own quote-gate**, both fixed in
   response (the quote-gate now fails closed and tolerates BOM files). A self-audit is a
   development pass, not independent validation. (`examples/self-audit/` now holds the later
   v0.3.0 self-audit run; see the v0.3.0 entry above for its counts.)

@@ -99,7 +99,7 @@ def _num_literals(text):
 
 def _value_present(value, text):
     """The token value's numeric literal(s) must each appear as a STANDALONE numeric literal in
-    the artifact — never as a substring of a longer number (so 0.08 does not match 0.083, and
+    the artifact, never as a substring of a longer number (so 0.08 does not match 0.083, and
     12 does not match 120). A value with no numeric literal fails closed."""
     vlits = _num_literals(value)
     if not vlits:

@@ -1,4 +1,4 @@
-# Example run — *Financial Incentives and Performance* (a real, accepted paper)
+# Example run: *Financial Incentives and Performance* (a real, accepted paper)
 
 A demonstration of `paper-workshop` (CRUCIBLE) run **end-to-end on an external, already-accepted
 paper**, with the authors' consent:
@@ -56,7 +56,7 @@ Full reasoning in [`REPORT.md`](REPORT.md).
   are exempt by design).
 - Act II: **3 prose edits** applied as tracked changes; **0 numbers changed**.
 
-## True Act II — the analysis was actually re-run
+## True Act II: the analysis was actually re-run
 
 A second pass (`phase2_true/`) did the *real* ATELIER: installed R + BMS, **re-ran the BMA heterogeneity
 path** of the authors' `incentives.R` on the shipped data, and redlined the **real LaTeX source** with
